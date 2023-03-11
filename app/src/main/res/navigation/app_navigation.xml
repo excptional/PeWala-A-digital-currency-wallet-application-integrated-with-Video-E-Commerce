@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_navigation"
+    app:startDestination="@id/nav_home"
+    tools:ignore="MissingDefaultResource">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_account"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Account"
+        tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/nav_add"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Add"
+        tools:layout="@layout/fragment_add" />
+
+    <fragment
+        android:id="@+id/nav_send"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Send"
+        tools:layout="@layout/fragment_send" />
+
+    <fragment
+        android:id="@+id/nav_receive"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Receive"
+        tools:layout="@layout/fragment_receive" />
+
+    <fragment
+        android:id="@+id/nav_redeem"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Redeem"
+        tools:layout="@layout/fragment_redeem" />
+
+    <fragment
+        android:id="@+id/nav_wallet"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Wallet"
+        tools:layout="@layout/fragment_wallet" />
+
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.History"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/nav_redeem_request"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.RedeemRequest"/>
+
+    <fragment
+        android:id="@+id/nav_redeem_confirmation"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.RedeemConfirmation"
+        tools:layout="@layout/fragment_redeem_confirmation" />
+
+</navigation>

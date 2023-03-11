@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_navigation"
+    app:startDestination="@id/nav_sign_in">
+
+    <fragment
+        android:id="@+id/nav_sign_in"
+        android:name="com.example.trigeredgedigitalcurrencyproject.auth.SignIn"
+        tools:layout="@layout/fragment_sign_in" />
+
+    <fragment
+        android:id="@+id/nav_sign_up"
+        android:name="com.example.trigeredgedigitalcurrencyproject.auth.SignUp"
+        tools:layout="@layout/fragment_sign_up" />
+
+
+</navigation>
