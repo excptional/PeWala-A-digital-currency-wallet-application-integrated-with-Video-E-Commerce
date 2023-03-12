@@ -20,11 +20,10 @@ class AuthViewModel(application: Application): AndroidViewModel(application) {
     fun signUp(
         name: String,
         phone: String,
-        cardId: String,
         aadharNo: String,
         password: String
     ) {
-        authRepository.signUp(name, phone, cardId, aadharNo, password)
+        authRepository.signUp(name, phone, aadharNo, password)
     }
 
 }

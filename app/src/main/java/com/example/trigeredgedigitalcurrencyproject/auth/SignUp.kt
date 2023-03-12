@@ -23,7 +23,6 @@ class SignUp : Fragment() {
     private lateinit var passwordEditText: TextInputEditText
     private lateinit var nameEditText: TextInputEditText
     private lateinit var aadharEditText: TextInputEditText
-    private lateinit var cardIdrEditText: TextInputEditText
     private lateinit var passwordLayout: TextInputLayout
     private lateinit var signInBtn: CardView
     private lateinit var signUpBtn: CardView
@@ -45,7 +44,6 @@ class SignUp : Fragment() {
         passwordEditText = view.findViewById(R.id.password_signUp)
         nameEditText = view.findViewById(R.id.name_signUp)
         aadharEditText = view.findViewById(R.id.aadhar_signUp)
-        cardIdrEditText = view.findViewById(R.id.cardId_signUp)
         passwordLayout = view.findViewById(R.id.passwordLayout_signUp)
         signUpBtn = view.findViewById(R.id.signUpButton_signUp)
         signInBtn = view.findViewById(R.id.signInButton_signUp)
@@ -70,7 +68,6 @@ class SignUp : Fragment() {
 
         val phNum = phEditText.text.toString()
         val name = nameEditText.text.toString()
-        val cardId = cardIdrEditText.text.toString()
         val aadhar = aadharEditText.text.toString()
         val password = passwordEditText.text.toString()
         var isAlright = true
@@ -81,10 +78,6 @@ class SignUp : Fragment() {
         }
         if(!phNum.matches(validPhoneNumberPattern.toRegex())) {
             phEditText.error = "Enter valid 10 digits phone number"
-            isAlright = false
-        }
-        if(cardId.isEmpty() or (cardId.length != 8)) {
-            cardIdrEditText.error = "Enter valid 8 characters card id"
             isAlright = false
         }
         if(aadhar.length != 12) {
@@ -102,7 +95,7 @@ class SignUp : Fragment() {
             signUpLoader.visibility = View.GONE
             Toast.makeText(requireContext(), "Enter valid details", Toast.LENGTH_SHORT).show()
         } else {
-            authViewModel.signUp(name, phNum, cardId, aadhar, password)
+            authViewModel.signUp(name, phNum, aadhar, password)
             authViewModel.response.observe(viewLifecycleOwner) {
                 when(it) {
                     is Response.Success -> {

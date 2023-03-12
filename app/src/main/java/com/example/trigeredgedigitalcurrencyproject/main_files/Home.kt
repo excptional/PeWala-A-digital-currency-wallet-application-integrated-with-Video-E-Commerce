@@ -11,6 +11,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.main_files.slider_files.SliderAdapter
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.smarteist.autoimageslider.SliderView
 
 
@@ -30,7 +32,6 @@ class Home : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-
 
         viewWallet = view.findViewById(R.id.view_wallet)
         send = view.findViewById(R.id.send_money)
@@ -63,22 +64,27 @@ class Home : Fragment() {
 
 
         add.setOnClickListener {
+            requireFragmentManager().popBackStack()
             Navigation.findNavController(view).navigate(R.id.nav_add, null, navBuilder.build())
         }
 
         send.setOnClickListener {
+            requireFragmentManager().popBackStack()
             Navigation.findNavController(view).navigate(R.id.nav_send, null, navBuilder.build())
         }
 
         receive.setOnClickListener {
+            requireFragmentManager().popBackStack()
             Navigation.findNavController(view).navigate(R.id.nav_receive, null, navBuilder.build())
         }
 
         redeem.setOnClickListener {
+            requireFragmentManager().popBackStack()
             Navigation.findNavController(view).navigate(R.id.nav_redeem, null, navBuilder.build())
         }
 
         viewWallet.setOnClickListener {
+            requireFragmentManager().popBackStack()
             Navigation.findNavController(view).navigate(R.id.nav_wallet, null, navBuilder.build())
         }
 
