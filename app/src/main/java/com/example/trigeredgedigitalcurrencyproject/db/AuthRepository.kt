@@ -116,12 +116,12 @@ class AuthRepository(private val application: Application) {
         ref.putFile(imgUri)
             .addOnSuccessListener {
                 ref.downloadUrl
-                    .addOnSuccessListener {
+                    .addOnSuccessListener { uri ->
                         val doc =
                             firebaseDB.collection("Users").document(firebaseAuth.currentUser!!.uid)
                         doc.get().addOnSuccessListener {
                             if (it.exists()) {
-                                doc.update("QR Code", imgUri.toString())
+                                doc.update("QR Code", uri.toString())
                             }
                         }
                     }

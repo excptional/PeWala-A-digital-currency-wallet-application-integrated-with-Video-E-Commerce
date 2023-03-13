@@ -70,6 +70,7 @@
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/download_btn_receive"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="match_parent"
                     app:cardBackgroundColor="@color/material_black"
@@ -90,6 +91,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/share_btn_receive"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="match_parent"
                     app:cardBackgroundColor="@color/material_black"
