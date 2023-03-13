@@ -57,6 +57,7 @@ class AuthRepository(private val application: Application) {
             "Aadhar" to aadharNo,
             "Uid" to "",
             "QR Code" to "",
+            "Wallet Balance" to "0",
             "Image Url" to "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
         )
         firebaseAuth.createUserWithEmailAndPassword("$phone@gmail.com", password)
