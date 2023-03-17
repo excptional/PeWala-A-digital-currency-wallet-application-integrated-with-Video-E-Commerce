@@ -7,13 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
-import com.example.trigeredgedigitalcurrencyproject.MainActivity
+import com.example.trigeredgedigitalcurrencyproject.main_files.MainActivity
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.Response

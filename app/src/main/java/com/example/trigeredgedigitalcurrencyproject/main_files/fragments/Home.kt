@@ -1,4 +1,4 @@
-package com.example.trigeredgedigitalcurrencyproject.main_files
+package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,8 +11,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.main_files.slider_files.SliderAdapter
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.smarteist.autoimageslider.SliderView
 
 
@@ -87,7 +85,6 @@ class Home : Fragment() {
             requireFragmentManager().popBackStack()
             Navigation.findNavController(view).navigate(R.id.nav_wallet, null, navBuilder.build())
         }
-
 
         return view
     }

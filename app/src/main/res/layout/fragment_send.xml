@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".main_files.Send">
+    tools:context=".main_files.fragments.Send">
 
     <LinearLayout
         android:id="@+id/main_layout_receive"
@@ -24,7 +24,12 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:src="@drawable/back" />
 
-
+        <TextView
+            android:id="@+id/qr_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Wallet Id"/>
 
     </LinearLayout>
 
@@ -42,7 +47,7 @@
         android:layout_centerInParent="true"
         android:background="@null"
         android:scaleType="centerCrop"
-        android:visibility="visible"
+        android:visibility="gone"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/black_round_loader" />

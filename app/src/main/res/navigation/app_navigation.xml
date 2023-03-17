@@ -8,51 +8,51 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Home"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_account"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Account"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Account"
         tools:layout="@layout/fragment_account" />
 
     <fragment
         android:id="@+id/nav_add"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Add"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Add"
         tools:layout="@layout/fragment_add" />
 
     <fragment
         android:id="@+id/nav_send"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Send"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Send"
         tools:layout="@layout/fragment_send" />
 
     <fragment
         android:id="@+id/nav_receive"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Receive"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Receive"
         tools:layout="@layout/fragment_receive" />
 
     <fragment
         android:id="@+id/nav_redeem"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Redeem"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Redeem"
         tools:layout="@layout/fragment_redeem" />
 
     <fragment
         android:id="@+id/nav_wallet"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.Wallet"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Wallet"
         tools:layout="@layout/fragment_wallet" />
 
     <fragment
         android:id="@+id/nav_history"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.History"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.History"
         tools:layout="@layout/fragment_history" />
 
     <fragment
         android:id="@+id/nav_redeem_request"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.RedeemRequest"/>
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.RedeemRequest"/>
 
     <fragment
         android:id="@+id/nav_redeem_confirmation"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.RedeemConfirmation"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.RedeemConfirmation"
         tools:layout="@layout/fragment_redeem_confirmation" />
 
 </navigation>

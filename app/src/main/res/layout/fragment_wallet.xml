@@ -5,7 +5,7 @@
     android:id="@+id/swipe_refresh_layout_wallet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main_files.Wallet">
+    tools:context=".main_files.fragments.Wallet">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,11 +17,11 @@
             android:scrollbars="none">
 
             <LinearLayout
-                android:id="@+id/main_layout_account"
+                android:id="@+id/main_layout_wallet"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -112,7 +112,8 @@
                                 android:text="₹10000"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_32sdp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:layout_gravity="end"/>
 
                         </LinearLayout>
 
@@ -123,7 +124,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/add_money_btn_wallet"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_70sdp"
+                    android:layout_height="@dimen/_65sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
                     app:cardUseCompatPadding="true"
@@ -131,15 +132,14 @@
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
-                    app:cardBackgroundColor="@color/material_black"
+                    app:cardBackgroundColor="#1E88E5"
                     app:cardCornerRadius="@dimen/_5sdp"
                     app:cardElevation="@dimen/_5sdp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/_15sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -168,7 +168,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/withdraw_money_btn_wallet"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_70sdp"
+                    android:layout_height="@dimen/_65sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
                     app:cardUseCompatPadding="true"
@@ -176,15 +176,14 @@
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
-                    app:cardBackgroundColor="@color/material_black"
+                    app:cardBackgroundColor="#1E88E5"
                     app:cardCornerRadius="@dimen/_5sdp"
                     app:cardElevation="@dimen/_5sdp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/_15sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -215,31 +214,23 @@
         </ScrollView>
 
         <View
-            android:id="@+id/whiteView_account"
+            android:id="@+id/whiteView_wallet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#A1FFFFFF"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/loader_account"
+            android:id="@+id/loader_wallet"
             android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_50sdp"
             android:layout_centerInParent="true"
             android:background="@null"
             android:scaleType="centerCrop"
-            android:visibility="gone"
+            android:visibility="visible"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/black_round_loader" />
-
-        <TextView
-            android:id="@+id/error_text_account"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Something went wrong, check your network connection"
-            android:visibility="gone" />
 
     </RelativeLayout>
 

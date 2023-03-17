@@ -1,10 +1,9 @@
-package com.example.trigeredgedigitalcurrencyproject.main_files
+package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle

@@ -5,7 +5,7 @@
     android:id="@+id/swipe_refresh_layout_account"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main_files.Account">
+    tools:context=".main_files.fragments.Account">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             <LinearLayout
                 android:id="@+id/main_layout_account"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -46,7 +46,8 @@
                         android:layout_height="@dimen/_110sdp"
                         android:layout_gravity="center"
                         android:layout_marginBottom="@dimen/_5sdp"
-                        android:gravity="right">
+                        android:gravity="right"
+                        tools:ignore="RtlHardcoded">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/profileImage_account"

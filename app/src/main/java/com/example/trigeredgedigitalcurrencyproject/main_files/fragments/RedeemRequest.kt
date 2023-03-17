@@ -1,4 +1,4 @@
-package com.example.trigeredgedigitalcurrencyproject.main_files
+package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

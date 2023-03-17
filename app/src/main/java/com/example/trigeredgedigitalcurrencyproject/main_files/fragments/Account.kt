@@ -1,23 +1,19 @@
-package com.example.trigeredgedigitalcurrencyproject.main_files
+package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.cardview.widget.CardView
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
@@ -179,7 +175,7 @@ class Account : Fragment() {
                     if(list.isNotEmpty()) {
                         nameAccount.text = list[0]
                         phoneAccount.text = "Phone : +91 ${list[1]}"
-                        cardIdAccount.text = "Card id : ${list[2]}"
+                        cardIdAccount.text = "Wallet id : ${list[2]}"
                         Glide.with(view).load(list[3]).into(profileImg)
                         mainLayout.visibility = View.VISIBLE
                         whiteView.visibility = View.GONE

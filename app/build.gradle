@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.trigeredgedigitalcurrencyproject"
-        minSdk 21
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -62,4 +62,7 @@ dependencies {
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
     implementation("io.github.g0dkar:qrcode-kotlin-android:3.3.0")
     implementation 'com.google.zxing:core:3.4.0'
+    implementation 'com.shreyaspatil:EasyUpiPayment:2.0'
+//    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0@aar'
 }

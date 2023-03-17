@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".main_files.Add">
+    tools:context=".main_files.fragments.Add">
 
     <LinearLayout
         android:id="@+id/main_layout_add"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <ImageButton
@@ -36,10 +36,21 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:textSize="@dimen/_13sdp"
+            android:layout_marginTop="@dimen/_11sdp"
+            android:textSize="@dimen/_12sdp"
             android:textColor="@color/material_black"
-            android:text="Write the amount here to\nadd the money into your wallet"/>
+            android:text="Write the amount to add into your wallet"/>
+
+        <TextView
+            android:id="@+id/walletId_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textSize="@dimen/_13sdp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="Id : 8621028794@digital"/>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -48,15 +59,14 @@
             android:layout_margin="@dimen/_5sdp"
             android:layout_gravity="center"
             android:hint="Enter amount"
-            app:hintTextColor="#1E88E5"
+            app:hintTextColor="#17AC6B"
             app:boxCornerRadiusTopEnd="@dimen/_10sdp"
             app:boxCornerRadiusBottomStart="@dimen/_10sdp"
             app:boxCornerRadiusTopStart="@dimen/_10sdp"
             app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
             app:startIconScaleType="centerInside"
             app:boxStrokeWidth="@dimen/_2sdp"
-            app:boxStrokeColor="#1E88E5"
-
+            app:boxStrokeColor="#17AC6B"
             app:startIconDrawable="@drawable/rupee_icon">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -65,7 +75,7 @@
                 android:layout_height="match_parent"
                 android:textSize="@dimen/_16sdp"
                 android:maxLength="5"
-                android:textColor="#1E88E5"
+                android:textColor="#17AC6B"
                 android:inputType="numberDecimal"/>
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -81,7 +91,7 @@
             android:focusable="true"
             android:layout_gravity="center"
             android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/material_black"
+            app:cardBackgroundColor="#17AC6B"
             app:cardCornerRadius="@dimen/_5sdp"
             app:cardElevation="@dimen/_5sdp">
 
@@ -104,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#A1FFFFFF"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/loader_add"
@@ -113,7 +123,7 @@
         android:layout_centerInParent="true"
         android:background="@null"
         android:scaleType="centerCrop"
-        android:visibility="gone"
+        android:visibility="visible"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/black_round_loader" />

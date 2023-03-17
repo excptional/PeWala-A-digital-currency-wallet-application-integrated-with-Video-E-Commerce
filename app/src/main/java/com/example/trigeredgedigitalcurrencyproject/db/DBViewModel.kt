@@ -13,6 +13,8 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
         get() = dbRepository.dbResponse
     val accDetails: LiveData<ArrayList<String>>
         get() = dbRepository.accDetails
+    val dailyAddLimit: LiveData<Double>
+        get() = dbRepository.limitData
 
     fun fetchAccountDetails(user: FirebaseUser){
         dbRepository.fetchAccountDetails(user)
@@ -20,5 +22,13 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
 
     fun uploadImageToStorage(imageUri: Uri, user: FirebaseUser) {
         dbRepository.uploadImageToStorage(imageUri, user)
+    }
+
+    fun checkDailyAddAmountLimit(user: FirebaseUser) {
+        dbRepository.checkDailyAddAmountLimit(user)
+    }
+
+    fun addAddMoneyRecords(amount: String, tId: String, user: FirebaseUser) {
+        dbRepository.addAddMoneyRecords(amount, tId, user)
     }
 }
