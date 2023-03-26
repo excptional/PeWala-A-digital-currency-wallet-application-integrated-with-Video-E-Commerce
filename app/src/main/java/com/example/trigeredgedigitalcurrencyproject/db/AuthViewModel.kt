@@ -17,6 +17,10 @@ class AuthViewModel(application: Application): AndroidViewModel(application) {
         authRepository.login(phone, password)
     }
 
+    fun logout() {
+        authRepository.logOut()
+    }
+
     fun signUp(
         name: String,
         phone: String,

@@ -1,7 +1,9 @@
 package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,21 +11,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
-import com.bumptech.glide.Glide
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
-import com.example.trigeredgedigitalcurrencyproject.main_files.AddMoneyUsingUPI
+import com.example.trigeredgedigitalcurrencyproject.db.UPIPayment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
 
 class Add : Fragment() {
 
+    private val UPI_PAYMENT_REQUEST_CODE = 123
     private lateinit var amountEditText: TextInputEditText
     private lateinit var addMoney: CardView
     private lateinit var whiteView: View
@@ -34,8 +37,10 @@ class Add : Fragment() {
     private lateinit var authViewModel: AuthViewModel
     private lateinit var myUser: FirebaseUser
     private lateinit var walletBalance: String
-    private lateinit var mainLayout: LinearLayout
+    private lateinit var mainLayout: RelativeLayout
     private var limit = 0.0
+    private lateinit var amount: String
+    private lateinit var tId: String
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -55,7 +60,7 @@ class Add : Fragment() {
         walletId = view.findViewById(R.id.walletId_add)
         mainLayout = view.findViewById(R.id.main_layout_add)
 
-        loadData(view)
+        loadData()
 
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) myUser = it
@@ -69,7 +74,7 @@ class Add : Fragment() {
 
             whiteView.visibility = View.VISIBLE
             loaderAdd.visibility = View.VISIBLE
-            val amount = amountEditText.text.toString()
+            amount = amountEditText.text.toString()
 
             if (amount.isEmpty()) {
                 whiteView.visibility = View.GONE
@@ -118,19 +123,60 @@ class Add : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                val intent = Intent(requireContext(), AddMoneyUsingUPI::class.java)
-                intent.putExtra("amount", amount)
-                intent.putExtra("uid", myUser)
-                startActivity(intent)
+                tId = "TID${System.currentTimeMillis()}"
+                val payment = UPIPayment(
+                    vpa = "tathagatabn-4@okicici",
+                    name = "Trigredge",
+                    description = "Adding money to your Trigredge wallet",
+                    transactionId = tId,
+                    amount = "$amount.00"
+                )
                 whiteView.visibility = View.GONE
                 loaderAdd.visibility = View.GONE
+                val paymentIntent = startPayment(payment)
+                startActivityForResult(paymentIntent, UPI_PAYMENT_REQUEST_CODE)
             }
         }
         return view
     }
 
+    private fun startPayment(payment: UPIPayment): Intent {
+        val uri = Uri.parse("upi://pay").buildUpon()
+            .appendQueryParameter("pa", payment.vpa)
+            .appendQueryParameter("pn", payment.name)
+            .appendQueryParameter("tn", payment.description)
+            .appendQueryParameter("am", payment.amount)
+            .appendQueryParameter("cu", "INR")
+            .appendQueryParameter("tr", payment.transactionId)
+            .appendQueryParameter("mc", "")
+            .appendQueryParameter("url", "")
+            .appendQueryParameter("mode", "UPI")
+            .build()
+
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = uri
+
+        return Intent.createChooser(intent, "Pay with")
+    }
+
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == UPI_PAYMENT_REQUEST_CODE) {
+            if ((resultCode == RESULT_OK) and (resultCode == 123)) {
+                Toast.makeText(requireContext(), "Added money successfully", Toast.LENGTH_SHORT).show()
+                dbViewModel.addAddMoneyRecords(amount, tId, myUser)
+                amountEditText.text = null
+            } else {
+                Toast.makeText(requireContext(),"Payment failed or cancel, try again", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
     @SuppressLint("SetTextI18n")
-    private fun loadData(view: View) {
+    private fun loadData() {
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
                 myUser = it
@@ -138,7 +184,7 @@ class Add : Fragment() {
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.isNotEmpty()) {
                         walletBalance = list[5]
-                        walletId.text = "(${list[2]})"
+                        walletId.text = list[2]
                         dbViewModel.checkDailyAddAmountLimit(myUser)
                         dbViewModel.dailyAddLimit.observe(viewLifecycleOwner) {
                             limit = it

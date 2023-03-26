@@ -55,4 +55,24 @@
         android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.RedeemConfirmation"
         tools:layout="@layout/fragment_redeem_confirmation" />
 
+    <fragment
+        android:id="@+id/nav_qr_scanner"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.QRScanner"
+        tools:layout="@layout/fragment_q_r_scanner" />
+
+    <fragment
+        android:id="@+id/nav_final_pay"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.FinalPayment"
+        tools:layout="@layout/fragment_final_payment" />
+
+    <fragment
+        android:id="@+id/nav_phone_verification"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PhoneVerification"
+        tools:layout="@layout/fragment_phone_varification" />
+
+    <fragment
+        android:id="@+id/nav_manage_pin"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.ManagePIN"
+        tools:layout="@layout/fragment_manage_p_i_n" />
+
 </navigation>

@@ -45,7 +45,7 @@
         android:id="@+id/qr_scanner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/qr_code"
+        android:src="@drawable/scanner_icon"
         app:maxImageSize="@dimen/_25sdp"
         app:layout_anchor="@id/bottomAppbar" />
 

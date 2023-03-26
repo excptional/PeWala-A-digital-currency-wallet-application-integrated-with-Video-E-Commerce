@@ -31,6 +31,11 @@ class AuthRepository(private val application: Application) {
     private val firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
 
+    fun logOut() {
+        firebaseAuth.signOut()
+        userLiveData.postValue(null)
+    }
+
     fun login(phone: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword("$phone@gmail.com", password)
             .addOnCompleteListener { task ->
@@ -57,6 +62,7 @@ class AuthRepository(private val application: Application) {
             "Aadhar" to aadharNo,
             "Uid" to "",
             "QR Code" to "",
+            "PIN" to "",
             "Balance" to "0",
             "Image Url" to "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
         )
@@ -79,14 +85,6 @@ class AuthRepository(private val application: Application) {
     private fun getErrorMassage(e: Exception): String {
         val colonIndex = e.toString().indexOf(":")
         return e.toString().substring(colonIndex + 2)
-    }
-
-    init {
-        if (firebaseAuth.currentUser != null) {
-            userLiveData.postValue(firebaseAuth.currentUser)
-        } else {
-            userLiveData.postValue(null)
-        }
     }
 
     private fun qrGenerator(cardId: String) {
@@ -127,6 +125,14 @@ class AuthRepository(private val application: Application) {
                         }
                     }
             }
+    }
+
+    init {
+        if (firebaseAuth.currentUser != null) {
+            userLiveData.postValue(firebaseAuth.currentUser)
+        } else {
+            userLiveData.postValue(null)
+        }
     }
 
 }

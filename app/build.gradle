@@ -62,7 +62,8 @@ dependencies {
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
     implementation("io.github.g0dkar:qrcode-kotlin-android:3.3.0")
     implementation 'com.google.zxing:core:3.4.0'
-    implementation 'com.shreyaspatil:EasyUpiPayment:2.0'
-//    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
-    implementation 'com.journeyapps:zxing-android-embedded:4.1.0@aar'
+    implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.0.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.0.2'
 }

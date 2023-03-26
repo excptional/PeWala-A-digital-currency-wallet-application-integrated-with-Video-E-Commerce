@@ -13,6 +13,8 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
         get() = dbRepository.dbResponse
     val accDetails: LiveData<ArrayList<String>>
         get() = dbRepository.accDetails
+    val payerDetails: LiveData<ArrayList<String>>
+        get() = dbRepository.payerDetails
     val dailyAddLimit: LiveData<Double>
         get() = dbRepository.limitData
 
@@ -30,5 +32,13 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
 
     fun addAddMoneyRecords(amount: String, tId: String, user: FirebaseUser) {
         dbRepository.addAddMoneyRecords(amount, tId, user)
+    }
+
+    fun getPayerDetails(id: String) {
+        dbRepository.getPayerDetails(id)
+    }
+
+    fun changePIN(uid: String, PIN: String) {
+        dbRepository.changePIN(uid, PIN)
     }
 }

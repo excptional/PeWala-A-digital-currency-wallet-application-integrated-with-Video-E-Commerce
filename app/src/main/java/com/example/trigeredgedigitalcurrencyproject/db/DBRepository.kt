@@ -22,6 +22,10 @@ class DBRepository(private val application: Application) {
     val accDetails: LiveData<ArrayList<String>>
         get() = accDetailsLiveData
 
+    private val payerDetailsLiveData = MutableLiveData<ArrayList<String>>()
+    val payerDetails: LiveData<ArrayList<String>>
+        get() = payerDetailsLiveData
+
     private val limitLivedata = MutableLiveData<Double>()
     val limitData: LiveData<Double>
         get() = limitLivedata
@@ -40,6 +44,7 @@ class DBRepository(private val application: Application) {
                 list.add(it.getString("Image Url").toString())
                 list.add(it.getString("QR Code").toString())
                 list.add(it.getString("Balance").toString())
+                list.add(it.getString("PIN").toString())
                 accDetailsLiveData.postValue(list)
             }
             .addOnFailureListener {
@@ -91,7 +96,8 @@ class DBRepository(private val application: Application) {
     }
 
     fun addAddMoneyRecords(amount: String, tId: String, user: FirebaseUser) {
-        val time = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
+        val time =
+            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
         val date = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault()).format(Date())
         val data1 = mapOf(
             "Amount" to amount,
@@ -106,11 +112,43 @@ class DBRepository(private val application: Application) {
             "User Id" to ""
         )
 
-        firebaseDB.collection("Add Money Records").document(user.uid).collection(date).document(tId).set(data1)
-        firebaseDB.collection("Transaction Records").document(user.uid).collection(date).document(tId).set(data2)
+        firebaseDB.collection("Add Money Records").document(user.uid).collection(date).document(tId)
+            .set(data1)
+        firebaseDB.collection("Transaction Records").document(user.uid).collection(date)
+            .document(tId).set(data2)
 
     }
 
+    fun getPayerDetails(id: String) {
+        val ref = firebaseDB.collection("Users")
+        ref.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                val list = arrayListOf<String>()
+                if (document.getString("Card Id") == id) {
+                    list.add(document.getString("Name").toString())
+                    list.add(document.getString("Phone").toString())
+                    list.add(document.getString("Image Url").toString())
+                    list.add(document.getString("Uid").toString())
+                    payerDetailsLiveData.postValue(list)
+                } else {
+                    payerDetailsLiveData.postValue(list)
+                }
+            }
+        }
+    }
+
+    fun changePIN(uid: String, PIN: String) {
+        val doc = firebaseDB.collection("Users").document(uid)
+        doc.get().addOnSuccessListener {
+            if (it.exists()) {
+                dbResponseLiveData.postValue(Response.Success())
+                doc.update("PIN", PIN)
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
 
     private fun getErrorMassage(e: Exception): String {
         val colonIndex = e.toString().indexOf(":")

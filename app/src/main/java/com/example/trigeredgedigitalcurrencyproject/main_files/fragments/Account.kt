@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -21,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.example.trigeredgedigitalcurrencyproject.R
+import com.example.trigeredgedigitalcurrencyproject.auth.AuthenticationActivity
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.Response
@@ -46,6 +48,9 @@ class Account : Fragment() {
     private lateinit var whiteView: View
     private lateinit var errorText: TextView
     private lateinit var mainLayout: LinearLayout
+    private lateinit var pinText: TextView
+    private lateinit var managePIN: LinearLayout
+    private lateinit var verifyIcon: ImageView
     private lateinit var loaderAccount: LottieAnimationView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var uploadImage: FloatingActionButton
@@ -92,6 +97,9 @@ class Account : Fragment() {
         errorText = view.findViewById(R.id.error_text_account)
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_account)
         uploadImage = view.findViewById(R.id.upload_image)
+        pinText = view.findViewById(R.id.pin_account)
+        managePIN = view.findViewById(R.id.managePIN_account)
+        verifyIcon = view.findViewById(R.id.verify_icon)
 
         loadData(view)
 
@@ -140,7 +148,15 @@ class Account : Fragment() {
         }
 
         signOut.setOnClickListener {
+            authViewModel.logout()
+            startActivity(Intent(requireActivity(), AuthenticationActivity::class.java))
+            requireActivity().finish()
+        }
 
+        managePIN.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("phone", phoneAccount.text.toString())
+            Navigation.findNavController(view).navigate(R.id.nav_manage_pin, bundle)
         }
 
         return view
@@ -173,6 +189,13 @@ class Account : Fragment() {
                 dbViewModel.fetchAccountDetails(it)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if(list.isNotEmpty()) {
+                        if(list[6] == ""){
+                            verifyIcon.visibility = View.GONE
+                            pinText.text = "PIN : _ _ _ _ (Not set)"
+                        } else {
+                            pinText.text = "PIN : * * * *"
+                            verifyIcon.visibility = View.VISIBLE
+                        }
                         nameAccount.text = list[0]
                         phoneAccount.text = "Phone : +91 ${list[1]}"
                         cardIdAccount.text = "Wallet id : ${list[2]}"

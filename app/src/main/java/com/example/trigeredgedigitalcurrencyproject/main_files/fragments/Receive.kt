@@ -17,6 +17,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.example.trigeredgedigitalcurrencyproject.R
@@ -34,7 +35,8 @@ class Receive : Fragment() {
     private lateinit var cardId: TextView
     private lateinit var whiteView: View
     private lateinit var loaderReceive: LottieAnimationView
-    private lateinit var mainLayout: LinearLayout
+    private lateinit var mainLayout: RelativeLayout
+    private lateinit var scanBtn: CardView
     private lateinit var backBtn: ImageButton
     private lateinit var shareBtn: CardView
     private lateinit var downloadBtn: CardView
@@ -57,6 +59,7 @@ class Receive : Fragment() {
         backBtn = view.findViewById(R.id.back_btn_receive)
         shareBtn = view.findViewById(R.id.share_btn_receive)
         downloadBtn = view.findViewById(R.id.download_btn_receive)
+        scanBtn = view.findViewById(R.id.scan_btn_receive)
 
         loadData(view)
 
@@ -65,6 +68,10 @@ class Receive : Fragment() {
 
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        scanBtn.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.nav_qr_scanner)
         }
 
         shareBtn.setOnClickListener {

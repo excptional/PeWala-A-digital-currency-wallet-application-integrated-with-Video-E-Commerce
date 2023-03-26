@@ -4,8 +4,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -14,8 +12,6 @@ import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.auth.AuthenticationActivity
 import com.example.trigeredgedigitalcurrencyproject.databinding.ActivityMainBinding
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
-import com.google.zxing.integration.android.IntentIntegrator
-import com.journeyapps.barcodescanner.CaptureActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -42,14 +38,7 @@ class MainActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         binding.qrScanner.setOnClickListener {
-            val intentIntegrator = IntentIntegrator(this)
-            intentIntegrator.setPrompt("")
-            intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-            intentIntegrator.setOrientationLocked(true)
-            intentIntegrator.setCameraId(0)
-            intentIntegrator.captureActivity = CaptureActivity::class.java
-            intentIntegrator.setBeepEnabled(false)
-            intentIntegrator.initiateScan()
+            navController.navigate(R.id.nav_qr_scanner)
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -89,27 +78,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             false
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        @Nullable data: Intent?
-    ) {
-        super.onActivityResult(requestCode, resultCode, data)
-        val intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (intentResult != null) {
-            if (intentResult.contents == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
-            } else {
-                val bundle = Bundle()
-                bundle.putString("walletId", intentResult.contents)
-                navController.navigate(R.id.nav_send, bundle)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 

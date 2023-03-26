@@ -68,25 +68,25 @@ class SignIn : Fragment() {
         val password = passwordEditText.text.toString()
         var isAlright = true
 
-        if(!phNum.matches(validPhoneNumberPattern.toRegex())) {
+        if (!phNum.matches(validPhoneNumberPattern.toRegex())) {
             phEditText.error = "Enter valid 10 digits phone number"
             isAlright = false
         }
-        if(password.length < 6) {
+        if (password.length < 6) {
             passwordEditText.error = "Enter name first"
             passwordLayout.isPasswordVisibilityToggleEnabled = false
             isAlright = false
         }
-        if(!isAlright) {
+        if (!isAlright) {
             whiteView.visibility = View.GONE
             signInLoader.visibility = View.GONE
         } else {
             authViewModel.login(phNum, password)
             authViewModel.response.observe(viewLifecycleOwner) {
-                when(it) {
+                when (it) {
                     is Response.Success -> {
                         startActivity(Intent(requireContext(), MainActivity::class.java))
-                        onDestroy()
+                        requireActivity().finish()
                         whiteView.visibility = View.GONE
                         signInLoader.visibility = View.GONE
                     }
