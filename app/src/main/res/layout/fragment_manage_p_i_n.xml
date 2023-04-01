@@ -152,6 +152,8 @@
             android:layout_marginEnd="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_15sdp"
             android:foreground="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
             app:cardBackgroundColor="@color/material_black"
             app:cardCornerRadius="@dimen/_10sdp"

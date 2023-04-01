@@ -75,4 +75,14 @@
         android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.ManagePIN"
         tools:layout="@layout/fragment_manage_p_i_n" />
 
+    <fragment
+        android:id="@+id/nav_success"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PaymentSuccess"
+        tools:layout="@layout/fragment_payment_success" />
+
+    <fragment
+        android:id="@+id/nav_fail"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PaymentFail"
+        tools:layout="@layout/fragment_payment_fail" />
+
 </navigation>

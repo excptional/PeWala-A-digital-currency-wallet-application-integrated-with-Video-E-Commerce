@@ -30,8 +30,8 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
         dbRepository.checkDailyAddAmountLimit(user)
     }
 
-    fun addAddMoneyRecords(amount: String, tId: String, user: FirebaseUser) {
-        dbRepository.addAddMoneyRecords(amount, tId, user)
+    fun addAddMoneyRecords(amount: String, note: String, tId: String, user: FirebaseUser) {
+        dbRepository.addAddMoneyRecords(amount, note, tId, user)
     }
 
     fun getPayerDetails(id: String) {
@@ -40,5 +40,9 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
 
     fun changePIN(uid: String, PIN: String) {
         dbRepository.changePIN(uid, PIN)
+    }
+
+    fun payment(senderUid: String, receiverUid: String, amount: String, note: String) {
+        dbRepository.payment(senderUid, receiverUid, amount, note)
     }
 }

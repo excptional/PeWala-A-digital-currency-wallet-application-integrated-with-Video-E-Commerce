@@ -166,7 +166,7 @@ class Add : Fragment() {
         if (requestCode == UPI_PAYMENT_REQUEST_CODE) {
             if ((resultCode == RESULT_OK) and (resultCode == 123)) {
                 Toast.makeText(requireContext(), "Added money successfully", Toast.LENGTH_SHORT).show()
-                dbViewModel.addAddMoneyRecords(amount, tId, myUser)
+                dbViewModel.addAddMoneyRecords(amount, "", tId, myUser)
                 amountEditText.text = null
             } else {
                 Toast.makeText(requireContext(),"Payment failed or cancel, try again", Toast.LENGTH_SHORT).show()

@@ -30,7 +30,6 @@ class DBRepository(private val application: Application) {
     val limitData: LiveData<Double>
         get() = limitLivedata
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
 
@@ -95,7 +94,7 @@ class DBRepository(private val application: Application) {
             }
     }
 
-    fun addAddMoneyRecords(amount: String, tId: String, user: FirebaseUser) {
+    fun addAddMoneyRecords(amount: String, note: String, tId: String, user: FirebaseUser) {
         val time =
             SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
         val date = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault()).format(Date())
@@ -109,7 +108,8 @@ class DBRepository(private val application: Application) {
             "TId" to tId,
             "Time" to time,
             "Operation" to "Add",
-            "User Id" to ""
+            "User Id" to "",
+            "Note" to note
         )
 
         firebaseDB.collection("Add Money Records").document(user.uid).collection(date).document(tId)
@@ -130,6 +130,7 @@ class DBRepository(private val application: Application) {
                     list.add(document.getString("Image Url").toString())
                     list.add(document.getString("Uid").toString())
                     payerDetailsLiveData.postValue(list)
+                    break
                 } else {
                     payerDetailsLiveData.postValue(list)
                 }
@@ -145,6 +146,81 @@ class DBRepository(private val application: Application) {
                 doc.update("PIN", PIN)
             }
         }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
+
+    fun payment(senderUid: String, receiverUid: String, amount: String, note: String) {
+
+        val doc1 = firebaseDB.collection("Users").document(senderUid)
+        val doc2 = firebaseDB.collection("Users").document(receiverUid)
+
+        doc1.get().addOnSuccessListener {
+            if (it.exists()) {
+                val amountDouble = amount.toDouble()
+                val balance = it.getString("Balance")!!.toDouble()
+                val finalBalance = balance - amountDouble
+                doc1.update("Balance", finalBalance.toInt().toString())
+                dbResponseLiveData.postValue(Response.Success())
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+
+        doc2.get().addOnSuccessListener {
+            if (it.exists()) {
+                val amountDouble = amount.toDouble()
+                val balance = it.getString("Balance")!!.toDouble()
+                val finalBalance = balance + amountDouble
+                doc2.update("Balance", finalBalance.toInt().toString())
+                dbResponseLiveData.postValue(Response.Success())
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
+
+    fun addTransaction(
+        amount: String,
+        note: String,
+        tId: String,
+        senderUid: String,
+        receiverUid: String,
+        time: String
+    ) {
+        val data1 = mapOf(
+            "Amount" to amount,
+            "TId" to tId,
+            "Time" to time,
+            "Operation" to "Send",
+            "User Id" to receiverUid,
+            "Note" to note
+        )
+
+        val data2 = mapOf(
+            "Amount" to amount,
+            "TId" to tId,
+            "Time" to time,
+            "Operation" to "Receive",
+            "User Id" to senderUid,
+            "Note" to note
+        )
+
+        firebaseDB.collection("Transaction Records").document(senderUid).collection(tId).add(data1)
+            .addOnSuccessListener {
+                dbResponseLiveData.postValue(Response.Success())
+            }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+        firebaseDB.collection("Transaction Records").document(receiverUid).collection(tId)
+            .add(data2)
+            .addOnSuccessListener {
+                dbResponseLiveData.postValue(Response.Success())
+            }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
