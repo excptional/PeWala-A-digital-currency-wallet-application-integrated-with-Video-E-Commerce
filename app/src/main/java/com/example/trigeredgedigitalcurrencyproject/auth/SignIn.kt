@@ -73,7 +73,7 @@ class SignIn : Fragment() {
             isAlright = false
         }
         if (password.length < 6) {
-            passwordEditText.error = "Enter name first"
+            passwordEditText.error = "Enter valid password"
             passwordLayout.isPasswordVisibilityToggleEnabled = false
             isAlright = false
         }

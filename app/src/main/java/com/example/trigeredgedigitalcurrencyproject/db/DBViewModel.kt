@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentSnapshot
 
 class DBViewModel(application: Application): AndroidViewModel(application) {
 
@@ -13,13 +14,19 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
         get() = dbRepository.dbResponse
     val accDetails: LiveData<ArrayList<String>>
         get() = dbRepository.accDetails
+    val transactionDetails: LiveData<ArrayList<DocumentSnapshot>>
+        get() = dbRepository.transactionDetails
     val payerDetails: LiveData<ArrayList<String>>
         get() = dbRepository.payerDetails
     val dailyAddLimit: LiveData<Double>
         get() = dbRepository.limitData
 
-    fun fetchAccountDetails(user: FirebaseUser){
-        dbRepository.fetchAccountDetails(user)
+    fun fetchAccountDetails(uid: String) {
+        dbRepository.fetchAccountDetails(uid)
+    }
+
+    fun fetchTransactionDetails(uid: String) {
+        dbRepository.fetchTransactionDetails(uid)
     }
 
     fun uploadImageToStorage(imageUri: Uri, user: FirebaseUser) {
@@ -44,5 +51,20 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
 
     fun payment(senderUid: String, receiverUid: String, amount: String, note: String) {
         dbRepository.payment(senderUid, receiverUid, amount, note)
+    }
+
+    fun addTransaction(
+        amount: String,
+        note: String,
+        tId: String,
+        senderUid: String,
+        receiverUid: String,
+        senderName: String,
+        senderPhone: String,
+        receiverName: String,
+        receiverPhone: String,
+        time: String
+    ) {
+        dbRepository.addTransaction(amount, note, tId, senderUid, receiverUid, senderName, senderPhone, receiverName, receiverPhone, time)
     }
 }

@@ -86,32 +86,6 @@ class FinalPayment : Fragment() {
 
         walletId.text = requireArguments().getString("walletId").toString()
 
-        dbViewModel.getPayerDetails(requireArguments().getString("walletId").toString())
-
-        dbViewModel.payerDetails.observe(viewLifecycleOwner) { list ->
-            if (list.isNullOrEmpty()) {
-                whiteView.visibility = View.GONE
-                loaderFinalPay.visibility = View.GONE
-                Toast.makeText(
-                    requireContext(),
-                    "Your given phone number is not registered in this app",
-                    Toast.LENGTH_SHORT
-                ).show()
-                requireActivity().onBackPressed()
-            } else {
-                receiverName = list[0]
-                receiverPhone = list[1]
-                receiverWalletId = "$receiverPhone@digital"
-                name.text = "Paying ${list[0]}"
-                phone.text = "Phone : +91 ${list[1]}"
-                Glide.with(this).load(list[2]).into(profileImg)
-                mainLayout.visibility = View.VISIBLE
-                whiteView.visibility = View.GONE
-                loaderFinalPay.visibility = View.GONE
-                getUid(walletId.text.toString())
-            }
-        }
-
         payBtn.setOnClickListener {
             whiteView.visibility = View.VISIBLE
             loaderFinalPay.visibility = View.VISIBLE
@@ -128,18 +102,49 @@ class FinalPayment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
+        authViewModel.userdata.observe(viewLifecycleOwner) { it ->
             if (it != null) {
                 senderUid = it.uid
-                dbViewModel.fetchAccountDetails(it)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if (list.isNotEmpty()) {
-                        senderName = list[0]
-                        senderPhone = list[1]
-                        senderWalletId = list[2]
-                        balance = list[5]
-                        originalPIN = list[6]
+                dbViewModel.fetchAccountDetails(it.uid)
+                dbViewModel.accDetails.observe(viewLifecycleOwner) {
+                    if (it.isNotEmpty()) {
+                        if(it[6].isEmpty()) {
+                            Toast.makeText(requireContext(), "Set your 4 digit PIN before use this feature", Toast.LENGTH_SHORT).show()
+                            requireActivity().onBackPressed()
+                        } else {
+                            senderName = it[0]
+                            senderPhone = it[1]
+                            senderWalletId = it[2]
+                            balance = it[5]
+                            originalPIN = it[6]
+                            dbViewModel.getPayerDetails(requireArguments().getString("walletId").toString())
+
+                            dbViewModel.payerDetails.observe(viewLifecycleOwner) { list ->
+                                if (list.isNullOrEmpty()) {
+                                    whiteView.visibility = View.GONE
+                                    loaderFinalPay.visibility = View.GONE
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Your given phone number is not registered in this app",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    requireActivity().onBackPressed()
+                                } else {
+                                    receiverName = list[0]
+                                    receiverPhone = list[1]
+                                    receiverWalletId = "$receiverPhone@digital"
+                                    name.text = "Paying ${list[0]}"
+                                    phone.text = "Phone : +91 ${list[1]}"
+                                    Glide.with(this).load(list[2]).into(profileImg)
+                                    mainLayout.visibility = View.VISIBLE
+                                    whiteView.visibility = View.GONE
+                                    loaderFinalPay.visibility = View.GONE
+                                    getUid(walletId.text.toString())
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -206,6 +211,7 @@ class FinalPayment : Fragment() {
                             bundle.putString("tid", tId)
                             bundle.putString("amount", amount)
                             bundle.putString("time", time)
+                            dbViewModel.addTransaction(amount, note, tId, senderUid, receiverUid, senderName, senderPhone, receiverName, receiverPhone, time)
                             Navigation.findNavController(requireView()).popBackStack()
                             Navigation.findNavController(requireView()).popBackStack()
                             Navigation.findNavController(requireView()).navigate(R.id.nav_success, bundle)

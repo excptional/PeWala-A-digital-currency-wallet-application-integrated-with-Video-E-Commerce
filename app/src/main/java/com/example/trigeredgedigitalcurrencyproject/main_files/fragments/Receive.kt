@@ -91,7 +91,7 @@ class Receive : Fragment() {
     private fun loadData(view: View) {
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if(it != null) {
-                dbViewModel.fetchAccountDetails(it)
+                dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if(list.isNotEmpty()) {
                         Glide.with(view).load(list[4]).into(qrImage)

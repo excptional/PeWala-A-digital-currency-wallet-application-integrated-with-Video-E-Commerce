@@ -58,7 +58,7 @@ class QRScanner : Fragment() {
     private fun loadData(walletId: String) {
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
-                dbViewModel.fetchAccountDetails(it)
+                dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.isNotEmpty()) {
                         if(walletId == list[2]) {

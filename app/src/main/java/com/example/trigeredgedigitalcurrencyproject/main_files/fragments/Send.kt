@@ -81,7 +81,7 @@ class Send : Fragment() {
     private fun loadData() {
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
-                dbViewModel.fetchAccountDetails(it)
+                dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.isNotEmpty()) {
                         phoneNum = list[1]
@@ -90,5 +90,4 @@ class Send : Fragment() {
             }
         }
     }
-
 }

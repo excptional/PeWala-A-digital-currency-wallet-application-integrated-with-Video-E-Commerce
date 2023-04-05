@@ -43,7 +43,7 @@ class ManagePIN : Fragment() {
     private lateinit var myUser: FirebaseUser
     private lateinit var submitBtn: CardView
     private lateinit var pin: String
-    private lateinit var prevPIN: String
+    private var prevPIN  = ""
     private lateinit var toastText: String
     private lateinit var temp: String
     private lateinit var backBtn: ImageButton
@@ -170,7 +170,7 @@ class ManagePIN : Fragment() {
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
                 myUser = it
-                dbViewModel.fetchAccountDetails(it)
+                dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.isNotEmpty()) {
                         phone = list[1]
@@ -178,6 +178,7 @@ class ManagePIN : Fragment() {
                             currentPINLayout.visibility = View.GONE
                             temp = "New PIN generated successfully"
                         } else {
+                            currentPINLayout.visibility = View.VISIBLE
                             prevPIN = list[6]
                             temp = "PIN changed successfully"
                         }

@@ -180,7 +180,7 @@ class Add : Fragment() {
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
                 myUser = it
-                dbViewModel.fetchAccountDetails(it)
+                dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.isNotEmpty()) {
                         walletBalance = list[5]

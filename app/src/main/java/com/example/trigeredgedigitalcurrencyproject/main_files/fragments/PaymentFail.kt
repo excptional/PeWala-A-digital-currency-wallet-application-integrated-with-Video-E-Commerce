@@ -1,6 +1,7 @@
 package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.view.Gravity
@@ -29,6 +30,9 @@ class PaymentFail : Fragment() {
         mainLayout = view.findViewById(R.id.mainLayout_fail)
         detailsLayout = view.findViewById(R.id.details_fail)
         animation = view.findViewById(R.id.animation_fail)
+
+        val mp = MediaPlayer.create(requireContext(), R.raw.failure)
+        mp.start()
 
         Handler().postDelayed({
             detailsLayout.visibility = View.VISIBLE

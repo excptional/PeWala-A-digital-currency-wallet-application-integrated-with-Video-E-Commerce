@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,6 +24,10 @@ class DBRepository(private val application: Application) {
     val accDetails: LiveData<ArrayList<String>>
         get() = accDetailsLiveData
 
+    private val transactionDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
+    val transactionDetails: LiveData<ArrayList<DocumentSnapshot>>
+        get() = transactionDetailsLiveData
+
     private val payerDetailsLiveData = MutableLiveData<ArrayList<String>>()
     val payerDetails: LiveData<ArrayList<String>>
         get() = payerDetailsLiveData
@@ -33,8 +39,8 @@ class DBRepository(private val application: Application) {
     private val firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
 
-    fun fetchAccountDetails(user: FirebaseUser) {
-        firebaseDB.collection("Users").document(user.uid).get()
+    fun fetchAccountDetails(uid: String) {
+        firebaseDB.collection("Users").document(uid).get()
             .addOnSuccessListener {
                 val list = ArrayList<String>()
                 list.add(it.getString("Name").toString())
@@ -51,8 +57,25 @@ class DBRepository(private val application: Application) {
             }
     }
 
+    fun fetchTransactionDetails(uid: String) {
+        firebaseDB.collection("Transaction Records").document("Transaction Records").collection(uid)
+            .get()
+            .addOnSuccessListener { documents ->
+                val list = arrayListOf<DocumentSnapshot>()
+                for (document in documents) {
+                    list.add(document)
+                }
+                dbResponseLiveData.postValue(Response.Success())
+                transactionDetailsLiveData.postValue(list)
+            }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
+
     fun uploadImageToStorage(imageUri: Uri, user: FirebaseUser) {
-        val ref = firebaseStorage.reference.child("images/${user.uid}/${imageUri.lastPathSegment}")
+        val ref =
+            firebaseStorage.reference.child("images/${user.uid}/${imageUri.lastPathSegment}")
         ref.putFile(imageUri)
             .addOnSuccessListener {
                 ref.downloadUrl
@@ -112,7 +135,8 @@ class DBRepository(private val application: Application) {
             "Note" to note
         )
 
-        firebaseDB.collection("Add Money Records").document(user.uid).collection(date).document(tId)
+        firebaseDB.collection("Add Money Records").document(user.uid).collection(date)
+            .document(tId)
             .set(data1)
         firebaseDB.collection("Transaction Records").document(user.uid).collection(date)
             .document(tId).set(data2)
@@ -189,6 +213,10 @@ class DBRepository(private val application: Application) {
         tId: String,
         senderUid: String,
         receiverUid: String,
+        senderName: String,
+        senderPhone: String,
+        receiverName: String,
+        receiverPhone: String,
         time: String
     ) {
         val data1 = mapOf(
@@ -197,6 +225,8 @@ class DBRepository(private val application: Application) {
             "Time" to time,
             "Operation" to "Send",
             "User Id" to receiverUid,
+            "User Name" to receiverName,
+            "User Phone" to receiverPhone,
             "Note" to note
         )
 
@@ -206,18 +236,23 @@ class DBRepository(private val application: Application) {
             "Time" to time,
             "Operation" to "Receive",
             "User Id" to senderUid,
+            "User Name" to senderName,
+            "User Phone" to senderPhone,
             "Note" to note
         )
 
-        firebaseDB.collection("Transaction Records").document(senderUid).collection(tId).add(data1)
+        firebaseDB.collection("Transaction Records").document("Transaction Records")
+            .collection(senderUid).document(tId)
+            .set(data1)
             .addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
             }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
-        firebaseDB.collection("Transaction Records").document(receiverUid).collection(tId)
-            .add(data2)
+        firebaseDB.collection("Transaction Records").document("Transaction Records")
+            .collection(receiverUid).document(tId)
+            .set(data2)
             .addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
             }

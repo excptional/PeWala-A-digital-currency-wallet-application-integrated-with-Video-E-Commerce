@@ -27,14 +27,15 @@
 
                 <ImageButton
                     android:id="@+id/back_btn_receive"
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:padding="@dimen/_4sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:background="@null"
                     android:contentDescription="@string/app_name"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/back"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    android:src="@drawable/back_black"
+                    tools:ignore="TouchTargetSizeCheck"/>
 
                 <TextView
                     android:layout_width="wrap_content"

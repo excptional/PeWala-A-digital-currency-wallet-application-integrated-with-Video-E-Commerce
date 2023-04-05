@@ -1,6 +1,7 @@
 package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.view.Gravity
@@ -62,6 +63,9 @@ class PaymentSuccess : Fragment() {
         tid.text = "Transaction ID : " + requireArguments().getString("tid")
         time.text = requireArguments().getString("time")
         amount.text = "₹" + requireArguments().getString("amount")
+
+        val mp = MediaPlayer.create(requireContext(), R.raw.success)
+        mp.start()
 
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
