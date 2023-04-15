@@ -14,6 +14,8 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
         get() = dbRepository.dbResponse
     val accDetails: LiveData<ArrayList<String>>
         get() = dbRepository.accDetails
+    val contactDetails: LiveData<ArrayList<DocumentSnapshot>>
+        get() = dbRepository.contactDetails
     val transactionDetails: LiveData<ArrayList<DocumentSnapshot>>
         get() = dbRepository.transactionDetails
     val payerDetails: LiveData<ArrayList<String>>
@@ -63,8 +65,18 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
         senderPhone: String,
         receiverName: String,
         receiverPhone: String,
+        receiverImg: String,
         time: String
     ) {
-        dbRepository.addTransaction(amount, note, tId, senderUid, receiverUid, senderName, senderPhone, receiverName, receiverPhone, time)
+        dbRepository.addTransaction(amount, note, tId, senderUid, receiverUid, senderName, senderPhone, receiverName, receiverPhone, receiverImg, time)
     }
+
+    fun fetchContacts(uid: String) {
+        dbRepository.fetchContacts(uid)
+    }
+
+    fun sendRedeemRequest(uid: String, amount: String) {
+        dbRepository.sendRedeemRequest(uid, amount)
+    }
+
 }

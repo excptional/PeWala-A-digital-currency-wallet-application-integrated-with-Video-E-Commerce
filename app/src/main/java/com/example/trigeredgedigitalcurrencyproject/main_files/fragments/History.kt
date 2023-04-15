@@ -37,6 +37,9 @@ class History : Fragment() {
     private lateinit var mainLayout: LinearLayout
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
+    private lateinit var name: String
+    private lateinit var phone: String
+
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +49,8 @@ class History : Fragment() {
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
+
+        loadData()
 
         historyShimmer = view.findViewById(R.id.history_shimmer)
         recyclerview = view.findViewById(R.id.recyclerView_history)
@@ -57,7 +62,8 @@ class History : Fragment() {
         historyShimmer.visibility = View.VISIBLE
         mainLayout.visibility = View.GONE
 
-        transactionHistoryAdapter = TransactionHistoryAdapter(requireContext(), transactionHistoryItems)
+        transactionHistoryAdapter =
+            TransactionHistoryAdapter(requireContext(), transactionHistoryItems)
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
         recyclerview.setHasFixedSize(true)
         recyclerview.setItemViewCacheSize(20)
@@ -80,7 +86,7 @@ class History : Fragment() {
             if (it != null) {
                 dbViewModel.fetchTransactionDetails(it.uid)
                 dbViewModel.transactionDetails.observe(viewLifecycleOwner) { list ->
-                    if(list.isNotEmpty()) {
+                    if (list.isNotEmpty()) {
                         nothingFoundText.visibility = View.GONE
                         fetchData(list)
                     } else {
@@ -96,7 +102,18 @@ class History : Fragment() {
     private fun fetchData(list: MutableList<DocumentSnapshot>) {
         transactionHistoryItemsArray = arrayListOf()
         for (i in list) {
-            if(i.exists()) {
+            if (i.exists()) {
+                if(i.getString("User Id")!!.isEmpty()) {
+                    val transactionData = TransactionHistoryItems(
+                        name,
+                        phone,
+                        i.getString("TId"),
+                        i.getString("Operation"),
+                        i.getString("Time"),
+                        i.getString("Amount")
+                    )
+                    transactionHistoryItemsArray.add(transactionData)
+                }
                 val transactionData = TransactionHistoryItems(
                     i.getString("User Name"),
                     i.getString("User Phone"),
@@ -113,5 +130,17 @@ class History : Fragment() {
         historyShimmer.visibility = View.GONE
         mainLayout.visibility = View.VISIBLE
         refreshLayout.isRefreshing = false
+    }
+
+    private fun loadData() {
+        authViewModel.userdata.observe(viewLifecycleOwner) { it ->
+            if (it != null) {
+                dbViewModel.fetchAccountDetails(it.uid)
+                dbViewModel.accDetails.observe(viewLifecycleOwner) {
+                    name = it[0]
+                    phone = it[1]
+                }
+            }
+        }
     }
 }

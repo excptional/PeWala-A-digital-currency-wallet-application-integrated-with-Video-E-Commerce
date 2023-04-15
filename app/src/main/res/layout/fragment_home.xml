@@ -10,11 +10,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/_20sdp"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
@@ -189,10 +190,45 @@
 
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:id="@+id/people_text_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="People"
+                android:textSize="@dimen/_14sdp"
+                android:textColor="@color/black"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/_5sdp"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/peopleLayout_home"
+                android:layout_width="match_parent"
+                app:cardElevation="@dimen/_5sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_12sdp"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/_5sdp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/people_recyclerview_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp"
+                    tools:listitem="@layout/people_items"
+                    android:orientation="horizontal"/>
+
+            </androidx.cardview.widget.CardView>
+
             <com.smarteist.autoimageslider.SliderView
                 android:id="@+id/slider"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
+                android:layout_marginBottom="@dimen/_30sdp"
                 app:sliderAnimationDuration="600"
                 app:sliderAutoCycleDirection="back_and_forth"
                 app:sliderIndicatorAnimationDuration="600"

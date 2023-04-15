@@ -66,6 +66,11 @@
         tools:layout="@layout/fragment_final_payment" />
 
     <fragment
+        android:id="@+id/nav_person_history"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PersonHistory"
+        tools:layout="@layout/fragment_person_history" />
+
+    <fragment
         android:id="@+id/nav_phone_verification"
         android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PhoneVerification"
         tools:layout="@layout/fragment_phone_varification" />

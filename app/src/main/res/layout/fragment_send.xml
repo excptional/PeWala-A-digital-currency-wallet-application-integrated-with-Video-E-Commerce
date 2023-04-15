@@ -14,6 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_50sdp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -28,10 +29,10 @@
                     android:id="@+id/back_btn_send"
                     android:layout_width="@dimen/_35sdp"
                     android:layout_height="@dimen/_35sdp"
-                    android:padding="@dimen/_4sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:background="@null"
                     android:contentDescription="@string/app_name"
+                    android:padding="@dimen/_4sdp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/back_black"
                     tools:ignore="TouchTargetSizeCheck" />
@@ -76,6 +77,27 @@
                     android:textSize="@dimen/_14sdp" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/contacts_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recent contacts" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/contact_recyclerview_send"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/contact_items"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -27,6 +28,10 @@ class DBRepository(private val application: Application) {
     private val transactionDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
     val transactionDetails: LiveData<ArrayList<DocumentSnapshot>>
         get() = transactionDetailsLiveData
+
+    private val contactDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
+    val contactDetails: LiveData<ArrayList<DocumentSnapshot>>
+        get() = contactDetailsLiveData
 
     private val payerDetailsLiveData = MutableLiveData<ArrayList<String>>()
     val payerDetails: LiveData<ArrayList<String>>
@@ -59,6 +64,9 @@ class DBRepository(private val application: Application) {
 
     fun fetchTransactionDetails(uid: String) {
         firebaseDB.collection("Transaction Records").document("Transaction Records").collection(uid)
+            .orderBy(
+                "TId", Query.Direction.DESCENDING
+            )
             .get()
             .addOnSuccessListener { documents ->
                 val list = arrayListOf<DocumentSnapshot>()
@@ -132,6 +140,8 @@ class DBRepository(private val application: Application) {
             "Time" to time,
             "Operation" to "Add",
             "User Id" to "",
+            "User Name" to "",
+            "User Phone" to "",
             "Note" to note
         )
 
@@ -217,6 +227,7 @@ class DBRepository(private val application: Application) {
         senderPhone: String,
         receiverName: String,
         receiverPhone: String,
+        receiverImgUrl: String,
         time: String
     ) {
         val data1 = mapOf(
@@ -246,6 +257,7 @@ class DBRepository(private val application: Application) {
             .set(data1)
             .addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
+                addContacts(receiverName, receiverPhone, receiverImgUrl, senderUid, receiverUid)
             }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
@@ -253,6 +265,54 @@ class DBRepository(private val application: Application) {
         firebaseDB.collection("Transaction Records").document("Transaction Records")
             .collection(receiverUid).document(tId)
             .set(data2)
+            .addOnSuccessListener {
+                dbResponseLiveData.postValue(Response.Success())
+            }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
+
+    private fun addContacts(
+        name: String,
+        phone: String,
+        imgUrl: String,
+        selfUid: String,
+        contactUid: String
+    ) {
+        val data = mapOf(
+            "Name" to name,
+            "Phone No" to phone,
+            "Image Url" to imgUrl,
+            "Uid" to contactUid
+        )
+        firebaseDB.collection("Contacts").document("Contacts").collection(selfUid)
+            .document(contactUid).set(data)
+    }
+
+    fun fetchContacts(uid: String) {
+        firebaseDB.collection("Contacts").document("Contacts").collection(uid).get()
+            .addOnSuccessListener { documents ->
+                val list = arrayListOf<DocumentSnapshot>()
+                for (document in documents) {
+                    list.add(document)
+                }
+                contactDetailsLiveData.postValue(list)
+            }
+    }
+
+    fun sendRedeemRequest(uid: String, amount: String) {
+        val time =
+            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
+        val timeInMillis = System.currentTimeMillis()
+        val data = mapOf(
+            "Amount" to amount,
+            "Request send" to time,
+            "Request approve" to "",
+            "Status" to "Pending"
+        )
+        firebaseDB.collection("Redeem Request").document("Redeem Request").collection(uid)
+            .document(timeInMillis.toString()).set(data)
             .addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
             }

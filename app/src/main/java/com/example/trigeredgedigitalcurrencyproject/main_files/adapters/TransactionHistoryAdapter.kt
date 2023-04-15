@@ -35,6 +35,7 @@ class TransactionHistoryAdapter(
         val currentItem = TransactionHistoryItems[position]
         holder.time.text = currentItem.time
         holder.amount.text = "₹${currentItem.amount}"
+
         holder.name.text = currentItem.name
         when (currentItem.operation) {
             "Send" -> {

@@ -1,16 +1,27 @@
 package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.trigeredgedigitalcurrencyproject.R
+import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
+import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
+import com.example.trigeredgedigitalcurrencyproject.main_files.adapters.PeopleAdapter
+import com.example.trigeredgedigitalcurrencyproject.main_files.items.PeopleItems
 import com.example.trigeredgedigitalcurrencyproject.main_files.slider_files.SliderAdapter
+import com.google.firebase.firestore.DocumentSnapshot
 import com.smarteist.autoimageslider.SliderView
 
 
@@ -24,18 +35,38 @@ class Home : Fragment() {
     private lateinit var receive: LinearLayout
     private lateinit var redeem: LinearLayout
     private lateinit var viewWallet: ImageButton
+    private lateinit var peopleAdapter: PeopleAdapter
+    private var peopleItemsArray = arrayListOf<PeopleItems>()
+    private lateinit var recyclerview: RecyclerView
+    private lateinit var authViewModel: AuthViewModel
+    private lateinit var dbViewModel: DBViewModel
+    private lateinit var peopleText: TextView
+    private lateinit var peopleLayout: CardView
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
+
         viewWallet = view.findViewById(R.id.view_wallet)
         send = view.findViewById(R.id.send_money)
         add = view.findViewById(R.id.add_money)
         receive = view.findViewById(R.id.receive_money)
         redeem = view.findViewById(R.id.redeem_money)
+        recyclerview = view.findViewById(R.id.people_recyclerview_home)
+        peopleLayout = view.findViewById(R.id.peopleLayout_home)
+        peopleText = view.findViewById(R.id.people_text_home)
+
+        peopleAdapter = PeopleAdapter(requireContext(), peopleItemsArray)
+        recyclerview.layoutManager = GridLayoutManager(view.context, 3)
+        recyclerview.setHasFixedSize(true)
+        recyclerview.setItemViewCacheSize(20)
+        recyclerview.adapter = peopleAdapter
 
         sliderView = view.findViewById(R.id.slider)
 
@@ -55,6 +86,8 @@ class Home : Fragment() {
         sliderView.scrollTimeInSec = 3
         sliderView.isAutoCycle = true
         sliderView.startAutoCycle()
+
+        loadData()
 
         val navBuilder = NavOptions.Builder()
         navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)
@@ -87,6 +120,42 @@ class Home : Fragment() {
         }
 
         return view
+    }
+
+    private fun fetchData(list: ArrayList<DocumentSnapshot>) {
+        peopleText.visibility = View.GONE
+        peopleLayout.visibility = View.GONE
+        peopleItemsArray = arrayListOf()
+        for (i in list) {
+            if (i.exists()) {
+                val peopleData = PeopleItems(
+                    i.getString("Name"),
+                    i.getString("Phone No"),
+                    i.getString("Image Url"),
+                    i.getString("Uid")
+                )
+                peopleItemsArray.add(peopleData)
+                peopleText.visibility = View.VISIBLE
+                peopleLayout.visibility = View.VISIBLE
+            }
+        }
+        peopleAdapter.updatePeople(peopleItemsArray)
+    }
+
+    private fun loadData() {
+        authViewModel.userdata.observe(viewLifecycleOwner) {
+            if (it != null) {
+                dbViewModel.fetchContacts(it.uid)
+                dbViewModel.contactDetails.observe(viewLifecycleOwner) {
+                    if (it.isNotEmpty()) {
+                        fetchData(it)
+                    } else {
+                        peopleText.visibility = View.GONE
+                        peopleLayout.visibility = View.GONE
+                    }
+                }
+            }
+        }
     }
 
 }

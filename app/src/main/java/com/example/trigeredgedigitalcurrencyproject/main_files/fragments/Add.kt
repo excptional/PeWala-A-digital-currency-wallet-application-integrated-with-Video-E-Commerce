@@ -62,10 +62,6 @@ class Add : Fragment() {
 
         loadData()
 
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if (it != null) myUser = it
-        }
-
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
         }
@@ -107,10 +103,10 @@ class Add : Fragment() {
             } else if (amount.toDouble() > limit) {
                 whiteView.visibility = View.GONE
                 loaderAdd.visibility = View.GONE
-                amountEditText.error = "You can't add not more than ${limit.toInt()} rupees"
+                amountEditText.error = "You can't add more than ${limit.toInt()} rupees"
                 Toast.makeText(
                     requireContext(),
-                    "You can't add not more than ${limit.toInt()} rupees according to your daily  limit",
+                    "You can't add more than ${limit.toInt()} rupees according to your daily limit",
                     Toast.LENGTH_SHORT
                 ).show()
             } else if (amount.toDouble() + walletBalance.toDouble() > 20000) {

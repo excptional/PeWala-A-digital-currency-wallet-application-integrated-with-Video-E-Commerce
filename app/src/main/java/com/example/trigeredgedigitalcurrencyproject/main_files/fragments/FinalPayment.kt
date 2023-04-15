@@ -56,10 +56,12 @@ class FinalPayment : Fragment() {
     private lateinit var receiverWalletId: String
     private lateinit var receiverName: String
     private lateinit var receiverPhone: String
+    private lateinit var receiverImageUrl: String
     private lateinit var tId: String
     private lateinit var originalPIN: String
     private lateinit var amount: String
     private lateinit var note: String
+    private lateinit var backBtn: ImageButton
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
@@ -78,11 +80,16 @@ class FinalPayment : Fragment() {
         whiteView = view.findViewById(R.id.whiteView_final_pay)
         loaderFinalPay = view.findViewById(R.id.loader_final_pay)
         mainLayout = view.findViewById(R.id.main_layout_final_pay)
+        backBtn = view.findViewById(R.id.back_btn_final_pay)
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
         loadData()
+
+        backBtn.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         walletId.text = requireArguments().getString("walletId").toString()
 
@@ -99,6 +106,7 @@ class FinalPayment : Fragment() {
         dbViewModel.getPayerDetails(receiverWalletId)
         dbViewModel.payerDetails.observe(viewLifecycleOwner) {
             receiverUid = it[3]
+            receiverImageUrl = it[2]
         }
     }
 
@@ -108,21 +116,21 @@ class FinalPayment : Fragment() {
             if (it != null) {
                 senderUid = it.uid
                 dbViewModel.fetchAccountDetails(it.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) {
-                    if (it.isNotEmpty()) {
-                        if(it[6].isEmpty()) {
+                dbViewModel.accDetails.observe(viewLifecycleOwner) { list1 ->
+                    if (list1.isNotEmpty()) {
+                        if(list1[6].isEmpty()) {
                             Toast.makeText(requireContext(), "Set your 4 digit PIN before use this feature", Toast.LENGTH_SHORT).show()
                             requireActivity().onBackPressed()
                         } else {
-                            senderName = it[0]
-                            senderPhone = it[1]
-                            senderWalletId = it[2]
-                            balance = it[5]
-                            originalPIN = it[6]
+                            senderName = list1[0]
+                            senderPhone = list1[1]
+                            senderWalletId = list1[2]
+                            balance = list1[5]
+                            originalPIN = list1[6]
                             dbViewModel.getPayerDetails(requireArguments().getString("walletId").toString())
 
-                            dbViewModel.payerDetails.observe(viewLifecycleOwner) { list ->
-                                if (list.isNullOrEmpty()) {
+                            dbViewModel.payerDetails.observe(viewLifecycleOwner) { list2 ->
+                                if (list2.isNullOrEmpty()) {
                                     whiteView.visibility = View.GONE
                                     loaderFinalPay.visibility = View.GONE
                                     Toast.makeText(
@@ -132,12 +140,12 @@ class FinalPayment : Fragment() {
                                     ).show()
                                     requireActivity().onBackPressed()
                                 } else {
-                                    receiverName = list[0]
-                                    receiverPhone = list[1]
+                                    receiverName = list2[0]
+                                    receiverPhone = list2[1]
                                     receiverWalletId = "$receiverPhone@digital"
-                                    name.text = "Paying ${list[0]}"
-                                    phone.text = "Phone : +91 ${list[1]}"
-                                    Glide.with(this).load(list[2]).into(profileImg)
+                                    name.text = "Paying ${list2[0]}"
+                                    phone.text = "Phone : +91 ${list2[1]}"
+                                    Glide.with(this).load(list2[2]).into(profileImg)
                                     mainLayout.visibility = View.VISIBLE
                                     whiteView.visibility = View.GONE
                                     loaderFinalPay.visibility = View.GONE
@@ -190,7 +198,7 @@ class FinalPayment : Fragment() {
                             loaderFinalPay.visibility = View.GONE
                             Toast.makeText(
                                 requireContext(),
-                                "payment successful",
+                                "Payment successful",
                                 Toast.LENGTH_SHORT
                             ).show()
                             tId = "TID" + System.currentTimeMillis()
@@ -211,7 +219,7 @@ class FinalPayment : Fragment() {
                             bundle.putString("tid", tId)
                             bundle.putString("amount", amount)
                             bundle.putString("time", time)
-                            dbViewModel.addTransaction(amount, note, tId, senderUid, receiverUid, senderName, senderPhone, receiverName, receiverPhone, time)
+                            dbViewModel.addTransaction(amount, note, tId, senderUid, receiverUid, senderName, senderPhone, receiverName, receiverPhone, receiverImageUrl, time)
                             Navigation.findNavController(requireView()).popBackStack()
                             Navigation.findNavController(requireView()).popBackStack()
                             Navigation.findNavController(requireView()).navigate(R.id.nav_success, bundle)

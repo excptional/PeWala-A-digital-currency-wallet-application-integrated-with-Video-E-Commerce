@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginEnd="@dimen/_10sdp"
+    android:layout_marginBottom="@dimen/_10sdp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:src="#BDBCBC"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_gravity="center"
+                android:background="#BDBCBC"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:orientation="horizontal"/>
+
+            <View
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:layout_gravity="center"
+                android:background="#BDBCBC"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:orientation="horizontal"/>
+
+            <View
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:layout_gravity="center"
+                android:background="#BDBCBC"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:orientation="horizontal"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_gravity="center"
+                android:background="#BDBCBC"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_30sdp"
+                android:orientation="horizontal"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_3sdp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/people_body_item"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/icon_people_item"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:src="@drawable/user2"/>
+
+    <TextView
+        android:id="@+id/name_people_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Madhu Das"
+        android:textStyle="bold"
+        android:maxLength="10"
+        android:ellipsize="end"
+        android:textColor="@color/material_black"
+        android:layout_marginTop="@dimen/_3sdp"/>
+
+</LinearLayout>
