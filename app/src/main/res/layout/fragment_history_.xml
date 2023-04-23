@@ -4,35 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/swipe_refresh_layout_redeem_request"
+    android:id="@+id/swipe_refresh_layout_history_"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".main_files.fragments.RedeemRequest">
+    tools:context=".main_files.fragments.History_">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/nothingFound_redeem_request"
+            android:id="@+id/nothingFound_history_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No redeem request found"
+            android:text="No history found"
             android:visibility="gone"
             android:layout_centerInParent="true"/>
 
         <LinearLayout
-            android:id="@+id/mainLayout_redeem_request"
+            android:id="@+id/mainLayout_history_"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Redeem requests"
-                android:textStyle="bold"
-                android:layout_margin="@dimen/_10sdp"/>
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/back_btn_history_"
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:padding="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:background="@null"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/back_black"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Transaction History"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -40,16 +62,15 @@
                 android:background="#CACACA"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_redeem_request"
+                android:id="@+id/recyclerView_history_"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_50sdp"
-                tools:listitem="@layout/redeem_items"/>
+                tools:listitem="@layout/transaction_history_items"/>
 
         </LinearLayout>
 
         <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/redeem_request_shimmer"
+            android:id="@+id/history_shimmer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -70,7 +91,6 @@
                 <include layout="@layout/history_shimmer" />
                 <include layout="@layout/history_shimmer" />
                 <include layout="@layout/history_shimmer" />
-
 
             </LinearLayout>
 

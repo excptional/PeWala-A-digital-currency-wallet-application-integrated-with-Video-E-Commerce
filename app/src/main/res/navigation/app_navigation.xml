@@ -47,8 +47,14 @@
         tools:layout="@layout/fragment_history" />
 
     <fragment
+        android:id="@+id/nav_history_"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.History_"
+        tools:layout="@layout/fragment_history_" />
+
+    <fragment
         android:id="@+id/nav_redeem_request"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.RedeemRequest"/>
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.RedeemRequest"
+        tools:layout="@layout/fragment_redeem_request"/>
 
     <fragment
         android:id="@+id/nav_redeem_confirmation"

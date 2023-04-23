@@ -1,10 +1,18 @@
 package com.example.trigeredgedigitalcurrencyproject.main_files
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.provider.Settings
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -12,12 +20,16 @@ import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.auth.AuthenticationActivity
 import com.example.trigeredgedigitalcurrencyproject.databinding.ActivityMainBinding
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
-
+import java.util.concurrent.Executor
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var authViewModel: AuthViewModel
     private lateinit var navController: NavController
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
+    private lateinit var executor: Executor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +52,47 @@ class MainActivity : AppCompatActivity() {
         binding.qrScanner.setOnClickListener {
             navController.navigate(R.id.nav_qr_scanner)
         }
+
+        checkDeviceHasBiometric()
+        executor = ContextCompat.getMainExecutor(this)
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(
+                    errorCode: Int,
+                    errString: CharSequence
+                ) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(this@MainActivity, "Application is closing", Toast.LENGTH_SHORT).show()
+                    Handler().postDelayed({
+                        finish()
+                        exitProcess(-1)
+                    }, 1000)
+                }
+
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult
+                ) {
+                    super.onAuthenticationSucceeded(result)
+                    Toast.makeText(this@MainActivity, "Authentication succeed", Toast.LENGTH_SHORT).show()
+
+                }
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(
+                        this@MainActivity, "Authentication failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Unlock Trigredge")
+            .setSubtitle("Enter phone screen lock pattern, PIN, password or fingerprint")
+            .setDeviceCredentialAllowed(true)
+            .setConfirmationRequired(true)
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if((destination.id == R.id.nav_home) or (destination.id == R.id.nav_account) or (destination.id == R.id.nav_history) or (destination.id == R.id.nav_redeem_request)) {
@@ -78,6 +131,37 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             false
+        }
+    }
+
+    @SuppressLint("SwitchIntDef")
+    private fun checkDeviceHasBiometric() {
+        val biometricManager = BiometricManager.from(this)
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
+            BiometricManager.BIOMETRIC_SUCCESS ->
+                Toast.makeText(this, "App can authenticate using biometrics.", Toast.LENGTH_SHORT)
+                    .show()
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+                Toast.makeText(
+                    this,
+                    "No biometric features available on this device.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {}
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                            putExtra(
+                                Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
+                                BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+                            )
+                        }
+                    }
+                } else {
+                    TODO("VERSION.SDK_INT < R")
+                }
+            }
         }
     }
 

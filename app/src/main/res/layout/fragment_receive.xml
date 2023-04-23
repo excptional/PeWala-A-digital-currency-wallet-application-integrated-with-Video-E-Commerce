@@ -20,8 +20,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -147,7 +147,7 @@
             android:layout_width="@dimen/_130sdp"
             android:layout_height="@dimen/_35sdp"
             android:layout_marginBottom="@dimen/_10sdp"
-            app:cardCornerRadius="@dimen/_25sdp"
+            app:cardCornerRadius="@dimen/_10sdp"
             app:cardBackgroundColor="@color/material_black"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"

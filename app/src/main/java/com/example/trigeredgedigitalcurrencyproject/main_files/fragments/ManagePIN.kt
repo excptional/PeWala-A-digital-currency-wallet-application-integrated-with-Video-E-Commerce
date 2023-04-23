@@ -26,7 +26,6 @@ import com.google.firebase.auth.*
 import retrofit2.Call
 import retrofit2.Callback
 
-
 class ManagePIN : Fragment() {
 
     private lateinit var sessionId: String

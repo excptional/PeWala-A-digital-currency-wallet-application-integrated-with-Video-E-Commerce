@@ -136,7 +136,7 @@ class Account : Fragment() {
         }
 
         viewHistory.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.nav_history, null, navBuilder.build())
+            Navigation.findNavController(view).navigate(R.id.nav_history_, null, navBuilder.build())
         }
 
         viewQR.setOnClickListener {

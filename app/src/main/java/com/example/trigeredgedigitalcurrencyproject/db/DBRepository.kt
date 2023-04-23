@@ -4,7 +4,6 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
@@ -28,6 +27,10 @@ class DBRepository(private val application: Application) {
     private val transactionDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
     val transactionDetails: LiveData<ArrayList<DocumentSnapshot>>
         get() = transactionDetailsLiveData
+
+    private val redeemRequestDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
+    val redeemRequestDetails: LiveData<ArrayList<DocumentSnapshot>>
+        get() = redeemRequestDetailsLiveData
 
     private val contactDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
     val contactDetails: LiveData<ArrayList<DocumentSnapshot>>
@@ -309,15 +312,38 @@ class DBRepository(private val application: Application) {
             "Amount" to amount,
             "Request send" to time,
             "Request approve" to "",
-            "Status" to "Pending"
+            "Status" to "Pending",
+            "Order" to System.currentTimeMillis()
         )
         firebaseDB.collection("Redeem Request").document("Redeem Request").collection(uid)
             .document(timeInMillis.toString()).set(data)
             .addOnSuccessListener {
+                redeem(uid, amount)
                 dbResponseLiveData.postValue(Response.Success())
             }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
+
+    private fun redeem(uid: String, amount: String) {
+        val doc = firebaseDB.collection("Users").document(uid)
+        doc.get().addOnSuccessListener {
+            if (it.exists()) {
+                val updatedAmount = it.getString("Balance")!!.toDouble() - amount.toDouble()
+                doc.update("Balance", updatedAmount.toInt().toString())
+            }
+        }
+    }
+
+    fun fetchRedeemRequest(uid: String) {
+        firebaseDB.collection("Redeem Request").document("Redeem Request").collection(uid).orderBy("Order", Query.Direction.DESCENDING).get()
+            .addOnSuccessListener { documents ->
+                val list = arrayListOf<DocumentSnapshot>()
+                for (document in documents) {
+                    list.add(document)
+                }
+                redeemRequestDetailsLiveData.postValue(list)
             }
     }
 
