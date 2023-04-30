@@ -53,6 +53,10 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.nav_qr_scanner)
         }
 
+        if(intent.getStringExtra("fragmentToLoad") == "Send") {
+            navController.navigate(R.id.nav_history_)
+        }
+
         checkDeviceHasBiometric()
         executor = ContextCompat.getMainExecutor(this)
         biometricPrompt = BiometricPrompt(this, executor,

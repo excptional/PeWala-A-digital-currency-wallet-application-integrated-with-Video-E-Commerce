@@ -41,8 +41,8 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
         dbRepository.checkDailyAddAmountLimit(user)
     }
 
-    fun addAddMoneyRecords(amount: String, note: String, tId: String, user: FirebaseUser) {
-        dbRepository.addAddMoneyRecords(amount, note, tId, user)
+    fun addMoney(amount: String, note: String, tId: String, uid: String) {
+        dbRepository.addMoney(amount, note, tId, uid)
     }
 
     fun getPayerDetails(id: String) {

@@ -2,9 +2,14 @@ package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +24,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
@@ -27,6 +34,7 @@ import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.Response
+import com.example.trigeredgedigitalcurrencyproject.main_files.MainActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.annotations.concurrent.Background
 import de.hdodenhof.circleimageview.CircleImageView
@@ -237,7 +245,6 @@ class FinalPayment : Fragment() {
                     }
                 }
             }
-
         }
 
         dialog.show()

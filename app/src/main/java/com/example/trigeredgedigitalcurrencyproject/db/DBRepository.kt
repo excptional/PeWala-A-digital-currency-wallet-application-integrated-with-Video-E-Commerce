@@ -1,5 +1,6 @@
 package com.example.trigeredgedigitalcurrencyproject.db
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -128,7 +129,7 @@ class DBRepository(private val application: Application) {
             }
     }
 
-    fun addAddMoneyRecords(amount: String, note: String, tId: String, user: FirebaseUser) {
+    private fun addAddMoneyRecords(amount: String, note: String, tId: String, uid: String) {
         val time =
             SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
         val date = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault()).format(Date())
@@ -148,12 +149,30 @@ class DBRepository(private val application: Application) {
             "Note" to note
         )
 
-        firebaseDB.collection("Add Money Records").document(user.uid).collection(date)
+        firebaseDB.collection("Add Money Records").document(uid).collection(date)
             .document(tId)
             .set(data1)
-        firebaseDB.collection("Transaction Records").document(user.uid).collection(date)
+        firebaseDB.collection("Transaction Records").document(uid).collection(date)
             .document(tId).set(data2)
 
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    fun addMoney(amount: String, note: String, tId: String, uid: String) {
+        val doc = firebaseDB.collection("Users").document(uid)
+            doc.get().addOnSuccessListener {
+            if (it.exists()) {
+                val amountDouble = amount.toDouble()
+                val balance = it.getString("Balance")!!.toDouble()
+                val finalBalance = balance + amountDouble
+                doc.update("Balance", finalBalance.toInt().toString())
+                addAddMoneyRecords(amount, note, tId, uid)
+                dbResponseLiveData.postValue(Response.Success())
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
     }
 
     fun getPayerDetails(id: String) {

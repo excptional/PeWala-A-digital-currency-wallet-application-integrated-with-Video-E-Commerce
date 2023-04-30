@@ -2,9 +2,15 @@ package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +21,14 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.UPIPayment
+import com.example.trigeredgedigitalcurrencyproject.main_files.MainActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
 
@@ -41,6 +49,7 @@ class Add : Fragment() {
     private var limit = 0.0
     private lateinit var amount: String
     private lateinit var tId: String
+    private lateinit var msg: String
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -120,8 +129,10 @@ class Add : Fragment() {
                 ).show()
             } else {
                 tId = "TID${System.currentTimeMillis()}"
+                msg = "₹" + amount + " added in your smart wallet. " +
+                        "\nTransaction ID : " + tId
                 val payment = UPIPayment(
-                    vpa = "tathagatabn-4@okicici",
+                    vpa = "bd27official@okhdfcbank",
                     name = "Trigredge",
                     description = "Adding money to your Trigredge wallet",
                     transactionId = tId,
@@ -155,21 +166,22 @@ class Add : Fragment() {
         return Intent.createChooser(intent, "Pay with")
     }
 
-
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == UPI_PAYMENT_REQUEST_CODE) {
             if ((resultCode == RESULT_OK) and (resultCode == 123)) {
                 Toast.makeText(requireContext(), "Added money successfully", Toast.LENGTH_SHORT).show()
-                dbViewModel.addAddMoneyRecords(amount, "", tId, myUser)
+                dbViewModel.addMoney(amount, "", tId, myUser.uid)
                 amountEditText.text = null
+                Handler().postDelayed({
+                    sendNotification(requireContext(), "Money added successfully", msg)
+                }, 2000)
             } else {
                 Toast.makeText(requireContext(),"Payment failed or cancel, try again", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 
     @SuppressLint("SetTextI18n")
     private fun loadData() {
@@ -196,5 +208,42 @@ class Add : Fragment() {
                 }
             }
         }
+    }
+
+    private fun sendNotification(context: Context, title: String, message: String) {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val intent = Intent(requireContext(), MainActivity::class.java).apply {
+            putExtra("fragmentToLoad", "Send")
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            requireContext(),
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // Create a notification channel (required for Android Oreo and above)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "default_channel_id"
+            val channelName = "Default Channel"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(channelId, channelName, importance)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        // Build the notification
+        val notificationBuilder = NotificationCompat.Builder(context, "default_channel_id")
+            .setSmallIcon(R.drawable.notification)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        // Show the notification
+        notificationManager.notify(0, notificationBuilder.build())
     }
 }
