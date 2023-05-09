@@ -11,6 +11,8 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import org.mindrot.jbcrypt.BCrypt
+import java.security.SecureRandom
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -195,11 +197,13 @@ class DBRepository(private val application: Application) {
     }
 
     fun changePIN(uid: String, PIN: String) {
+        val salt = BCrypt.gensalt(10, SecureRandom())
+        val hashedPIN = BCrypt.hashpw(PIN, salt)
         val doc = firebaseDB.collection("Users").document(uid)
         doc.get().addOnSuccessListener {
             if (it.exists()) {
                 dbResponseLiveData.postValue(Response.Success())
-                doc.update("PIN", PIN)
+                doc.update("PIN", hashedPIN)
             }
         }
             .addOnFailureListener {

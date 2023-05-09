@@ -21,6 +21,7 @@ import com.example.trigeredgedigitalcurrencyproject.db.Response
 import com.example.trigeredgedigitalcurrencyproject.db.UPIPayment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
+import org.mindrot.jbcrypt.BCrypt
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -62,13 +63,10 @@ class Redeem : Fragment() {
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
         }
-
         redeemMoney.setOnClickListener {
-
             whiteView.visibility = View.VISIBLE
             loaderRedeem.visibility = View.VISIBLE
             amount = amountEditText.text.toString()
-
             if (amount.isEmpty()) {
                 whiteView.visibility = View.GONE
                 loaderRedeem.visibility = View.GONE
@@ -134,7 +132,7 @@ class Redeem : Fragment() {
                 Toast.makeText(requireContext(), "Enter valid PIN", Toast.LENGTH_SHORT).show()
                 whiteView.visibility = View.GONE
                 loaderRedeem.visibility = View.GONE
-            } else if(originalPIN != pin) {
+            } else if(!BCrypt.checkpw(pin, originalPIN)) {
                 Toast.makeText(requireContext(), "Entered wrong PIN, try again", Toast.LENGTH_SHORT).show()
                 pinEditText.text = null
                 whiteView.visibility = View.GONE
@@ -160,9 +158,7 @@ class Redeem : Fragment() {
                     }
                 }
             }
-
         }
-
         dialog.show()
     }
 
@@ -190,5 +186,4 @@ class Redeem : Fragment() {
             }
         }
     }
-
 }

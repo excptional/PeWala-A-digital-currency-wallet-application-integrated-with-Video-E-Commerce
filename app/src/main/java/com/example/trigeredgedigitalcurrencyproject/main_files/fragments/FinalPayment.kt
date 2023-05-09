@@ -38,6 +38,7 @@ import com.example.trigeredgedigitalcurrencyproject.main_files.MainActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.annotations.concurrent.Background
 import de.hdodenhof.circleimageview.CircleImageView
+import org.mindrot.jbcrypt.BCrypt
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -192,7 +193,7 @@ class FinalPayment : Fragment() {
                 Toast.makeText(requireContext(), "Enter valid PIN", Toast.LENGTH_SHORT).show()
                 whiteView.visibility = View.GONE
                 loaderFinalPay.visibility = View.GONE
-            } else if(originalPIN != pin) {
+            } else if(!BCrypt.checkpw(pin, originalPIN)) {
                 Toast.makeText(requireContext(), "Entered wrong PIN, try again", Toast.LENGTH_SHORT).show()
                 pinEditText.text = null
                 whiteView.visibility = View.GONE

@@ -9,14 +9,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.type.Color
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
-import io.github.g0dkar.qrcode.QRCode
-import io.github.g0dkar.qrcode.render.Colors
+import org.mindrot.jbcrypt.BCrypt
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.security.SecureRandom
 
 class AuthRepository(private val application: Application) {
 
@@ -54,9 +53,11 @@ class AuthRepository(private val application: Application) {
         aadharNo: String,
         password: String
     ) {
+        val salt = BCrypt.gensalt(10, SecureRandom())
+        val hashedPassword = BCrypt.hashpw(password, salt)
         val data = mapOf(
             "Name" to name,
-            "Password" to password,
+            "Password" to hashedPassword,
             "Phone" to phone,
             "Card Id" to "$phone@digital",
             "Aadhar" to aadharNo,
