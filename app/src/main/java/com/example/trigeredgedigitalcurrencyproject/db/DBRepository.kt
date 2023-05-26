@@ -151,18 +151,18 @@ class DBRepository(private val application: Application) {
             "Note" to note
         )
 
-        firebaseDB.collection("Add Money Records").document(uid).collection(date)
-            .document(tId)
-            .set(data1)
-        firebaseDB.collection("Transaction Records").document(uid).collection(date)
-            .document(tId).set(data2)
+        firebaseDB.collection("Add Money Records").document("Add Money Records")
+            .collection(uid).document(tId).set(data1)
+
+        firebaseDB.collection("Transaction Records").document("Transaction Records")
+            .collection(uid).document(tId).set(data2)
 
     }
 
     @SuppressLint("SuspiciousIndentation")
     fun addMoney(amount: String, note: String, tId: String, uid: String) {
         val doc = firebaseDB.collection("Users").document(uid)
-            doc.get().addOnSuccessListener {
+        doc.get().addOnSuccessListener {
             if (it.exists()) {
                 val amountDouble = amount.toDouble()
                 val balance = it.getString("Balance")!!.toDouble()
@@ -360,7 +360,8 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchRedeemRequest(uid: String) {
-        firebaseDB.collection("Redeem Request").document("Redeem Request").collection(uid).orderBy("Order", Query.Direction.DESCENDING).get()
+        firebaseDB.collection("Redeem Request").document("Redeem Request").collection(uid)
+            .orderBy("Order", Query.Direction.DESCENDING).get()
             .addOnSuccessListener { documents ->
                 val list = arrayListOf<DocumentSnapshot>()
                 for (document in documents) {

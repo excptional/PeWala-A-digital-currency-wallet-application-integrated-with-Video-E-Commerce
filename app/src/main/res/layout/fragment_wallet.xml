@@ -35,13 +35,13 @@
                         android:id="@+id/back_btn_wallet"
                         android:layout_width="@dimen/_35sdp"
                         android:layout_height="@dimen/_35sdp"
-                        android:padding="@dimen/_4sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:background="@null"
                         android:contentDescription="@string/app_name"
+                        android:padding="@dimen/_4sdp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/back_black"
-                        tools:ignore="TouchTargetSizeCheck"/>
+                        tools:ignore="TouchTargetSizeCheck" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/smart_wallet"/>
+                    android:src="@drawable/smart_wallet" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -78,16 +78,16 @@
                         <com.airbnb.lottie.LottieAnimationView
                             android:layout_width="@dimen/_60sdp"
                             android:layout_height="@dimen/_60sdp"
-                            app:lottie_rawRes="@raw/wallet"
-                            android:scaleX="4"
-                            android:scaleY="4"
-                            app:lottie_autoPlay="true"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_5sdp"
-                            android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_marginTop="@dimen/_10sdp"
-                            app:lottie_loop="true"/>
+                            android:layout_marginEnd="@dimen/_5sdp"
+                            android:scaleX="4"
+                            android:scaleY="4"
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true"
+                            app:lottie_rawRes="@raw/wallet" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -95,8 +95,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_5sdp"
-                            android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_marginTop="@dimen/_5sdp"
+                            android:layout_marginEnd="@dimen/_5sdp"
                             android:orientation="vertical">
 
                             <TextView
@@ -112,11 +112,11 @@
                                 android:id="@+id/balance_wallet"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="end"
                                 android:text="₹10000"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_32sdp"
-                                android:textStyle="bold"
-                                android:layout_gravity="end"/>
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -130,14 +130,14 @@
                     android:layout_height="@dimen/_60sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
-                    app:cardUseCompatPadding="true"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
                     app:cardBackgroundColor="#1E88E5"
                     app:cardCornerRadius="@dimen/_5sdp"
-                    app:cardElevation="@dimen/_5sdp">
+                    app:cardElevation="@dimen/_5sdp"
+                    app:cardUseCompatPadding="true">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -149,8 +149,8 @@
                         <ImageView
                             android:layout_width="@dimen/_25sdp"
                             android:layout_height="@dimen/_25sdp"
-                            android:layout_marginEnd="@dimen/_10sdp"
                             android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_marginEnd="@dimen/_10sdp"
                             android:background="@null"
                             android:scaleType="centerCrop"
                             android:src="@drawable/add_wallet" />
@@ -174,14 +174,14 @@
                     android:layout_height="@dimen/_60sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
-                    app:cardUseCompatPadding="true"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
                     app:cardBackgroundColor="#1E88E5"
                     app:cardCornerRadius="@dimen/_5sdp"
-                    app:cardElevation="@dimen/_5sdp">
+                    app:cardElevation="@dimen/_5sdp"
+                    app:cardUseCompatPadding="true">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -193,8 +193,8 @@
                         <ImageView
                             android:layout_width="@dimen/_25sdp"
                             android:layout_height="@dimen/_25sdp"
-                            android:layout_marginEnd="@dimen/_10sdp"
                             android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_marginEnd="@dimen/_10sdp"
                             android:background="@null"
                             android:scaleType="centerCrop"
                             android:src="@drawable/mobile_banking" />
@@ -212,24 +212,39 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/title_pending_request_wallet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:visibility="gone"
-                    android:text="Pending redeem requests"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/pending_request_recyclerview_wallet"
+                <LinearLayout
+                    android:id="@+id/grp_pending_request_wallet"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    tools:listitem="@layout/pending_redeem_request"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:text="Pending redeem requests"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#CACACA" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/pending_request_recyclerview_wallet"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        tools:listitem="@layout/pending_redeem_request" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#CACACA" />
+                </LinearLayout>
 
             </LinearLayout>
 

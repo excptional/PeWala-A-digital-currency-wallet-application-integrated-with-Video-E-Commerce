@@ -198,7 +198,6 @@
                 android:textSize="@dimen/_14sdp"
                 android:textColor="@color/black"
                 android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_5sdp"
                 android:visibility="gone"
                 android:layout_marginBottom="@dimen/_5sdp"/>
 
@@ -224,11 +223,33 @@
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/shop_home"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_190sdp"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:cardCornerRadius="@dimen/_10sdp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/you_can_shop_here"/>
+
+            </androidx.cardview.widget.CardView>
+
             <com.smarteist.autoimageslider.SliderView
                 android:id="@+id/slider"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
                 android:layout_marginBottom="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 app:sliderAnimationDuration="600"
                 app:sliderAutoCycleDirection="back_and_forth"
                 app:sliderIndicatorAnimationDuration="600"

@@ -132,12 +132,20 @@ class Redeem : Fragment() {
                 Toast.makeText(requireContext(), "Enter valid PIN", Toast.LENGTH_SHORT).show()
                 whiteView.visibility = View.GONE
                 loaderRedeem.visibility = View.GONE
-            } else if(!BCrypt.checkpw(pin, originalPIN)) {
-                Toast.makeText(requireContext(), "Entered wrong PIN, try again", Toast.LENGTH_SHORT).show()
+            } else if (pin != originalPIN) {
+                Toast.makeText(requireContext(), "Entered wrong PIN, try again", Toast.LENGTH_SHORT)
+                    .show()
                 pinEditText.text = null
                 whiteView.visibility = View.GONE
                 loaderRedeem.visibility = View.GONE
-            } else {
+            }
+//          else if(!BCrypt.checkpw(pin, originalPIN)) {
+//                Toast.makeText(requireContext(), "Entered wrong PIN, try again", Toast.LENGTH_SHORT).show()
+//                pinEditText.text = null
+//                whiteView.visibility = View.GONE
+//                loaderRedeem.visibility = View.GONE
+//          }
+            else {
                 dbViewModel.sendRedeemRequest(myUser.uid, amount)
                 dbViewModel.dbResponse.observe(viewLifecycleOwner) {
                     when(it) {

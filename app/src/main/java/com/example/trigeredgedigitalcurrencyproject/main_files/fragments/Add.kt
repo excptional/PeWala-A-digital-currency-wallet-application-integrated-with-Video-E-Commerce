@@ -1,6 +1,8 @@
 package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
+import android.R.attr
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -11,17 +13,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.example.trigeredgedigitalcurrencyproject.R
@@ -31,6 +32,8 @@ import com.example.trigeredgedigitalcurrencyproject.db.UPIPayment
 import com.example.trigeredgedigitalcurrencyproject.main_files.MainActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
+import java.util.Locale
+
 
 class Add : Fragment() {
 
@@ -170,15 +173,27 @@ class Add : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == UPI_PAYMENT_REQUEST_CODE) {
-            if ((resultCode == RESULT_OK) and (resultCode == 123)) {
-                Toast.makeText(requireContext(), "Added money successfully", Toast.LENGTH_SHORT).show()
-                dbViewModel.addMoney(amount, "", tId, myUser.uid)
-                amountEditText.text = null
-                Handler().postDelayed({
-                    sendNotification(requireContext(), "Money added successfully", msg)
-                }, 2000)
-            } else {
-                Toast.makeText(requireContext(),"Payment failed or cancel, try again", Toast.LENGTH_SHORT).show()
+            when (resultCode) {
+                RESULT_OK -> {
+                    val response = data?.getStringExtra("response")
+                    if (response != null && response.toLowerCase(Locale.ROOT).contains("success")) {
+                        Toast.makeText(requireContext(), "Added money successfully", Toast.LENGTH_SHORT).show()
+                        dbViewModel.addMoney(amount, "", tId, myUser.uid)
+                        amountEditText.text = null
+                        Handler().postDelayed({
+                            sendNotification(requireContext(), "Money added successfully", msg)
+                        }, 2000)
+                    } else {
+                        Toast.makeText(requireContext(), "UPI Payment failed", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+                RESULT_CANCELED -> {
+                    Toast.makeText(requireContext(), "UPI Payment cancelled", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(requireContext(), "UPI Payment failed", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

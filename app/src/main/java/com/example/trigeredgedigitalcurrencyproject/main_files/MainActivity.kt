@@ -47,7 +47,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         window.statusBarColor = Color.parseColor("#4FC4D9E6")
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
 
         binding.qrScanner.setOnClickListener {
             navController.navigate(R.id.nav_qr_scanner)
@@ -78,7 +80,6 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     super.onAuthenticationSucceeded(result)
                     Toast.makeText(this@MainActivity, "Authentication succeed", Toast.LENGTH_SHORT).show()
-
                 }
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
@@ -168,5 +169,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }

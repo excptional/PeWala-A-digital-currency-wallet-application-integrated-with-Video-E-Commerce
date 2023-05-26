@@ -44,7 +44,7 @@ class Wallet : Fragment() {
     private lateinit var mainLayout: LinearLayout
     private lateinit var name: String
     private lateinit var phone: String
-    private lateinit var titlePendingRequest: TextView
+    private lateinit var grpPendingRequest: LinearLayout
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -67,7 +67,7 @@ class Wallet : Fragment() {
         refreshLayout = view.findViewById(R.id.swipe_refresh_layout_wallet)
         mainLayout = view.findViewById(R.id.main_layout_wallet)
         recyclerview = view.findViewById(R.id.pending_request_recyclerview_wallet)
-        titlePendingRequest = view.findViewById(R.id.title_pending_request_wallet)
+        grpPendingRequest = view.findViewById(R.id.grp_pending_request_wallet)
 
         redeemAdapter = PendingRequestAdapter(requireContext(), redeemItemsArray)
         recyclerview.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
@@ -118,7 +118,7 @@ class Wallet : Fragment() {
                             else {
                                 recyclerview.visibility = View.GONE
                                 refreshLayout.isRefreshing = false
-                                titlePendingRequest.visibility = View.GONE
+                                grpPendingRequest.visibility = View.GONE
                             }
                         }
                     } else {
@@ -147,7 +147,7 @@ class Wallet : Fragment() {
         }
         redeemAdapter.updateRedeemItems(redeemItemsArray)
         recyclerview.visibility = View.VISIBLE
-        titlePendingRequest.visibility =View.VISIBLE
+        grpPendingRequest.visibility =View.VISIBLE
         refreshLayout.isRefreshing = false
     }
 

@@ -113,16 +113,17 @@ class History : Fragment() {
                         i.getString("Amount")
                     )
                     transactionHistoryItemsArray.add(transactionData)
+                } else {
+                    val transactionData = TransactionHistoryItems(
+                        i.getString("User Name"),
+                        i.getString("User Phone"),
+                        i.getString("TId"),
+                        i.getString("Operation"),
+                        i.getString("Time"),
+                        i.getString("Amount")
+                    )
+                    transactionHistoryItemsArray.add(transactionData)
                 }
-                val transactionData = TransactionHistoryItems(
-                    i.getString("User Name"),
-                    i.getString("User Phone"),
-                    i.getString("TId"),
-                    i.getString("Operation"),
-                    i.getString("Time"),
-                    i.getString("Amount")
-                )
-                transactionHistoryItemsArray.add(transactionData)
             }
         }
         transactionHistoryAdapter.updateTransactionHistory(transactionHistoryItemsArray)

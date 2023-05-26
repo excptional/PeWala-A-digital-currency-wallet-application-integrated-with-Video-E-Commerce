@@ -47,6 +47,11 @@
         tools:layout="@layout/fragment_history" />
 
     <fragment
+        android:id="@+id/nav_shop"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Shop"
+        tools:layout="@layout/fragment_shop" />
+
+    <fragment
         android:id="@+id/nav_history_"
         android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.History_"
         tools:layout="@layout/fragment_history_" />
@@ -95,5 +100,10 @@
         android:id="@+id/nav_fail"
         android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PaymentFail"
         tools:layout="@layout/fragment_payment_fail" />
+
+    <fragment
+        android:id="@+id/nav_add_product"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.AddProduct"
+        tools:layout="@layout/fragment_add_product" />
 
 </navigation>

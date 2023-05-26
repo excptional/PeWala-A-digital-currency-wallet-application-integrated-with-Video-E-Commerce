@@ -127,8 +127,12 @@ class FinalPayment : Fragment() {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list1 ->
                     if (list1.isNotEmpty()) {
-                        if(list1[6].isEmpty()) {
-                            Toast.makeText(requireContext(), "Set your 4 digit PIN before use this feature", Toast.LENGTH_SHORT).show()
+                        if (list1[6].isEmpty()) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Set your 4 digit PIN before use this feature",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             requireActivity().onBackPressed()
                         } else {
                             senderName = list1[0]
@@ -136,7 +140,9 @@ class FinalPayment : Fragment() {
                             senderWalletId = list1[2]
                             balance = list1[5]
                             originalPIN = list1[6]
-                            dbViewModel.getPayerDetails(requireArguments().getString("walletId").toString())
+                            dbViewModel.getPayerDetails(
+                                requireArguments().getString("walletId").toString()
+                            )
 
                             dbViewModel.payerDetails.observe(viewLifecycleOwner) { list2 ->
                                 if (list2.isNullOrEmpty()) {
@@ -176,7 +182,10 @@ class FinalPayment : Fragment() {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setContentView(R.layout.enter_pin_dialog)
 
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
 
         val pinEditText: EditText = dialog.findViewById(R.id.pinEditText)
         val submit: CardView = dialog.findViewById(R.id.submit_btn_PIN_dialog)
@@ -193,12 +202,20 @@ class FinalPayment : Fragment() {
                 Toast.makeText(requireContext(), "Enter valid PIN", Toast.LENGTH_SHORT).show()
                 whiteView.visibility = View.GONE
                 loaderFinalPay.visibility = View.GONE
-            } else if(!BCrypt.checkpw(pin, originalPIN)) {
-                Toast.makeText(requireContext(), "Entered wrong PIN, try again", Toast.LENGTH_SHORT).show()
+            } else if (pin != originalPIN) {
+                Toast.makeText(requireContext(), "Entered wrong PIN, try again", Toast.LENGTH_SHORT)
+                    .show()
                 pinEditText.text = null
                 whiteView.visibility = View.GONE
                 loaderFinalPay.visibility = View.GONE
-            } else {
+            }
+//          else if(!BCrypt.checkpw(pin, originalPIN)) {
+//                Toast.makeText(requireContext(), "Entered wrong PIN, try again", Toast.LENGTH_SHORT).show()
+//                pinEditText.text = null
+//                whiteView.visibility = View.GONE
+//                loaderFinalPay.visibility = View.GONE
+//          }
+            else {
                 dbViewModel.payment(senderUid, receiverUid, amount, note)
                 dbViewModel.dbResponse.observe(viewLifecycleOwner) {
                     when (it) {
@@ -228,12 +245,26 @@ class FinalPayment : Fragment() {
                             bundle.putString("tid", tId)
                             bundle.putString("amount", amount)
                             bundle.putString("time", time)
-                            dbViewModel.addTransaction(amount, note, tId, senderUid, receiverUid, senderName, senderPhone, receiverName, receiverPhone, receiverImageUrl, time)
+                            dbViewModel.addTransaction(
+                                amount,
+                                note,
+                                tId,
+                                senderUid,
+                                receiverUid,
+                                senderName,
+                                senderPhone,
+                                receiverName,
+                                receiverPhone,
+                                receiverImageUrl,
+                                time
+                            )
                             Navigation.findNavController(requireView()).popBackStack()
                             Navigation.findNavController(requireView()).popBackStack()
-                            Navigation.findNavController(requireView()).navigate(R.id.nav_success, bundle)
+                            Navigation.findNavController(requireView())
+                                .navigate(R.id.nav_success, bundle)
                             dialog.hide()
                         }
+
                         is Response.Failure -> {
                             whiteView.visibility = View.GONE
                             loaderFinalPay.visibility = View.GONE

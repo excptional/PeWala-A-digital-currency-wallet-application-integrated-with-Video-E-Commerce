@@ -42,6 +42,7 @@ class Home : Fragment() {
     private lateinit var dbViewModel: DBViewModel
     private lateinit var peopleText: TextView
     private lateinit var peopleLayout: CardView
+    private lateinit var shop: CardView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -61,6 +62,7 @@ class Home : Fragment() {
         recyclerview = view.findViewById(R.id.people_recyclerview_home)
         peopleLayout = view.findViewById(R.id.peopleLayout_home)
         peopleText = view.findViewById(R.id.people_text_home)
+        shop = view.findViewById(R.id.shop_home)
 
         peopleAdapter = PeopleAdapter(requireContext(), peopleItemsArray)
         recyclerview.layoutManager = GridLayoutManager(view.context, 3)
@@ -93,6 +95,10 @@ class Home : Fragment() {
         navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)
             .setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out)
 
+        shop.setOnClickListener {
+            requireFragmentManager().popBackStack()
+            Navigation.findNavController(view).navigate(R.id.nav_shop, null, navBuilder.build())
+        }
 
         add.setOnClickListener {
             requireFragmentManager().popBackStack()
