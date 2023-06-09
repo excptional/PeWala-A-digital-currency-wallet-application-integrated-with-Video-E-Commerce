@@ -106,4 +106,14 @@
         android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.AddProduct"
         tools:layout="@layout/fragment_add_product" />
 
+    <fragment
+        android:id="@+id/nav_products"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Products"
+        tools:layout="@layout/fragment_products" />
+
+    <fragment
+        android:id="@+id/nav_order_place"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.OrderPlace"
+        tools:layout="@layout/fragment_order_place" />
+
 </navigation>

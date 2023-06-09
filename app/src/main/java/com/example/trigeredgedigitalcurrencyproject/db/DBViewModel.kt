@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 
-class DBViewModel(application: Application): AndroidViewModel(application) {
+class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dbRepository: DBRepository = DBRepository(application)
     val dbResponse: LiveData<Response<String>>
@@ -24,7 +24,8 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
         get() = dbRepository.payerDetails
     val dailyAddLimit: LiveData<Double>
         get() = dbRepository.limitData
-
+    val productsData: LiveData<MutableList<DocumentSnapshot>>
+        get() = dbRepository.productData
     fun fetchAccountDetails(uid: String) {
         dbRepository.fetchAccountDetails(uid)
     }
@@ -70,7 +71,19 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
         receiverImg: String,
         time: String
     ) {
-        dbRepository.addTransaction(amount, note, tId, senderUid, receiverUid, senderName, senderPhone, receiverName, receiverPhone, receiverImg, time)
+        dbRepository.addTransaction(
+            amount,
+            note,
+            tId,
+            senderUid,
+            receiverUid,
+            senderName,
+            senderPhone,
+            receiverName,
+            receiverPhone,
+            receiverImg,
+            time
+        )
     }
 
     fun fetchContacts(uid: String) {
@@ -83,6 +96,24 @@ class DBViewModel(application: Application): AndroidViewModel(application) {
 
     fun fetchRedeemRequest(uid: String) {
         dbRepository.fetchRedeemRequest(uid)
+    }
+
+    fun addProduct(
+        uid: String,
+        productName: String,
+        brandName: String,
+        productImage: Uri,
+        productPrice: String,
+        quantity: String,
+        description: String,
+        productType: String,
+        keywords: String
+    ) {
+        dbRepository.addProduct(uid, productName, brandName, productImage, productPrice, quantity, description, productType, keywords)
+    }
+
+    fun fetchProducts(category: String) {
+        dbRepository.fetchProducts(category)
     }
 
 }

@@ -47,6 +47,10 @@ class DBRepository(private val application: Application) {
     val limitData: LiveData<Double>
         get() = limitLivedata
 
+    private val productLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
+    val productData: LiveData<MutableList<DocumentSnapshot>>
+        get() = productLivedata
+
     private val firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
 
@@ -368,6 +372,44 @@ class DBRepository(private val application: Application) {
                     list.add(document)
                 }
                 redeemRequestDetailsLiveData.postValue(list)
+            }
+    }
+
+    fun addProduct(uid: String, productName: String, brandName: String, productImage: Uri, productPrice: String, quantity: String, description: String, productType: String, keywords: String) {
+        val id = System.currentTimeMillis().toString()
+        val doc = firebaseStorage.reference.child("food and accessories/${productImage.lastPathSegment}")
+        doc.putFile(productImage).addOnSuccessListener {
+            doc.downloadUrl.addOnSuccessListener {
+                val data = hashMapOf(
+                    "Product Name" to productName,
+                    "Brand Name" to brandName,
+                    "Product Image" to it.toString(),
+                    "Product Price" to productPrice,
+                    "Quantity" to quantity,
+                    "Description" to description,
+                    "Product Type" to productType,
+                    "Tags" to keywords,
+                    "Seller ID" to uid,
+                    "Raters" to "",
+                    "Ratings" to "0"
+                )
+                firebaseDB.collection("Products").document("Products").collection(productType).document(id).set(data)
+            }
+        }
+    }
+
+    fun fetchProducts(category: String) {
+        firebaseDB.collection("Products").document("Products").collection(category).get()
+            .addOnSuccessListener { documents ->
+                val list = mutableListOf<DocumentSnapshot>()
+                for (document in documents) {
+                    list.add(document)
+                }
+                dbResponseLiveData.postValue(Response.Success())
+                productLivedata.postValue(list)
+            }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
     }
 
