@@ -11,5 +11,6 @@ data class ProductsItems(
     val ratings: String? = null,
     val raters: String? = null,
     val sellerName: String? = null,
-    val sellerImageUrl: String? = null
+    val sellerImageUrl: String? = null,
+    val productId: String? = null
 )

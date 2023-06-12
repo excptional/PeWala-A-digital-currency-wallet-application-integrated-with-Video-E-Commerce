@@ -391,7 +391,8 @@ class DBRepository(private val application: Application) {
                     "Tags" to keywords,
                     "Seller ID" to uid,
                     "Raters" to "",
-                    "Ratings" to "0"
+                    "Ratings" to "0",
+                    "Product ID" to id
                 )
                 firebaseDB.collection("Products").document("Products").collection(productType).document(id).set(data)
             }
@@ -412,6 +413,16 @@ class DBRepository(private val application: Application) {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
     }
+
+    fun addToWishlist(category: String, productId: String, uid: String) {
+        val data = mapOf(
+            "Category" to category,
+            "Product Id" to productId
+        )
+
+        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).document(productId).set(data)
+    }
+
 
     private fun getErrorMassage(e: Exception): String {
         val colonIndex = e.toString().indexOf(":")

@@ -113,7 +113,8 @@ class Products : Fragment() {
                                 i.getString("Ratings"),
                                 i.getString("Raters"),
                                 it[0],
-                                it[3]
+                                it[3],
+                                i.getString("Product ID")
                             )
                             productsItemsArray.add(acc)
                             productsAdapter.updateProducts(productsItemsArray)

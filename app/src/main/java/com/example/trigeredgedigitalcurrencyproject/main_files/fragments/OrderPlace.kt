@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.example.trigeredgedigitalcurrencyproject.R
@@ -64,6 +65,22 @@ class OrderPlace : Fragment() {
 
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        addWishlistBtn.setOnClickListener {
+            Toast.makeText(requireContext(), "This feature is not implemented till now", Toast.LENGTH_SHORT).show()
+        }
+
+        shareBtn.setOnClickListener {
+            Toast.makeText(requireContext(), "This feature is not implemented till now", Toast.LENGTH_SHORT).show()
+        }
+
+        addToCart.setOnClickListener {
+            Toast.makeText(requireContext(), "This feature is not implemented till now", Toast.LENGTH_SHORT).show()
+        }
+
+        placeOrder.setOnClickListener {
+            Toast.makeText(requireContext(), "This feature is not implemented till now", Toast.LENGTH_SHORT).show()
         }
 
         return view

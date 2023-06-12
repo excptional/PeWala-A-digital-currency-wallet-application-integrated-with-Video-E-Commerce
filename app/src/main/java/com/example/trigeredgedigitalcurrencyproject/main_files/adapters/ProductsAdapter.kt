@@ -50,6 +50,7 @@ class ProductsAdapter(
         bundle.putString("rating", currentItem.ratings)
         bundle.putString("quantity", currentItem.quantity)
         bundle.putString("description", currentItem.description)
+        bundle.putString("productId", currentItem.productId)
 
         holder.itemLayout.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.nav_order_place, bundle)
