@@ -1,12 +1,19 @@
 package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +24,9 @@ import com.example.trigeredgedigitalcurrencyproject.db.Response
 import com.example.trigeredgedigitalcurrencyproject.main_files.adapters.ProductsAdapter
 import com.example.trigeredgedigitalcurrencyproject.main_files.items.ProductsItems
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.DocumentSnapshot
+import java.util.Locale
 
 class Products : Fragment() {
 
@@ -28,6 +37,8 @@ class Products : Fragment() {
     private lateinit var shimmerContainerProducts: ShimmerFrameLayout
     private lateinit var notFoundText: TextView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var searchET: TextInputEditText
+    private lateinit var searchView: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +52,8 @@ class Products : Fragment() {
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout_products)
         productsRecyclerView = view.findViewById(R.id.recyclerView_products)
         notFoundText = view.findViewById(R.id.notFound_products)
+        searchET = view.findViewById(R.id.search_edit_text_products)
+        searchView = view.findViewById(R.id.searchView_products)
 
         shimmerContainerProducts = view.findViewById(R.id.shimmer_view_products)
         shimmerContainerProducts.startShimmer()
@@ -62,6 +75,7 @@ class Products : Fragment() {
                 fetchProductsList(it)
                 swipeRefreshLayout.isRefreshing = false
             }
+            searchET.text = null
         }
 
         dbViewModel!!.fetchProducts(category)
@@ -87,6 +101,38 @@ class Products : Fragment() {
 //            }
 //        }
 
+        searchET.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                dbViewModel!!.fetchProducts(category)
+                dbViewModel!!.productsData.observe(viewLifecycleOwner) {
+                    fetchSearchedList(it, s.toString().toLowerCase())
+                    swipeRefreshLayout.isRefreshing = false
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                dbViewModel!!.fetchProducts(category)
+                dbViewModel!!.productsData.observe(viewLifecycleOwner) {
+                    fetchSearchedList(it, s.toString().toLowerCase())
+                    swipeRefreshLayout.isRefreshing = false
+                }
+            }
+        })
+
+        searchET.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(searchET.windowToken, 0)
+                searchET.clearFocus()
+                true // Return true to indicate that the action has been handled
+            } else {
+                false // Return false if the action is not handled
+            }
+        }
+
         return view
     }
 
@@ -99,34 +145,82 @@ class Products : Fragment() {
         } else {
             for (i in list) {
                 if (i.exists()) {
-                    dbViewModel!!.fetchAccountDetails(i.getString("Seller ID").toString())
-                    dbViewModel!!.accDetails.observe(viewLifecycleOwner) {
-                        if (list.isNotEmpty()) {
-                            val acc = ProductsItems(
-                                i.getString("Product Name"),
-                                i.getString("Brand Name"),
-                                i.getString("Product Image"),
-                                i.getString("Product Price"),
-                                i.getString("Quantity"),
-                                i.getString("Description"),
-                                i.getString("tags"),
-                                i.getString("Ratings"),
-                                i.getString("Raters"),
-                                it[0],
-                                it[3],
-                                i.getString("Product ID")
-                            )
-                            productsItemsArray.add(acc)
-                            productsAdapter.updateProducts(productsItemsArray)
-                            shimmerContainerProducts.clearAnimation()
-                            shimmerContainerProducts.visibility = View.GONE
-                            productsRecyclerView.visibility = View.VISIBLE
-                            swipeRefreshLayout.isRefreshing = false
-                        }
-                    }
+                    val acc = ProductsItems(
+                        i.getString("Product Name"),
+                        i.getString("Brand Name"),
+                        i.getString("Product Image"),
+                        i.getString("Category"),
+                        i.getString("Product Price"),
+                        i.getString("Quantity"),
+                        i.getString("Description"),
+                        i.getString("Tags"),
+                        i.getString("Ratings"),
+                        i.getString("Raters"),
+                        i.getString("Seller Name"),
+                        i.getString("Seller Image"),
+                        i.getString("Seller UID"),
+                        i.getString("Product ID")
+                    )
+                    productsItemsArray.add(acc)
                 }
             }
+            if(productsItemsArray.isEmpty()) {
+                notFoundText.visibility = View.VISIBLE
+                shimmerContainerProducts.visibility = View.GONE
+                productsRecyclerView.visibility = View.GONE
+            } else {
+                productsAdapter.updateProducts(productsItemsArray)
+                shimmerContainerProducts.clearAnimation()
+                shimmerContainerProducts.visibility = View.GONE
+                productsRecyclerView.visibility = View.VISIBLE
+                searchView.visibility = View.VISIBLE
+                notFoundText.visibility = View.GONE
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
+    }
 
+    private fun fetchSearchedList(list: MutableList<DocumentSnapshot>?, s: String) {
+        productsItemsArray = arrayListOf()
+        if (list!!.size == 0) {
+            notFoundText.visibility = View.VISIBLE
+            shimmerContainerProducts.visibility = View.GONE
+            productsRecyclerView.visibility = View.GONE
+        } else {
+            for (i in list) {
+                if (i.exists() and i.getString("Tags")!!.contains(s)) {
+                    val acc = ProductsItems(
+                        i.getString("Product Name"),
+                        i.getString("Brand Name"),
+                        i.getString("Product Image"),
+                        i.getString("Category"),
+                        i.getString("Product Price"),
+                        i.getString("Quantity"),
+                        i.getString("Description"),
+                        i.getString("Tags"),
+                        i.getString("Ratings"),
+                        i.getString("Raters"),
+                        i.getString("Seller Name"),
+                        i.getString("Seller Image"),
+                        i.getString("Seller UID"),
+                        i.getString("Product ID")
+                    )
+                    productsItemsArray.add(acc)
+                }
+            }
+            if(productsItemsArray.isEmpty()) {
+                notFoundText.visibility = View.VISIBLE
+                shimmerContainerProducts.visibility = View.GONE
+                productsRecyclerView.visibility = View.GONE
+            } else {
+                productsAdapter.updateProducts(productsItemsArray)
+                shimmerContainerProducts.clearAnimation()
+                shimmerContainerProducts.visibility = View.GONE
+                productsRecyclerView.visibility = View.VISIBLE
+                searchView.visibility = View.VISIBLE
+                notFoundText.visibility = View.GONE
+                swipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 

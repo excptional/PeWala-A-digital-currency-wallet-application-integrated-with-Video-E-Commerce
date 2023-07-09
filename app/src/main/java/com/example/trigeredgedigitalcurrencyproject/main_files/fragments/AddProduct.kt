@@ -29,6 +29,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
+import java.util.Locale
 
 class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -197,7 +198,8 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
         val quantityStr = quantity.text.toString()
         val priceStr = price.text.toString()
         val descriptionStr = description.text.toString()
-        val keywordsStr = keywords.text.toString()
+        var keywordsStr = productName.text.toString() + ", " + brandName.text.toString() + ", " + keywords.text.toString()
+        keywordsStr = keywordsStr.toLowerCase(Locale.ROOT)
         val brandNameStr = brandName.text.toString()
 
         var allRight = true
@@ -252,30 +254,33 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
         } else {
             authViewModel.userdata.observe(viewLifecycleOwner) {
                 if (it != null) {
-                    dbViewModel.addProduct(
-                        it.uid,
-                        productNameStr,
-                        brandNameStr,
-                        productImageUri,
-                        priceStr,
-                        "$quantityStr $quantityTypeStr",
-                        descriptionStr,
-                        productTypeStr,
-                        keywordsStr
-                    )
-                    Toast.makeText(requireContext(), "Your product listed successfully, you can check it in the shop section", Toast.LENGTH_SHORT).show()
-                    requireActivity().onBackPressed()
+                    dbViewModel.fetchAccountDetails(it.uid)
+                    dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
+                        if(list.isNotEmpty()) {
+                            dbViewModel.addProduct(
+                                it.uid,
+                                list[0],
+                                list[3],
+                                productNameStr,
+                                brandNameStr,
+                                productImageUri,
+                                priceStr,
+                                "$quantityStr $quantityTypeStr",
+                                descriptionStr,
+                                productTypeStr,
+                                keywordsStr
+                            )
+                            Toast.makeText(requireContext(), "Your product listed successfully, you can check it in the shop section", Toast.LENGTH_SHORT).show()
+                            requireActivity().onBackPressed()
+                        }
+                    }
                 }
             }
         }
     }
 
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if (it != null) {
-                myUser = it
-            }
-        }
+
     }
 
 }

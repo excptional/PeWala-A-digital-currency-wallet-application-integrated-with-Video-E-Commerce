@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.example.trigeredgedigitalcurrencyproject.R
+import de.hdodenhof.circleimageview.CircleImageView
 
 class OrderPlace : Fragment() {
 
@@ -30,6 +31,8 @@ class OrderPlace : Fragment() {
     private lateinit var description: TextView
     private lateinit var ratingBar: RatingBar
     private lateinit var ratingText: TextView
+    private lateinit var sellerName: TextView
+    private lateinit var sellerImg: CircleImageView
     private lateinit var placeOrder: RelativeLayout
     private lateinit var addToCart: RelativeLayout
 
@@ -53,6 +56,8 @@ class OrderPlace : Fragment() {
         productPrice = view.findViewById(R.id.product_price_order)
         placeOrder = view.findViewById(R.id.place_order)
         addToCart = view.findViewById(R.id.add_to_card_order)
+        sellerName = view.findViewById(R.id.sellerName_order)
+        sellerImg = view.findViewById(R.id.sellerImage_order)
 
         productName.text = requireArguments().getString("productName")
         productPrice.text = "₹" + requireArguments().getString("productPrice") + " INR"
@@ -61,6 +66,8 @@ class OrderPlace : Fragment() {
         ratingBar.rating = requireArguments().getString("rating")!!.toFloat()
         ratingText.text = requireArguments().getString("rating")
         description.text = requireArguments().getString("description")
+        sellerName.text = requireArguments().getString("sellerName")
+        Glide.with(view).load(requireArguments().getString("sellerImageUrl")).into(sellerImg)
         Glide.with(view).load(requireArguments().getString("productImageUrl")).into(productImage)
 
         backBtn.setOnClickListener {
@@ -80,7 +87,20 @@ class OrderPlace : Fragment() {
         }
 
         placeOrder.setOnClickListener {
-            Toast.makeText(requireContext(), "This feature is not implemented till now", Toast.LENGTH_SHORT).show()
+            val bundle = Bundle()
+            bundle.putString("brandName", brandName.text.toString())
+            bundle.putString("productName", productName.text.toString())
+            bundle.putString("productImageUrl", requireArguments().getString("productImageUrl"))
+            bundle.putString("productPrice", requireArguments().getString("productPrice"))
+            bundle.putString("sellerName", sellerName.text.toString())
+            bundle.putString("sellerImageUrl", requireArguments().getString("sellerImageUrl"))
+//            bundle.putString("rating", currentItem.ratings)
+            bundle.putString("quantity", quantity.text.toString())
+            bundle.putString("description", description.text.toString())
+            bundle.putString("productId", requireArguments().getString("productId"))
+            bundle.putString("category", requireArguments().getString("category"))
+            bundle.putString("sellerUid", requireArguments().getString("sellerUid"))
+            Navigation.findNavController(it).navigate(R.id.nav_final_order_place, bundle)
         }
 
         return view

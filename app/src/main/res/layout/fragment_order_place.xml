@@ -164,11 +164,36 @@
                 android:text="Pedigree Pet Food"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_3sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_20sdp"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/sellerImage_order"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:src="@drawable/user2" />
+
+                <TextView
+                    android:id="@+id/sellerName_order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:text="Bikash Dutta"
+                    android:layout_gravity="center"
+                    android:textColor="@color/material_black"
+                    android:textSize="@dimen/_11sdp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -375,9 +375,22 @@ class DBRepository(private val application: Application) {
             }
     }
 
-    fun addProduct(uid: String, productName: String, brandName: String, productImage: Uri, productPrice: String, quantity: String, description: String, productType: String, keywords: String) {
+    fun addProduct(
+        sellerUid: String,
+        sellerName: String,
+        sellerImgUrl: String,
+        productName: String,
+        brandName: String,
+        productImage: Uri,
+        productPrice: String,
+        quantity: String,
+        description: String,
+        productType: String,
+        keywords: String
+    ) {
         val id = System.currentTimeMillis().toString()
-        val doc = firebaseStorage.reference.child("food and accessories/${productImage.lastPathSegment}")
+        val doc =
+            firebaseStorage.reference.child("food and accessories/${productImage.lastPathSegment}")
         doc.putFile(productImage).addOnSuccessListener {
             doc.downloadUrl.addOnSuccessListener {
                 val data = hashMapOf(
@@ -387,14 +400,17 @@ class DBRepository(private val application: Application) {
                     "Product Price" to productPrice,
                     "Quantity" to quantity,
                     "Description" to description,
-                    "Product Type" to productType,
+                    "Category" to productType,
                     "Tags" to keywords,
-                    "Seller ID" to uid,
+                    "Seller UID" to sellerUid,
+                    "Seller Name" to sellerName,
+                    "Seller Image" to sellerImgUrl,
                     "Raters" to "",
                     "Ratings" to "0",
                     "Product ID" to id
                 )
-                firebaseDB.collection("Products").document("Products").collection(productType).document(id).set(data)
+                firebaseDB.collection("Products").document("Products").collection(productType)
+                    .document(id).set(data)
             }
         }
     }
@@ -420,13 +436,67 @@ class DBRepository(private val application: Application) {
             "Product Id" to productId
         )
 
-        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).document(productId).set(data)
+        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).document(productId)
+            .set(data)
+    }
+
+    fun addOrder(
+        userName: String,
+        userNumber: String,
+        userAddress: String,
+        userUID: String,
+        productName: String,
+        productImageUrl: String,
+        productId: String,
+        productCategory: String,
+        payableAmount: String,
+        quantity: String,
+        sellerUID: String
+    ) {
+        val orderID = generateUniqueId()
+        val time = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
+        val timeInMillis = System.currentTimeMillis()
+
+        val data = mapOf(
+            "Order ID" to orderID,
+            "User Name" to userName,
+            "User UID" to userUID,
+            "User Number" to userNumber,
+            "User Address" to userAddress,
+            "Quantity" to quantity,
+            "Product Name" to productName,
+            "Payable Amount" to payableAmount,
+            "Product Image Url" to productImageUrl,
+            "Delivery Date" to "NA",
+            "Seller UID" to sellerUID,
+            "Product ID" to productId,
+            "Order Time" to time,
+            "Category" to productCategory
+        )
+
+        firebaseDB.collection("Orders").document("order_$timeInMillis").set(data)
+        firebaseDB.collection("My Orders").document("My Orders").collection(userUID).document("order_$timeInMillis").set(data)
+        firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUID).document("order_$timeInMillis").set(data)
+
     }
 
 
     private fun getErrorMassage(e: Exception): String {
         val colonIndex = e.toString().indexOf(":")
         return e.toString().substring(colonIndex + 2)
+    }
+
+    private fun generateUniqueId(): String {
+        val characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        val random = Random()
+        val idBuilder = StringBuilder()
+
+        repeat(8) {
+            val randomIndex = random.nextInt(characters.length)
+            idBuilder.append(characters[randomIndex])
+        }
+
+        return idBuilder.toString()
     }
 
 }

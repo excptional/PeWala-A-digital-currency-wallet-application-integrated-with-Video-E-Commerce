@@ -26,6 +26,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         get() = dbRepository.limitData
     val productsData: LiveData<MutableList<DocumentSnapshot>>
         get() = dbRepository.productData
+
     fun fetchAccountDetails(uid: String) {
         dbRepository.fetchAccountDetails(uid)
     }
@@ -99,7 +100,9 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addProduct(
-        uid: String,
+        sellerUid: String,
+        sellerName: String,
+        sellerImgUrl: String,
         productName: String,
         brandName: String,
         productImage: Uri,
@@ -109,11 +112,51 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         productType: String,
         keywords: String
     ) {
-        dbRepository.addProduct(uid, productName, brandName, productImage, productPrice, quantity, description, productType, keywords)
+        dbRepository.addProduct(
+            sellerUid,
+            sellerName,
+            sellerImgUrl,
+            productName,
+            brandName,
+            productImage,
+            productPrice,
+            quantity,
+            description,
+            productType,
+            keywords
+        )
     }
 
     fun fetchProducts(category: String) {
         dbRepository.fetchProducts(category)
+    }
+
+    fun addOrder(
+        userName: String,
+        userNumber: String,
+        userAddress: String,
+        userUID: String,
+        productName: String,
+        productImageUrl: String,
+        productId: String,
+        productCategory: String,
+        payableAmount: String,
+        quantity: String,
+        sellerUID: String
+    ) {
+        dbRepository.addOrder(
+            userName,
+            userNumber,
+            userAddress,
+            userUID,
+            productName,
+            productImageUrl,
+            productId,
+            productCategory,
+            payableAmount,
+            quantity,
+            sellerUID
+        )
     }
 
 }
