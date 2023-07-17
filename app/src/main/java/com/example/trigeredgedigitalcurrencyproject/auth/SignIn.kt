@@ -49,11 +49,12 @@ class SignIn : Fragment() {
         signInLoader = view.findViewById(R.id.loader_signIn)
 
         signInBtn.setOnClickListener {
+            signInBtn.isClickable = false
             signIn(view)
         }
 
         signUpBtn.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.nav_sign_up)
+            Navigation.findNavController(it).navigate(R.id.nav_user_type)
         }
 
         return view
@@ -94,6 +95,7 @@ class SignIn : Fragment() {
                         Toast.makeText(requireContext(), it.errorMassage, Toast.LENGTH_SHORT).show()
                         whiteView.visibility = View.GONE
                         signInLoader.visibility = View.GONE
+                        signInBtn.isClickable = true
                     }
                 }
             }

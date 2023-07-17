@@ -51,11 +51,12 @@ class AuthRepository(private val application: Application) {
         name: String,
         phone: String,
         aadharNo: String,
-        password: String
+        password: String,
+        userType: String
     ) {
         val salt = BCrypt.gensalt(10, SecureRandom())
         val hashedPassword = BCrypt.hashpw(password, salt)
-        val data = mapOf(
+        val data1 = mapOf(
             "Name" to name,
             "Password" to hashedPassword,
             "Phone" to phone,
@@ -65,16 +66,49 @@ class AuthRepository(private val application: Application) {
             "QR Code" to "",
             "PIN" to "",
             "Balance" to "0",
+            "User" to userType,
+            "Status" to "",
+            "PAN No" to "",
+            "GSTIN" to "",
+            "Trade License" to "",
             "Image Url" to "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
         )
+
+        val data2 = mapOf(
+            "Name" to name,
+            "Password" to hashedPassword,
+            "Phone" to phone,
+            "Card Id" to "$phone@digital",
+            "Aadhar" to aadharNo,
+            "Uid" to "",
+            "QR Code" to "",
+            "PIN" to "",
+            "Balance" to "0",
+            "User" to userType,
+            "Status" to "Not verified",
+            "PAN No" to "",
+            "GSTIN" to "",
+            "Trade License" to "",
+            "Image Url" to "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
+        )
+
         firebaseAuth.createUserWithEmailAndPassword("$phone@gmail.com", password)
             .addOnSuccessListener {
                 val doc = firebaseDB.collection("Users").document(firebaseAuth.currentUser!!.uid)
-                doc.set(data)
-                doc.get().addOnSuccessListener {
-                    doc.update("Uid", firebaseAuth.currentUser!!.uid)
-                    qrGenerator("$phone@digital")
+                if(userType == "Buyer") {
+                    doc.set(data1)
+                    doc.get().addOnSuccessListener {
+                        doc.update("Uid", firebaseAuth.currentUser!!.uid)
+                        qrGenerator("$phone@digital")
+                    }
+                } else {
+                    doc.set(data2)
+                    doc.get().addOnSuccessListener {
+                        doc.update("Uid", firebaseAuth.currentUser!!.uid)
+                        qrGenerator("$phone@digital")
+                    }
                 }
+
                 responseLiveData.postValue(Response.Success())
                 userLiveData.postValue(firebaseAuth.currentUser)
             }

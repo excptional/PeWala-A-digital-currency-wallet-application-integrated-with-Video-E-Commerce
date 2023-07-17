@@ -25,9 +25,10 @@ class AuthViewModel(application: Application): AndroidViewModel(application) {
         name: String,
         phone: String,
         aadharNo: String,
-        password: String
+        password: String,
+        userType: String
     ) {
-        authRepository.signUp(name, phone, aadharNo, password)
+        authRepository.signUp(name, phone, aadharNo, password, userType)
     }
 
 }

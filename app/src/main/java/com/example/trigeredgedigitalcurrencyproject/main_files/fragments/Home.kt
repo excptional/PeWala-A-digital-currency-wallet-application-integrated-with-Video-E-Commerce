@@ -43,6 +43,8 @@ class Home : Fragment() {
     private lateinit var peopleText: TextView
     private lateinit var peopleLayout: CardView
     private lateinit var shop: CardView
+    private lateinit var userType: String
+    private lateinit var userStatus: String
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -53,6 +55,8 @@ class Home : Fragment() {
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
+
+        loadData()
 
         viewWallet = view.findViewById(R.id.view_wallet)
         send = view.findViewById(R.id.send_money)
@@ -89,15 +93,28 @@ class Home : Fragment() {
         sliderView.isAutoCycle = true
         sliderView.startAutoCycle()
 
-        loadData()
-
         val navBuilder = NavOptions.Builder()
         navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)
             .setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out)
 
         shop.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("userType", userType)
             requireFragmentManager().popBackStack()
-            Navigation.findNavController(view).navigate(R.id.nav_shop, null, navBuilder.build())
+            if (userType == "Seller") {
+                when (userStatus) {
+                    "Not verified" -> Navigation.findNavController(view)
+                        .navigate(R.id.nav_seller_doc, null, navBuilder.build())
+
+                    "Checking" ->
+                        Navigation.findNavController(view)
+                            .navigate(R.id.nav_waiting, null, navBuilder.build())
+
+                    else -> Navigation.findNavController(view)
+                        .navigate(R.id.nav_shop_seller, bundle, navBuilder.build())
+                }
+            } else Navigation.findNavController(view)
+                .navigate(R.id.nav_shop_buyer, bundle, navBuilder.build())
         }
 
         add.setOnClickListener {
@@ -158,6 +175,13 @@ class Home : Fragment() {
                     } else {
                         peopleText.visibility = View.GONE
                         peopleLayout.visibility = View.GONE
+                    }
+                }
+                dbViewModel.fetchAccountDetails(it.uid)
+                dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
+                    if (list.isNotEmpty()) {
+                        userType = list[7]
+                        userStatus = list[8]
                     }
                 }
             }

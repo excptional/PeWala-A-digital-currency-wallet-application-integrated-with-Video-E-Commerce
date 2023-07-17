@@ -12,7 +12,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import com.example.trigeredgedigitalcurrencyproject.R
 
-class Shop : Fragment() {
+class ShopBuyer : Fragment() {
 
     private lateinit var addProduct: CardView
     private lateinit var groceries: LinearLayout
@@ -30,9 +30,9 @@ class Shop : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_shop, container, false)
+        val view = inflater.inflate(R.layout.fragment_shop_buyer, container, false)
 
-        addProduct = view.findViewById(R.id.addProduct)
+//        addProduct = view.findViewById(R.id.addProduct)
         groceries = view.findViewById(R.id.groceries)
         fashion = view.findViewById(R.id.fashion)
         electronics = view.findViewById(R.id.electronics)
@@ -47,10 +47,10 @@ class Shop : Fragment() {
         navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)
             .setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out)
 
-        addProduct.setOnClickListener {
-            Navigation.findNavController(view)
-                .navigate(R.id.nav_add_product, null, navBuilder.build())
-        }
+//        addProduct.setOnClickListener {
+//            Navigation.findNavController(view)
+//                .navigate(R.id.nav_add_product, null, navBuilder.build())
+//        }
 
         groceries.setOnClickListener {
             val bundle = Bundle()

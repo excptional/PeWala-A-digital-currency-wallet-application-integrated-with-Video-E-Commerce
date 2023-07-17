@@ -120,7 +120,7 @@
                             android:layout_width="@dimen/_25sdp"
                             android:layout_height="@dimen/_25sdp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/collect_money"/>
+                            android:src="@drawable/collect_money" />
 
                         <TextView
                             android:layout_width="wrap_content"

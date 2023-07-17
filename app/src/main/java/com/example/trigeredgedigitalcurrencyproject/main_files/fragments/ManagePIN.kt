@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.*
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Response
 
 class ManagePIN : Fragment() {
 
@@ -142,15 +143,15 @@ class ManagePIN : Fragment() {
             apiService.sentOTP(apiKey, phone)
         call!!.enqueue(object : Callback<MessageResponse?> {
 
-            override fun onFailure(call: Call<MessageResponse?>?, t: Throwable) {
+            override fun onFailure(call: Call<MessageResponse?>, t: Throwable) {
                 Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(
-                call: Call<MessageResponse?>?,
-                response: retrofit2.Response<MessageResponse?>?
+                call: Call<MessageResponse?>,
+                response: Response<MessageResponse?>
             ) {
-                sessionId = response!!.body()!!.getDetails()!!
+                sessionId = response.body()!!.getDetails()!!
                 val bundle = Bundle()
                 bundle.putString("sessionId", sessionId)
                 bundle.putString("api_key", apiKey)

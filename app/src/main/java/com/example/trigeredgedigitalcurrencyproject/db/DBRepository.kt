@@ -13,6 +13,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import org.mindrot.jbcrypt.BCrypt
 import java.security.SecureRandom
+import java.sql.Struct
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -47,9 +48,17 @@ class DBRepository(private val application: Application) {
     val limitData: LiveData<Double>
         get() = limitLivedata
 
-    private val productLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
-    val productData: LiveData<MutableList<DocumentSnapshot>>
-        get() = productLivedata
+    private val productsLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
+    val productsData: LiveData<MutableList<DocumentSnapshot>>
+        get() = productsLivedata
+
+    private val sellerProductsLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
+    val sellerProductsData: LiveData<MutableList<DocumentSnapshot>>
+        get() = sellerProductsLivedata
+
+    private val sellerReceivedOrdersLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
+    val sellerReceivedOrdersData: LiveData<MutableList<DocumentSnapshot>>
+        get() = sellerReceivedOrdersLivedata
 
     private val firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -65,6 +74,8 @@ class DBRepository(private val application: Application) {
                 list.add(it.getString("QR Code").toString())
                 list.add(it.getString("Balance").toString())
                 list.add(it.getString("PIN").toString())
+                list.add(it.getString("User").toString())
+                list.add(it.getString("Status").toString())
                 accDetailsLiveData.postValue(list)
             }
             .addOnFailureListener {
@@ -411,6 +422,8 @@ class DBRepository(private val application: Application) {
                 )
                 firebaseDB.collection("Products").document("Products").collection(productType)
                     .document(id).set(data)
+                firebaseDB.collection("Seller Products").document("Seller Products").collection(sellerUid)
+                    .document(id).set(data)
             }
         }
     }
@@ -423,7 +436,7 @@ class DBRepository(private val application: Application) {
                     list.add(document)
                 }
                 dbResponseLiveData.postValue(Response.Success())
-                productLivedata.postValue(list)
+                productsLivedata.postValue(list)
             }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
@@ -459,10 +472,10 @@ class DBRepository(private val application: Application) {
 
         val data = mapOf(
             "Order ID" to orderID,
-            "User Name" to userName,
-            "User UID" to userUID,
-            "User Number" to userNumber,
-            "User Address" to userAddress,
+            "Buyer Name" to userName,
+            "Buyer UID" to userUID,
+            "Buyer Number" to userNumber,
+            "Buyer Address" to userAddress,
             "Quantity" to quantity,
             "Product Name" to productName,
             "Payable Amount" to payableAmount,
@@ -480,6 +493,62 @@ class DBRepository(private val application: Application) {
 
     }
 
+    fun uploadSellerDoc(pan: String, gstin: String, uri: Uri, uid: String) {
+        val doc = firebaseDB.collection("Users").document(uid)
+        doc.get().addOnSuccessListener {
+            if(it.exists()) {
+                val ref =
+                    firebaseStorage.reference.child("images/${uid}/${uri.lastPathSegment}")
+                ref.putFile(uri)
+                    .addOnSuccessListener {
+                        ref.downloadUrl
+                            .addOnSuccessListener {
+                                doc.update("PAN No", pan)
+                                doc.update("GSTIN", gstin)
+                                doc.update("Trade License", it.toString())
+                                doc.update("Status", "Checking")
+                                dbResponseLiveData.postValue(Response.Success())
+                            }
+                            .addOnFailureListener {
+                                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                            }
+                    }
+                    .addOnFailureListener {
+                        dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                    }
+            }
+        }
+    }
+
+    fun fetchSellerProducts(sellerUid: String) {
+        firebaseDB.collection("Seller Products").document("Seller Products").collection(sellerUid).get()
+            .addOnSuccessListener { documents ->
+                val list = mutableListOf<DocumentSnapshot>()
+                for (document in documents) {
+                    list.add(document)
+                }
+                dbResponseLiveData.postValue(Response.Success())
+                sellerProductsLivedata.postValue(list)
+            }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
+
+    fun fetchReceivedOrders(sellerUid: String) {
+        firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid).get()
+            .addOnSuccessListener { documents ->
+                val list = mutableListOf<DocumentSnapshot>()
+                for (document in documents) {
+                    list.add(document)
+                }
+                dbResponseLiveData.postValue(Response.Success())
+                sellerReceivedOrdersLivedata.postValue(list)
+            }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
 
     private fun getErrorMassage(e: Exception): String {
         val colonIndex = e.toString().indexOf(":")

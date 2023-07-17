@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.main_files.items.ProductsItems
+import com.example.trigeredgedigitalcurrencyproject.main_files.items.SellerProductsItems
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ProductsAdapter(
@@ -58,16 +59,6 @@ class ProductsAdapter(
             Navigation.findNavController(it).navigate(R.id.nav_order_place, bundle)
         }
 
-//        val bundle = Bundle()
-//        bundle.putString("productName", currentItem.productName)
-//        bundle.putString("productImage", currentItem.productImageUrl)
-//        bundle.putString("productPrice", currentItem.productPrice)
-//        bundle.putString("productRating", currentItem.productRating)
-//        bundle.putString("sellerId", currentItem.sellerID)
-//
-//        holder.itemLayout.setOnClickListener {
-////            Navigation.findNavController(it).navigate(R.id.nav_order_place, bundle)
-//        }
     }
 
     override fun getItemCount(): Int {

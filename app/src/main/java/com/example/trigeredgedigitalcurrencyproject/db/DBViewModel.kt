@@ -25,7 +25,13 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     val dailyAddLimit: LiveData<Double>
         get() = dbRepository.limitData
     val productsData: LiveData<MutableList<DocumentSnapshot>>
-        get() = dbRepository.productData
+        get() = dbRepository.productsData
+
+    val sellerProductsData: LiveData<MutableList<DocumentSnapshot>>
+        get() = dbRepository.sellerProductsData
+
+    val sellerReceivedOrdersData: LiveData<MutableList<DocumentSnapshot>>
+        get() = dbRepository.sellerReceivedOrdersData
 
     fun fetchAccountDetails(uid: String) {
         dbRepository.fetchAccountDetails(uid)
@@ -157,6 +163,18 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
             quantity,
             sellerUID
         )
+    }
+
+    fun uploadSellerDoc(pan: String, gstin: String, uri: Uri, uid: String) {
+        dbRepository.uploadSellerDoc(pan, gstin, uri, uid)
+    }
+
+    fun fetchSellerProducts(sellerUid: String) {
+        dbRepository.fetchSellerProducts(sellerUid)
+    }
+
+    fun fetchReceivedOrders(sellerUid: String) {
+        dbRepository.fetchReceivedOrders(sellerUid)
     }
 
 }

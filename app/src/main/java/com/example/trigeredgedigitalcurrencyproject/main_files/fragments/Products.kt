@@ -12,21 +12,17 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
-import com.example.trigeredgedigitalcurrencyproject.db.Response
 import com.example.trigeredgedigitalcurrencyproject.main_files.adapters.ProductsAdapter
 import com.example.trigeredgedigitalcurrencyproject.main_files.items.ProductsItems
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.DocumentSnapshot
-import java.util.Locale
 
 class Products : Fragment() {
 

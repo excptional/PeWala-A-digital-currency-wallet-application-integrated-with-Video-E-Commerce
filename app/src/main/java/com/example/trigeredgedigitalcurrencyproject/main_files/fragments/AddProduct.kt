@@ -202,27 +202,27 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
         keywordsStr = keywordsStr.toLowerCase(Locale.ROOT)
         val brandNameStr = brandName.text.toString()
 
-        var allRight = true
+        var isAlright = true
 
         if (productNameStr.isEmpty()) {
             productName.error = "Enter product name"
-            allRight = false
+            isAlright = false
         }
         if (brandNameStr.isEmpty()) {
             productName.error = "Enter product name"
-            allRight = false
+            isAlright = false
         }
         if (priceStr.isEmpty()) {
             price.error = "Enter product price"
-            allRight = false
+            isAlright = false
         }
         if (quantityStr.isEmpty()) {
             quantity.error = "Enter quantity"
-            allRight = false
+            isAlright = false
         }
         if (descriptionStr.isEmpty()) {
             description.error = "Enter description here"
-            allRight = false
+            isAlright = false
         }
         if (beforeLayoutProductImage.isVisible) {
             Toast.makeText(
@@ -230,7 +230,7 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
                 "Add your product image",
                 Toast.LENGTH_SHORT
             ).show()
-            allRight = false
+            isAlright = false
         }
         if (productTypeStr.isEmpty()) {
             Toast.makeText(
@@ -238,7 +238,7 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
                 "Choose your product type",
                 Toast.LENGTH_SHORT
             ).show()
-            allRight = false
+            isAlright = false
         }
         if (quantityTypeStr.isEmpty()) {
             Toast.makeText(
@@ -246,10 +246,10 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
                 "Choose your quantity type",
                 Toast.LENGTH_SHORT
             ).show()
-            allRight = false
+            isAlright = false
         }
 
-        if (!allRight) {
+        if (!isAlright) {
             Toast.makeText(requireContext(), "Enter valid details", Toast.LENGTH_SHORT).show()
         } else {
             authViewModel.userdata.observe(viewLifecycleOwner) {

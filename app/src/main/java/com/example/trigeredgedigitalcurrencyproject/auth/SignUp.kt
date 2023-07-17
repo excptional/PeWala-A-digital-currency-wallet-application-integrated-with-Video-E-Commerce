@@ -30,6 +30,7 @@ class SignUp : Fragment() {
     private lateinit var signUpLoader: LottieAnimationView
     private val validPhoneNumberPattern by lazy { "^(\\+\\d{1,3}[- ]?)?\\d{10}\$" }
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var userType: String
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -39,6 +40,8 @@ class SignUp : Fragment() {
         val view = inflater.inflate(R.layout.fragment_sign_up, container, false)
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        userType = requireArguments().getString("userType").toString()
 
         phEditText = view.findViewById(R.id.ph_signUp)
         passwordEditText = view.findViewById(R.id.password_signUp)
@@ -55,6 +58,7 @@ class SignUp : Fragment() {
         }
 
         signUpBtn.setOnClickListener {
+            signUpBtn.isClickable = false
             signUp(view)
         }
         return view
@@ -95,7 +99,7 @@ class SignUp : Fragment() {
             signUpLoader.visibility = View.GONE
             Toast.makeText(requireContext(), "Enter valid details", Toast.LENGTH_SHORT).show()
         } else {
-            authViewModel.signUp(name, phNum, aadhar, password)
+            authViewModel.signUp(name, phNum, aadhar, password, userType)
             authViewModel.response.observe(viewLifecycleOwner) {
                 when(it) {
                     is Response.Success -> {
@@ -107,6 +111,7 @@ class SignUp : Fragment() {
                         Toast.makeText(requireContext(), it.errorMassage, Toast.LENGTH_SHORT).show()
                         whiteView.visibility = View.GONE
                         signUpLoader.visibility = View.GONE
+                        signUpBtn.isClickable = true
                     }
                 }
             }
