@@ -458,6 +458,7 @@ class DBRepository(private val application: Application) {
         userNumber: String,
         userAddress: String,
         userUID: String,
+        brandName: String,
         productName: String,
         productImageUrl: String,
         productId: String,
@@ -466,9 +467,8 @@ class DBRepository(private val application: Application) {
         quantity: String,
         sellerUID: String
     ) {
-        val orderID = generateUniqueId()
         val time = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
-        val timeInMillis = System.currentTimeMillis()
+        val orderID = System.currentTimeMillis()
 
         val data = mapOf(
             "Order ID" to orderID,
@@ -477,6 +477,7 @@ class DBRepository(private val application: Application) {
             "Buyer Number" to userNumber,
             "Buyer Address" to userAddress,
             "Quantity" to quantity,
+            "Brand Name" to brandName,
             "Product Name" to productName,
             "Payable Amount" to payableAmount,
             "Product Image Url" to productImageUrl,
@@ -484,13 +485,19 @@ class DBRepository(private val application: Application) {
             "Seller UID" to sellerUID,
             "Product ID" to productId,
             "Order Time" to time,
-            "Category" to productCategory
+            "Category" to productCategory,
+            "Status" to "Pending"
         )
 
-        firebaseDB.collection("Orders").document("order_$timeInMillis").set(data)
-        firebaseDB.collection("My Orders").document("My Orders").collection(userUID).document("order_$timeInMillis").set(data)
-        firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUID).document("order_$timeInMillis").set(data)
-
+        firebaseDB.collection("Orders").document("order_$orderID").set(data).addOnSuccessListener {
+            dbResponseLiveData.postValue(Response.Success())
+        }
+        firebaseDB.collection("My Orders").document("My Orders").collection(userUID).document("order_$orderID").set(data).addOnSuccessListener {
+            dbResponseLiveData.postValue(Response.Success())
+        }
+        firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUID).document("order_$orderID").set(data).addOnSuccessListener {
+            dbResponseLiveData.postValue(Response.Success())
+        }
     }
 
     fun uploadSellerDoc(pan: String, gstin: String, uri: Uri, uid: String) {
@@ -548,6 +555,83 @@ class DBRepository(private val application: Application) {
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
+    }
+
+    fun acceptOrders(sellerUid: String, buyerUid: String, orderId: String, date: String) {
+        val doc1 = firebaseDB.collection("Orders").document("order_$orderId")
+        val doc2 = firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid).document("order_$orderId")
+        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid).document("order_$orderId")
+
+        doc1.get().addOnSuccessListener {
+            if (it.exists()) {
+                dbResponseLiveData.postValue(Response.Success())
+                doc1.update("Delivery Date", date)
+                doc1.update("Status", "Accepted")
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+
+        doc2.get().addOnSuccessListener {
+            if (it.exists()) {
+                dbResponseLiveData.postValue(Response.Success())
+                doc2.update("Delivery Date", date)
+                doc2.update("Status", "Accepted")
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+
+        doc3.get().addOnSuccessListener {
+            if (it.exists()) {
+                dbResponseLiveData.postValue(Response.Success())
+                doc3.update("Delivery Date", date)
+                doc3.update("Status", "Accepted")
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+
+    }
+
+    fun rejectOrders(sellerUid: String, buyerUid: String, orderId: String) {
+        val doc1 = firebaseDB.collection("Orders").document("order_$orderId")
+        val doc2 = firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid).document("order_$orderId")
+        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid).document("order_$orderId")
+
+        doc1.get().addOnSuccessListener {
+            if (it.exists()) {
+                dbResponseLiveData.postValue(Response.Success())
+                doc1.update("Status", "Rejected")
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+
+        doc2.get().addOnSuccessListener {
+            if (it.exists()) {
+                dbResponseLiveData.postValue(Response.Success())
+                doc2.delete()
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+
+        doc3.get().addOnSuccessListener {
+            if (it.exists()) {
+                dbResponseLiveData.postValue(Response.Success())
+                doc3.update("Status", "Rejected")
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+
     }
 
     private fun getErrorMassage(e: Exception): String {

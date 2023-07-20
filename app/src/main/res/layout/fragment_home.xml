@@ -8,9 +8,11 @@
     tools:context=".main_files.fragments.Home">
 
     <ScrollView
+        android:id="@+id/mainLayout_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/_20sdp"
+        android:visibility="gone"
         android:scrollbars="none">
 
         <LinearLayout
@@ -266,5 +268,17 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/progressbar_home"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_centerInParent="true"
+        android:background="@null"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/black_round_loader" />
 
 </RelativeLayout>

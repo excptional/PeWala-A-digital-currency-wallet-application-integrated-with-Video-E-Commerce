@@ -214,6 +214,7 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_10sdp"
             android:scrollbars="horizontal"
+            android:singleLine="true"
             android:hint="Enter complete address"/>
 
     </LinearLayout>
@@ -261,5 +262,24 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/whiteView_order_summary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#A1FFFFFF"
+        android:visibility="gone" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loader_order_summary"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_centerInParent="true"
+        android:background="@null"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/black_round_loader" />
 
 </RelativeLayout>

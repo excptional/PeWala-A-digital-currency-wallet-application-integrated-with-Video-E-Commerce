@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#4FC4D9E6"
     android:id="@+id/swipeRefreshLayout_seller_shop"
     tools:context=".main_files.fragments.ShopSeller">
 

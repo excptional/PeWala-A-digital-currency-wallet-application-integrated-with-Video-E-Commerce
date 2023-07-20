@@ -1,27 +1,45 @@
 package com.example.trigeredgedigitalcurrencyproject.main_files.adapters
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Dialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CalendarView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.ViewTreeLifecycleOwner
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.trigeredgedigitalcurrencyproject.R
+import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
+import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
 import com.example.trigeredgedigitalcurrencyproject.main_files.items.SellerReceivedOrdersItems
 import de.hdodenhof.circleimageview.CircleImageView
 import org.w3c.dom.Text
+import java.security.acl.Owner
 
 class SellerReceivedOrdersAdapter(
     private val ProductItems: ArrayList<SellerReceivedOrdersItems>
 ) :
     RecyclerView.Adapter<SellerReceivedOrdersAdapter. SellerReceivedOrdersViewHolder>() {
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SellerReceivedOrdersViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.received_order_items, parent, false)
@@ -40,7 +58,7 @@ class SellerReceivedOrdersAdapter(
         holder.address.text = currentItem.address
         holder.time.text = currentItem.time
 
-        if(currentItem.delivery_date == "NA") {
+        if(currentItem.status == "Pending") {
             holder.btnLayout.visibility = View.VISIBLE
             holder.deliveryDate.visibility = View.GONE
         } else {
@@ -49,12 +67,25 @@ class SellerReceivedOrdersAdapter(
             holder.deliveryDate.text = "Deliver on " + currentItem.delivery_date
         }
 
-        holder.acceptBtn.setOnClickListener {
+        val bundle = Bundle()
+        bundle.putString("productName", currentItem.productName)
+        bundle.putString("brandName", currentItem.brandName)
+        bundle.putString("buyerName", currentItem.buyerName)
+        bundle.putString("address", currentItem.address)
+        bundle.putString("quantity", currentItem.quantity)
+        bundle.putString("orderTime", currentItem.time)
+        bundle.putString("productPrice", currentItem.price)
+        bundle.putString("orderId", currentItem.orderId)
+        bundle.putString("productImg", currentItem.productImageUrl)
+        bundle.putString("buyerUid", currentItem.buyerUid)
+        bundle.putString("sellerUid", currentItem.sellerUid)
 
-        }
+        val navBuilder = NavOptions.Builder()
+        navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)
+            .setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out)
 
-        holder.rejectBtn.setOnClickListener {
-
+        holder.item.setOnClickListener {
+            Navigation.findNavController(it).navigate(R.id.nav_order_details, bundle, navBuilder.build())
         }
 
     }
@@ -78,8 +109,7 @@ class SellerReceivedOrdersAdapter(
         val time: TextView = itemView.findViewById(R.id.time_order_seller)
         val productImage: ImageView = itemView.findViewById(R.id.productImg_order_seller)
         val productPrice: TextView = itemView.findViewById(R.id.productPrice_order_seller)
-        val acceptBtn: CardView = itemView.findViewById(R.id.accept_btn_order_seller)
-        val rejectBtn: CardView = itemView.findViewById(R.id.reject_order_seller)
+        val item: CardView = itemView.findViewById(R.id.itemLayout_order_seller)
         val deliveryDate: TextView = itemView.findViewById(R.id.delivery_date_order_seller)
         val btnLayout: LinearLayout = itemView.findViewById(R.id.btn_layout_order_seller)
     }

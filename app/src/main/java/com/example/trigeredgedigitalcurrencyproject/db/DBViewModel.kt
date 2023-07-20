@@ -142,6 +142,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         userNumber: String,
         userAddress: String,
         userUID: String,
+        brandName: String,
         productName: String,
         productImageUrl: String,
         productId: String,
@@ -155,6 +156,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
             userNumber,
             userAddress,
             userUID,
+            brandName,
             productName,
             productImageUrl,
             productId,
@@ -175,6 +177,14 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     fun fetchReceivedOrders(sellerUid: String) {
         dbRepository.fetchReceivedOrders(sellerUid)
+    }
+
+    fun acceptOrders(sellerUid: String, buyerUid: String, orderId: String, date: String) {
+        dbRepository.acceptOrders(sellerUid, buyerUid, orderId, date)
+    }
+
+    fun rejectOrders(sellerUid: String, buyerUid: String, orderId: String) {
+        dbRepository.rejectOrders(sellerUid, buyerUid, orderId)
     }
 
 }

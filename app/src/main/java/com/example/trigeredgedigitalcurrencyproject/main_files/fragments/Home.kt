@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
@@ -45,6 +47,8 @@ class Home : Fragment() {
     private lateinit var shop: CardView
     private lateinit var userType: String
     private lateinit var userStatus: String
+    private lateinit var mainLayout: ScrollView
+    private lateinit var loader: LottieAnimationView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -56,8 +60,6 @@ class Home : Fragment() {
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
-        loadData()
-
         viewWallet = view.findViewById(R.id.view_wallet)
         send = view.findViewById(R.id.send_money)
         add = view.findViewById(R.id.add_money)
@@ -67,6 +69,10 @@ class Home : Fragment() {
         peopleLayout = view.findViewById(R.id.peopleLayout_home)
         peopleText = view.findViewById(R.id.people_text_home)
         shop = view.findViewById(R.id.shop_home)
+        mainLayout = view.findViewById(R.id.mainLayout_home)
+        loader = view.findViewById(R.id.progressbar_home)
+
+        loadData()
 
         peopleAdapter = PeopleAdapter(requireContext(), peopleItemsArray)
         recyclerview.layoutManager = GridLayoutManager(view.context, 3)
@@ -182,6 +188,8 @@ class Home : Fragment() {
                     if (list.isNotEmpty()) {
                         userType = list[7]
                         userStatus = list[8]
+                        mainLayout.visibility = View.VISIBLE
+                        loader.visibility = View.GONE
                     }
                 }
             }

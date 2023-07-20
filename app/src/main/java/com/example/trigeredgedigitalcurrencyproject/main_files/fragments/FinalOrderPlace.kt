@@ -15,10 +15,13 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
+import com.example.trigeredgedigitalcurrencyproject.db.Response
 import kotlin.properties.Delegates
 
 class FinalOrderPlace : Fragment() {
@@ -38,9 +41,12 @@ class FinalOrderPlace : Fragment() {
     private lateinit var address: EditText
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
+    private lateinit var whiteView: View
+    private lateinit var loader: LottieAnimationView
     private var price = 0
+    private var availableStocks by Delegates.notNull<Int>()
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,13 +69,16 @@ class FinalOrderPlace : Fragment() {
         finalAmount = view.findViewById(R.id.finalAmount_order_summary)
         placeOrder = view.findViewById(R.id.placeOrder_btn_order_summary)
         address = view.findViewById(R.id.address_order_summary)
+        whiteView = view.findViewById(R.id.whiteView_order_summary)
+        loader = view.findViewById(R.id.loader_order_summary)
 
         price = Integer.parseInt(requireArguments().getString("productPrice").toString())
 
         productName.text = requireArguments().getString("productName")
 //        updatedProductPrice.text = "₹" + requireArguments().getString("productPrice") + " INR"
         brandName.text = requireArguments().getString("brandName")
-        quantity.text = "Quantity : " + requireArguments().getString("quantity")
+//        quantity.text = "Quantity : " + requireArguments().getString("quantity")
+        availableStocks = requireArguments().getString("quantity")!!.toInt()
         description.text = requireArguments().getString("description")
         Glide.with(view).load(requireArguments().getString("productImageUrl")).into(productImage)
 
@@ -81,6 +90,8 @@ class FinalOrderPlace : Fragment() {
         var temp2 = temp1 + 30
         finalAmountInt = temp2
 
+        finalAmount.text = "₹$finalAmountInt"
+
         updatedProductPrice.text = "Product Price :  ₹$temp1"
         totalPrice.text = "Total amount you have to pay : ₹$temp2 INR"
 
@@ -89,7 +100,7 @@ class FinalOrderPlace : Fragment() {
         }
 
         plusBtn.setOnClickListener {
-            if (count < 12) {
+            if (count <= availableStocks) {
                 count++
                 quantity.text = "$count"
                 temp1 = price * count
@@ -127,26 +138,65 @@ class FinalOrderPlace : Fragment() {
         }
 
         placeOrder.setOnClickListener {
+            whiteView.visibility = View.VISIBLE
+            loader.visibility = View.VISIBLE
             order()
-            Toast.makeText(requireContext(), "Your order placed successfully", Toast.LENGTH_SHORT).show()
-            requireActivity().onBackPressed()
         }
         return view
     }
 
     private fun order() {
         val addressStr = address.text.toString()
-        if(addressStr.isEmpty()) {
-            Toast.makeText(requireContext(), "Enter your proper address to place order", Toast.LENGTH_SHORT).show()
+        if (addressStr.isEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                "Enter your proper address to place order",
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
-            authViewModel.userdata.observe(viewLifecycleOwner) { it ->
+            authViewModel.userdata.observe(viewLifecycleOwner) {
                 if (it != null) {
                     dbViewModel.fetchAccountDetails(it.uid)
                     dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                        dbViewModel.addOrder(list[0], list[1], addressStr, it.uid, requireArguments().getString("productName").toString(),
-                            requireArguments().getString("productImageUrl").toString(), requireArguments().getString("productId").toString(),
-                            requireArguments().getString("category").toString(), requireArguments().getString("productPrice").toString(),
-                            requireArguments().getString("quantity").toString(), requireArguments().getString("sellerUid").toString())
+                        dbViewModel.addOrder(
+                            list[0],
+                            list[1],
+                            addressStr,
+                            it.uid,
+                            requireArguments().getString("productName").toString(),
+                            requireArguments().getString("productImageUrl").toString(),
+                            requireArguments().getString("brandName").toString(),
+                            requireArguments().getString("productId").toString(),
+                            requireArguments().getString("category").toString(),
+                            requireArguments().getString("productPrice").toString(),
+                            quantity.text.toString(),
+                            requireArguments().getString("sellerUid").toString()
+                        )
+
+                        dbViewModel.dbResponse.observe(viewLifecycleOwner) {
+                            when (it) {
+                                is Response.Success -> {
+                                    whiteView.visibility = View.GONE
+                                    loader.visibility = View.GONE
+                                    requireActivity().onBackPressed()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Your order placed successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                                is Response.Failure -> {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        it.errorMassage,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    whiteView.visibility = View.GONE
+                                    loader.visibility = View.GONE
+                                }
+                            }
+                        }
                     }
                 }
             }
