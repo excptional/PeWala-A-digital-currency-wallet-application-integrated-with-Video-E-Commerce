@@ -33,6 +33,9 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     val sellerReceivedOrdersData: LiveData<MutableList<DocumentSnapshot>>
         get() = dbRepository.sellerReceivedOrdersData
 
+    val myOrdersData: LiveData<MutableList<DocumentSnapshot>>
+        get() = dbRepository.myOrdersData
+
     fun fetchAccountDetails(uid: String) {
         dbRepository.fetchAccountDetails(uid)
     }
@@ -185,6 +188,10 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     fun rejectOrders(sellerUid: String, buyerUid: String, orderId: String) {
         dbRepository.rejectOrders(sellerUid, buyerUid, orderId)
+    }
+
+    fun fetchMyOrders(buyerUid: String) {
+        dbRepository.fetchMyOrders(buyerUid)
     }
 
 }

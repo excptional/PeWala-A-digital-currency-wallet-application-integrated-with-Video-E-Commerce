@@ -34,7 +34,7 @@ import org.w3c.dom.Text
 import java.security.acl.Owner
 
 class SellerReceivedOrdersAdapter(
-    private val ProductItems: ArrayList<SellerReceivedOrdersItems>
+    private val OrdersItems: ArrayList<SellerReceivedOrdersItems>
 ) :
     RecyclerView.Adapter<SellerReceivedOrdersAdapter. SellerReceivedOrdersViewHolder>() {
 
@@ -48,7 +48,7 @@ class SellerReceivedOrdersAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: SellerReceivedOrdersViewHolder, position: Int) {
-        val currentItem = ProductItems[position]
+        val currentItem = OrdersItems[position]
         holder.productName.text = currentItem.productName
         holder.brandName.text = currentItem.brandName
         holder.buyerName.text = "Ordered by " + currentItem.buyerName
@@ -91,13 +91,13 @@ class SellerReceivedOrdersAdapter(
     }
 
     override fun getItemCount(): Int {
-        return ProductItems.size
+        return OrdersItems.size
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateSellerReceivedOrders(updateSellerReceivedOrdersItems: ArrayList<SellerReceivedOrdersItems>) {
-        ProductItems.clear()
-        ProductItems.addAll(updateSellerReceivedOrdersItems)
+        OrdersItems.clear()
+        OrdersItems.addAll(updateSellerReceivedOrdersItems)
         notifyDataSetChanged()
     }
 

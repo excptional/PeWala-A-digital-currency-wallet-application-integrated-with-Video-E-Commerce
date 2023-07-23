@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/itemLayout_order_buyer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="#F0F4F6"
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:cardElevation="@dimen/_5sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/_5sdp">
+
+                <ImageView
+                    android:id="@+id/productImg_order_buyer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_95sdp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/_3sdp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/coc" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="@dimen/_5sdp">
+
+                <TextView
+                    android:id="@+id/brandName_order_buyer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="Coca Cola"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/productName_order_buyer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:singleLine="true"
+                    android:text="Coca Cola Black soda drink"
+                    android:textColor="@color/material_black"
+                    android:textSize="@dimen/_12sdp" />
+
+                <TextView
+                    android:id="@+id/quantity_order_buyer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    android:singleLine="true"
+                    android:text="Quantity : 5"
+                    android:textColor="@color/material_black"
+                    android:textSize="@dimen/_13sdp" />
+
+                <TextView
+                    android:id="@+id/time_order_buyer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    android:singleLine="true"
+                    android:text="Ordered on 14 July, 2023"
+                    android:textColor="@color/material_black"
+                    android:textSize="@dimen/_13sdp" />
+
+                <TextView
+                    android:id="@+id/delivery_date_order_buyer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:text="Your order will deliver on \n14 July, 2023"
+                    android:textColor="#2196F3"
+                    android:textSize="@dimen/_13sdp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

@@ -60,6 +60,10 @@ class DBRepository(private val application: Application) {
     val sellerReceivedOrdersData: LiveData<MutableList<DocumentSnapshot>>
         get() = sellerReceivedOrdersLivedata
 
+    private val myOrdersLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
+    val myOrdersData: LiveData<MutableList<DocumentSnapshot>>
+        get() = myOrdersLivedata
+
     private val firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
 
@@ -551,6 +555,21 @@ class DBRepository(private val application: Application) {
                 }
                 dbResponseLiveData.postValue(Response.Success())
                 sellerReceivedOrdersLivedata.postValue(list)
+            }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
+
+    fun fetchMyOrders(buyerUid: String) {
+        firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid).get()
+            .addOnSuccessListener { documents ->
+                val list = mutableListOf<DocumentSnapshot>()
+                for (document in documents) {
+                    list.add(document)
+                }
+                dbResponseLiveData.postValue(Response.Success())
+                myOrdersLivedata.postValue(list)
             }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))

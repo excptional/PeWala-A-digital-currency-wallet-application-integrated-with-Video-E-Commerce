@@ -128,7 +128,7 @@ class ShopSeller : Fragment() {
         } else {
             for (i in list) {
                 if (i.exists()) {
-                    val acc = SellerProductsItems(
+                    val product= SellerProductsItems(
                         i.getString("Product Name"),
                         i.getString("Brand Name"),
                         i.getString("Product Image"),
@@ -144,7 +144,7 @@ class ShopSeller : Fragment() {
                         i.getString("Seller UID"),
                         i.getString("Product ID")
                     )
-                    productsItemsArray.add(acc)
+                    productsItemsArray.add(product)
                 }
             }
             productsAdapter.updateSellerProducts(productsItemsArray)
@@ -163,7 +163,7 @@ class ShopSeller : Fragment() {
         } else {
             for (i in list) {
                 if (i.exists()) {
-                    val acc = SellerReceivedOrdersItems(
+                    val order = SellerReceivedOrdersItems(
                         i.getString("Buyer Name"),
                         i.getString("Buyer UID"),
                         i.getString("Seller UID"),
@@ -179,7 +179,7 @@ class ShopSeller : Fragment() {
                         i.getString("Quantity"),
                         i.getString("Order ID")
                     )
-                    ordersItemsArray.add(acc)
+                    ordersItemsArray.add(order)
                 }
             }
             ordersAdapter.updateSellerReceivedOrders(ordersItemsArray)
