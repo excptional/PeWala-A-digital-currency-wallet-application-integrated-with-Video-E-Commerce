@@ -146,4 +146,9 @@
         android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Orders"
         tools:layout="@layout/fragment_orders" />
 
+    <fragment
+        android:id="@+id/nav_wishlist"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Wishlist"
+        tools:layout="@layout/fragment_wishlist" />
+
 </navigation>

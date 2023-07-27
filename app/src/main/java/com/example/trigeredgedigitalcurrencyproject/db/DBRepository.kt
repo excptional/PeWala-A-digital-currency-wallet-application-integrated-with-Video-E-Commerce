@@ -6,11 +6,13 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firestore.v1.Document
 import org.mindrot.jbcrypt.BCrypt
 import java.security.SecureRandom
 import java.sql.Struct
@@ -63,6 +65,14 @@ class DBRepository(private val application: Application) {
     private val myOrdersLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
     val myOrdersData: LiveData<MutableList<DocumentSnapshot>>
         get() = myOrdersLivedata
+
+    private val wishlistLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
+    val wishlistData: LiveData<MutableList<DocumentSnapshot>>
+        get() = wishlistLivedata
+
+    private val isInWishlistLivedata = MutableLiveData<Boolean>()
+    val isInWishlistData: LiveData<Boolean>
+        get() = isInWishlistLivedata
 
     private val firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
@@ -426,7 +436,8 @@ class DBRepository(private val application: Application) {
                 )
                 firebaseDB.collection("Products").document("Products").collection(productType)
                     .document(id).set(data)
-                firebaseDB.collection("Seller Products").document("Seller Products").collection(sellerUid)
+                firebaseDB.collection("Seller Products").document("Seller Products")
+                    .collection(sellerUid)
                     .document(id).set(data)
             }
         }
@@ -448,13 +459,51 @@ class DBRepository(private val application: Application) {
     }
 
     fun addToWishlist(category: String, productId: String, uid: String) {
-        val data = mapOf(
-            "Category" to category,
-            "Product Id" to productId
-        )
+        firebaseDB.collection("Products").document("Products").collection(category).document(productId).get().addOnSuccessListener {data ->
+            firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).document(productId)
+                .set(data.data!!).addOnSuccessListener {
+                    dbResponseLiveData.postValue(Response.Success())
+                }
+                .addOnFailureListener {
+                    dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                }
+        }
+    }
 
-        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).document(productId)
-            .set(data)
+    fun isInWishList(productId: String, uid: String) {
+        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).get()
+            .addOnSuccessListener {
+                val documents = it.toList()
+                val foundDocument = binarySearchDocuments(documents, productId)
+                if (foundDocument != null) {
+                    isInWishlistLivedata.postValue(true)
+                } else {
+                    isInWishlistLivedata.postValue(false)
+
+                }
+            }
+    }
+
+    fun removeFromWishlist(productId: String, uid: String) {
+        val doc = firebaseDB.collection("Wishlist").document("Wishlist").collection(uid)
+            .document(productId)
+        doc.get().addOnSuccessListener {
+            doc.delete()
+            dbResponseLiveData.postValue(Response.Success())
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(it.message.toString()))
+            }
+    }
+
+    fun fetchWishlistItems(uid: String) {
+        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).get().addOnSuccessListener { documents ->
+            val list = mutableListOf<DocumentSnapshot>()
+            for (document in documents) {
+                list.add(document)
+            }
+            wishlistLivedata.postValue(list)
+        }
     }
 
     fun addOrder(
@@ -471,7 +520,8 @@ class DBRepository(private val application: Application) {
         quantity: String,
         sellerUID: String
     ) {
-        val time = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
+        val time =
+            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
         val orderID = System.currentTimeMillis()
 
         val data = mapOf(
@@ -496,18 +546,43 @@ class DBRepository(private val application: Application) {
         firebaseDB.collection("Orders").document("order_$orderID").set(data).addOnSuccessListener {
             dbResponseLiveData.postValue(Response.Success())
         }
-        firebaseDB.collection("My Orders").document("My Orders").collection(userUID).document("order_$orderID").set(data).addOnSuccessListener {
-            dbResponseLiveData.postValue(Response.Success())
+        firebaseDB.collection("My Orders").document("My Orders").collection(userUID)
+            .document("order_$orderID").set(data).addOnSuccessListener {
+                dbResponseLiveData.postValue(Response.Success())
+            }
+        firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUID)
+            .document("order_$orderID").set(data).addOnSuccessListener {
+                dbResponseLiveData.postValue(Response.Success())
+            }
+    }
+
+    private fun binarySearchDocuments(
+        documents: List<DocumentSnapshot>,
+        targetId: String
+    ): DocumentSnapshot? {
+        var low = 0
+        var high = documents.size - 1
+
+        while (low <= high) {
+            val mid = (low + high) / 2
+            val midItem = documents[mid]
+
+            val comparison = midItem.id.compareTo(targetId)
+
+            when {
+                comparison == 0 -> return midItem // Found the document with the target ID
+                comparison < 0 -> low = mid + 1 // The target is in the right half
+                else -> high = mid - 1 // The target is in the left half
+            }
         }
-        firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUID).document("order_$orderID").set(data).addOnSuccessListener {
-            dbResponseLiveData.postValue(Response.Success())
-        }
+
+        return null // Document with the target ID not found
     }
 
     fun uploadSellerDoc(pan: String, gstin: String, uri: Uri, uid: String) {
         val doc = firebaseDB.collection("Users").document(uid)
         doc.get().addOnSuccessListener {
-            if(it.exists()) {
+            if (it.exists()) {
                 val ref =
                     firebaseStorage.reference.child("images/${uid}/${uri.lastPathSegment}")
                 ref.putFile(uri)
@@ -532,7 +607,8 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchSellerProducts(sellerUid: String) {
-        firebaseDB.collection("Seller Products").document("Seller Products").collection(sellerUid).get()
+        firebaseDB.collection("Seller Products").document("Seller Products").collection(sellerUid)
+            .get()
             .addOnSuccessListener { documents ->
                 val list = mutableListOf<DocumentSnapshot>()
                 for (document in documents) {
@@ -578,8 +654,11 @@ class DBRepository(private val application: Application) {
 
     fun acceptOrders(sellerUid: String, buyerUid: String, orderId: String, date: String) {
         val doc1 = firebaseDB.collection("Orders").document("order_$orderId")
-        val doc2 = firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid).document("order_$orderId")
-        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid).document("order_$orderId")
+        val doc2 =
+            firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid)
+                .document("order_$orderId")
+        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid)
+            .document("order_$orderId")
 
         doc1.get().addOnSuccessListener {
             if (it.exists()) {
@@ -618,8 +697,11 @@ class DBRepository(private val application: Application) {
 
     fun rejectOrders(sellerUid: String, buyerUid: String, orderId: String) {
         val doc1 = firebaseDB.collection("Orders").document("order_$orderId")
-        val doc2 = firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid).document("order_$orderId")
-        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid).document("order_$orderId")
+        val doc2 =
+            firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid)
+                .document("order_$orderId")
+        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid)
+            .document("order_$orderId")
 
         doc1.get().addOnSuccessListener {
             if (it.exists()) {
@@ -652,6 +734,7 @@ class DBRepository(private val application: Application) {
             }
 
     }
+
 
     private fun getErrorMassage(e: Exception): String {
         val colonIndex = e.toString().indexOf(":")

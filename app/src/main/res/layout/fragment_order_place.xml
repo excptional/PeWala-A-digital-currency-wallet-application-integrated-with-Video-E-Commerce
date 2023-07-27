@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     tools:context=".main_files.fragments.OrderPlace">
 
@@ -21,7 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/background"
+            android:background="@color/white"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground">
@@ -32,7 +33,7 @@
                 android:layout_centerInParent="true"
                 android:text="Add to cart"
                 android:textAllCaps="true"
-                android:textColor="@color/black"
+                android:textColor="@color/material_black"
                 android:textSize="@dimen/_15sdp"
                 android:textStyle="bold" />
 
@@ -43,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/material_black"
+            android:background="#03A9F4"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground">
@@ -101,7 +102,7 @@
                 </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/add_in_whishlist_order"
+                    android:id="@+id/add_to_whishlist_order"
                     android:layout_width="@dimen/_35sdp"
                     android:layout_height="@dimen/_35sdp"
                     android:background="@null"
@@ -313,5 +314,24 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <View
+        android:id="@+id/whiteView_order"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#A1FFFFFF"
+        android:visibility="gone" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loader_order"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_centerInParent="true"
+        android:background="@null"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/black_round_loader" />
 
 </RelativeLayout>

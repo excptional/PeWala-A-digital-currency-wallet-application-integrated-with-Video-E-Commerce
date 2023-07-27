@@ -15,6 +15,7 @@ import com.example.trigeredgedigitalcurrencyproject.R
 class ShopBuyer : Fragment() {
 
     private lateinit var orders: CardView
+    private lateinit var wishlist: CardView
     private lateinit var groceries: LinearLayout
     private lateinit var fashion: LinearLayout
     private lateinit var electronics: LinearLayout
@@ -33,6 +34,7 @@ class ShopBuyer : Fragment() {
         val view = inflater.inflate(R.layout.fragment_shop_buyer, container, false)
 
         orders = view.findViewById(R.id.orders_buyer_shop)
+        wishlist = view.findViewById(R.id.wishlist_buyer_shop)
         groceries = view.findViewById(R.id.groceries)
         fashion = view.findViewById(R.id.fashion)
         electronics = view.findViewById(R.id.electronics)
@@ -54,6 +56,10 @@ class ShopBuyer : Fragment() {
 
         orders.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.nav_orders, null, navBuilder.build())
+        }
+
+        wishlist.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.nav_wishlist, null, navBuilder.build())
         }
 
         groceries.setOnClickListener {

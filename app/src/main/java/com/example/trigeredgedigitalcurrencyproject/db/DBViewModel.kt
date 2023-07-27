@@ -36,6 +36,12 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     val myOrdersData: LiveData<MutableList<DocumentSnapshot>>
         get() = dbRepository.myOrdersData
 
+    val wishlistData: LiveData<MutableList<DocumentSnapshot>>
+        get() = dbRepository.wishlistData
+
+    val isInWishlistData: LiveData<Boolean>
+        get() = dbRepository.isInWishlistData
+
     fun fetchAccountDetails(uid: String) {
         dbRepository.fetchAccountDetails(uid)
     }
@@ -192,6 +198,22 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     fun fetchMyOrders(buyerUid: String) {
         dbRepository.fetchMyOrders(buyerUid)
+    }
+
+    fun addToWishlist(category: String, productId: String, uid: String) {
+        dbRepository.addToWishlist(category, productId, uid)
+    }
+
+    fun removeFromWishlist(productId: String, uid: String) {
+        dbRepository.removeFromWishlist(productId, uid)
+    }
+
+    fun isInWishList(productId: String, uid: String) {
+        dbRepository.isInWishList(productId, uid)
+    }
+
+    fun fetchWishlistItems(uid: String) {
+        dbRepository.fetchWishlistItems(uid)
     }
 
 }

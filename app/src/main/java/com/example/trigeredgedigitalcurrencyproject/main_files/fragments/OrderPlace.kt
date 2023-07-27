@@ -13,15 +13,21 @@ import android.widget.RatingBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.example.trigeredgedigitalcurrencyproject.R
+import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
+import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
+import com.example.trigeredgedigitalcurrencyproject.db.Response
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlin.properties.Delegates
 
 class OrderPlace : Fragment() {
 
     private lateinit var backBtn: ImageButton
-    private lateinit var addWishlistBtn: ImageButton
+    private lateinit var addToWishlistBtn: ImageButton
     private lateinit var shareBtn: ImageButton
     private lateinit var productImage: ImageView
     private lateinit var productName: TextView
@@ -35,6 +41,12 @@ class OrderPlace : Fragment() {
     private lateinit var sellerImg: CircleImageView
     private lateinit var placeOrder: RelativeLayout
     private lateinit var addToCart: RelativeLayout
+    private lateinit var authViewModel: AuthViewModel
+    private lateinit var dbViewModel: DBViewModel
+    private var uid: String? = null
+    private lateinit var whiteView: View
+    private lateinit var loader: LottieAnimationView
+    private var flag by Delegates.notNull<Boolean>()
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
@@ -44,7 +56,7 @@ class OrderPlace : Fragment() {
         val view = inflater.inflate(R.layout.fragment_order_place, container, false)
 
         backBtn = view.findViewById(R.id.back_btn_order)
-        addWishlistBtn = view.findViewById(R.id.add_in_whishlist_order)
+        addToWishlistBtn = view.findViewById(R.id.add_to_whishlist_order)
         shareBtn = view.findViewById(R.id.share_order)
         productName = view.findViewById(R.id.productName_order)
         brandName = view.findViewById(R.id.brandName_order)
@@ -58,6 +70,12 @@ class OrderPlace : Fragment() {
         addToCart = view.findViewById(R.id.add_to_card_order)
         sellerName = view.findViewById(R.id.sellerName_order)
         sellerImg = view.findViewById(R.id.sellerImage_order)
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
+        whiteView = view.findViewById(R.id.whiteView_order)
+        loader = view.findViewById(R.id.loader_order)
+
+        loadData()
 
         productName.text = requireArguments().getString("productName")
         productPrice.text = "₹" + requireArguments().getString("productPrice") + " INR"
@@ -74,8 +92,11 @@ class OrderPlace : Fragment() {
             requireActivity().onBackPressed()
         }
 
-        addWishlistBtn.setOnClickListener {
-            Toast.makeText(requireContext(), "This feature is not implemented till now", Toast.LENGTH_SHORT).show()
+        addToWishlistBtn.setOnClickListener {
+            whiteView.visibility = View.VISIBLE
+            loader.visibility = View.VISIBLE
+            if(!flag) addedToWishlist(requireArguments().getString("productId").toString())
+            else removeFromWishlist(requireArguments().getString("productId").toString())
         }
 
         shareBtn.setOnClickListener {
@@ -94,7 +115,7 @@ class OrderPlace : Fragment() {
             bundle.putString("productPrice", requireArguments().getString("productPrice"))
             bundle.putString("sellerName", sellerName.text.toString())
             bundle.putString("sellerImageUrl", requireArguments().getString("sellerImageUrl"))
-//            bundle.putString("rating", currentItem.ratings)
+            bundle.putString("rating", requireArguments().getString("ratings"))
             bundle.putString("quantity", quantity.text.toString())
             bundle.putString("description", description.text.toString())
             bundle.putString("productId", requireArguments().getString("productId"))
@@ -104,6 +125,64 @@ class OrderPlace : Fragment() {
         }
 
         return view
+    }
+
+    private fun addedToWishlist(productId: String) {
+        dbViewModel.addToWishlist(requireArguments().getString("category").toString(), productId, uid!!)
+        dbViewModel.dbResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is Response.Success -> {
+                    whiteView.visibility = View.GONE
+                    loader.visibility = View.GONE
+                    addToWishlistBtn.setImageResource(R.drawable.love_icon)
+                    Toast.makeText(requireContext(), "This product is added to your wishlist", Toast.LENGTH_SHORT).show()
+                }
+
+                is Response.Failure -> {
+                    whiteView.visibility = View.GONE
+                    loader.visibility = View.GONE
+                    Toast.makeText(requireContext(), it.errorMassage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun removeFromWishlist(productId: String) {
+        dbViewModel.removeFromWishlist(productId, uid!!)
+        dbViewModel.dbResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is Response.Success -> {
+                    whiteView.visibility = View.GONE
+                    loader.visibility = View.GONE
+                    addToWishlistBtn.setImageResource(R.drawable.whishlist_icon)
+                    Toast.makeText(requireContext(), "This product is removed from your wishlist", Toast.LENGTH_SHORT).show()
+                }
+
+                is Response.Failure -> {
+                    whiteView.visibility = View.GONE
+                    loader.visibility = View.GONE
+                    Toast.makeText(requireContext(), it.errorMassage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun loadData() {
+        authViewModel.userdata.observe(viewLifecycleOwner) {
+            if (it != null) {
+                uid = it.uid
+                dbViewModel.isInWishList(requireArguments().getString("productId").toString(), it.uid)
+                dbViewModel.isInWishlistData.observe(viewLifecycleOwner) {
+                    if(it) {
+                        addToWishlistBtn.setImageResource(R.drawable.love_icon)
+                        flag = true
+                    } else {
+                        addToWishlistBtn.setImageResource(R.drawable.whishlist_icon)
+                        flag = false
+                    }
+                }
+            }
+        }
     }
 
 }
