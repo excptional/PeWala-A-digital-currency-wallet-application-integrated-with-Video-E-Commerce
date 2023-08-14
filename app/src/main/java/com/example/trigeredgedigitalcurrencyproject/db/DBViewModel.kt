@@ -14,6 +14,8 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         get() = dbRepository.dbResponse
     val accDetails: LiveData<ArrayList<String>>
         get() = dbRepository.accDetails
+    val productDetails: LiveData<DocumentSnapshot>
+        get() = dbRepository.productDetails
     val contactDetails: LiveData<ArrayList<DocumentSnapshot>>
         get() = dbRepository.contactDetails
     val redeemRequestDetails: LiveData<ArrayList<DocumentSnapshot>>
@@ -41,6 +43,15 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     val isInWishlistData: LiveData<Boolean>
         get() = dbRepository.isInWishlistData
+
+    val cartData: LiveData<MutableList<DocumentSnapshot>>
+        get() = dbRepository.cartData
+
+    val isInCartData: LiveData<Boolean>
+        get() = dbRepository.isInCartData
+
+    val addressData: LiveData<DocumentSnapshot>
+        get() = dbRepository.addressData
 
     fun fetchAccountDetails(uid: String) {
         dbRepository.fetchAccountDetails(uid)
@@ -123,6 +134,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         productImage: Uri,
         productPrice: String,
         quantity: String,
+        unit: String,
         description: String,
         productType: String,
         keywords: String
@@ -136,6 +148,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
             productImage,
             productPrice,
             quantity,
+            unit,
             description,
             productType,
             keywords
@@ -214,6 +227,45 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     fun fetchWishlistItems(uid: String) {
         dbRepository.fetchWishlistItems(uid)
+    }
+
+    fun addToCart(category: String, productId: String, uid: String) {
+        dbRepository.addToCart(category, productId, uid)
+    }
+
+    fun isInCart(productId: String, uid: String) {
+        dbRepository.isInCart(productId, uid)
+    }
+
+    fun removeFromCart(productId: String, uid: String) {
+        dbRepository.removeFromCart(productId, uid)
+    }
+
+    fun fetchCartItems(uid: String) {
+        dbRepository.fetchCartItems(uid)
+    }
+
+    fun updateQuantityOfCart(productId: String, uid: String, quantity: String) {
+        dbRepository.updateQuantityOfCart(productId, uid, quantity)
+    }
+
+    fun getProductDetails(category: String, productId: String) {
+        dbRepository.getProductDetails(category, productId)
+    }
+
+    fun saveAddress(
+        locality: String,
+        city: String,
+        postalNo: String,
+        state: String,
+        landmark: String,
+        uid: String
+    ) {
+        dbRepository.saveAddress(locality, city, postalNo, state, landmark, uid)
+    }
+
+    fun getAddress(uid: String) {
+        dbRepository.getAddress(uid)
     }
 
 }

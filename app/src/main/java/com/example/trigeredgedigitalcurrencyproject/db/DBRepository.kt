@@ -5,6 +5,7 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.common.util.concurrent.Service.State
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -13,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firestore.v1.Document
+import com.google.protobuf.Empty
 import org.mindrot.jbcrypt.BCrypt
 import java.security.SecureRandom
 import java.sql.Struct
@@ -29,6 +31,10 @@ class DBRepository(private val application: Application) {
     private val accDetailsLiveData = MutableLiveData<ArrayList<String>>()
     val accDetails: LiveData<ArrayList<String>>
         get() = accDetailsLiveData
+
+    private val productDetailsLiveData = MutableLiveData<DocumentSnapshot>()
+    val productDetails: LiveData<DocumentSnapshot>
+        get() = productDetailsLiveData
 
     private val transactionDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
     val transactionDetails: LiveData<ArrayList<DocumentSnapshot>>
@@ -74,6 +80,18 @@ class DBRepository(private val application: Application) {
     val isInWishlistData: LiveData<Boolean>
         get() = isInWishlistLivedata
 
+    private val isInCartLivedata = MutableLiveData<Boolean>()
+    val isInCartData: LiveData<Boolean>
+        get() = isInCartLivedata
+
+    private val cartLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
+    val cartData: LiveData<MutableList<DocumentSnapshot>>
+        get() = cartLivedata
+
+    private val addressLivedata = MutableLiveData<DocumentSnapshot>()
+    val addressData: LiveData<DocumentSnapshot>
+        get() = addressLivedata
+
     private val firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
 
@@ -91,6 +109,7 @@ class DBRepository(private val application: Application) {
                 list.add(it.getString("User").toString())
                 list.add(it.getString("Status").toString())
                 accDetailsLiveData.postValue(list)
+                dbResponseLiveData.postValue(Response.Success())
             }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
@@ -409,6 +428,7 @@ class DBRepository(private val application: Application) {
         productImage: Uri,
         productPrice: String,
         quantity: String,
+        unit: String,
         description: String,
         productType: String,
         keywords: String
@@ -423,7 +443,7 @@ class DBRepository(private val application: Application) {
                     "Brand Name" to brandName,
                     "Product Image" to it.toString(),
                     "Product Price" to productPrice,
-                    "Quantity" to quantity,
+                    "Stocks" to quantity,
                     "Description" to description,
                     "Category" to productType,
                     "Tags" to keywords,
@@ -432,7 +452,8 @@ class DBRepository(private val application: Application) {
                     "Seller Image" to sellerImgUrl,
                     "Raters" to "",
                     "Ratings" to "0",
-                    "Product ID" to id
+                    "Product ID" to id,
+                    "Unit" to unit
                 )
                 firebaseDB.collection("Products").document("Products").collection(productType)
                     .document(id).set(data)
@@ -458,16 +479,43 @@ class DBRepository(private val application: Application) {
             }
     }
 
+    fun getProductDetails(category: String, productId: String) {
+        firebaseDB.collection("Products").document("Products").collection(category)
+            .document(productId).get()
+            .addOnSuccessListener {
+                productDetailsLiveData.postValue(it)
+                dbResponseLiveData.postValue(Response.Success())
+            }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
+
     fun addToWishlist(category: String, productId: String, uid: String) {
-        firebaseDB.collection("Products").document("Products").collection(category).document(productId).get().addOnSuccessListener {data ->
-            firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).document(productId)
-                .set(data.data!!).addOnSuccessListener {
-                    dbResponseLiveData.postValue(Response.Success())
-                }
-                .addOnFailureListener {
-                    dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
-                }
-        }
+        firebaseDB.collection("Products").document("Products").collection(category)
+            .document(productId).get().addOnSuccessListener { doc ->
+
+                val data = mapOf(
+                    "Category" to doc.get("Category").toString(),
+                    "Product ID" to doc.get("Product ID").toString(),
+                    "Product Name" to doc.get("Product Name").toString(),
+                    "Product Image" to doc.get("Product Image").toString(),
+                    "Brand Name" to doc.get("Brand Name").toString(),
+                    "Seller Name" to doc.get("Seller Name").toString(),
+                    "Seller Image" to doc.get("Seller Image").toString(),
+                    "Ratings" to doc.get("Ratings").toString(),
+                    "Product Price" to doc.get("Product Price").toString()
+                )
+
+                firebaseDB.collection("Wishlist").document("Wishlist").collection(uid)
+                    .document(productId)
+                    .set(data).addOnSuccessListener {
+                        dbResponseLiveData.postValue(Response.Success())
+                    }
+                    .addOnFailureListener {
+                        dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                    }
+            }
     }
 
     fun isInWishList(productId: String, uid: String) {
@@ -497,12 +545,86 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchWishlistItems(uid: String) {
-        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).get().addOnSuccessListener { documents ->
-            val list = mutableListOf<DocumentSnapshot>()
-            for (document in documents) {
-                list.add(document)
+        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).get()
+            .addOnSuccessListener { documents ->
+                val list = mutableListOf<DocumentSnapshot>()
+                for (document in documents) {
+                    list.add(document)
+                }
+                wishlistLivedata.postValue(list)
             }
-            wishlistLivedata.postValue(list)
+    }
+
+    fun addToCart(category: String, productId: String, uid: String) {
+        firebaseDB.collection("Products").document("Products").collection(category)
+            .document(productId).get().addOnSuccessListener { doc ->
+
+                val data = mapOf(
+                    "Category" to doc.get("Category").toString(),
+                    "Product ID" to doc.get("Product ID").toString(),
+                    "Product Name" to doc.get("Product Name").toString(),
+                    "Product Image" to doc.get("Product Image").toString(),
+                    "Brand Name" to doc.get("Brand Name").toString(),
+                    "Seller Name" to doc.get("Seller Name").toString(),
+                    "Seller Image" to doc.get("Seller Image").toString(),
+                    "Seller Uid" to doc.get("Seller Uid").toString(),
+                    "Description" to doc.get("Description").toString(),
+                    "Quantity" to "1",
+                    "Ratings" to doc.get("Ratings").toString(),
+                    "Product Price" to doc.get("Product Price").toString()
+                )
+
+                firebaseDB.collection("Cart").document("Cart").collection(uid).document(productId)
+                    .set(data).addOnSuccessListener {
+                        firebaseDB.collection("Cart").document("Cart").collection(uid)
+                        dbResponseLiveData.postValue(Response.Success())
+                    }
+                    .addOnFailureListener {
+                        dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                    }
+            }
+    }
+
+    fun isInCart(productId: String, uid: String) {
+        firebaseDB.collection("Cart").document("Cart").collection(uid).get()
+            .addOnSuccessListener {
+                val documents = it.toList()
+                val foundDocument = binarySearchDocuments(documents, productId)
+                if (foundDocument != null) {
+                    isInCartLivedata.postValue(true)
+                } else {
+                    isInCartLivedata.postValue(false)
+                }
+            }
+    }
+
+    fun fetchCartItems(uid: String) {
+        firebaseDB.collection("Cart").document("Cart").collection(uid).get()
+            .addOnSuccessListener { documents ->
+                val list = mutableListOf<DocumentSnapshot>()
+                for (document in documents) {
+                    list.add(document)
+                }
+                cartLivedata.postValue(list)
+            }
+    }
+
+    fun removeFromCart(productId: String, uid: String) {
+        val doc = firebaseDB.collection("Cart").document("Cart").collection(uid)
+            .document(productId)
+        doc.get().addOnSuccessListener {
+            doc.delete()
+            dbResponseLiveData.postValue(Response.Success())
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(it.message.toString()))
+            }
+    }
+
+    fun updateQuantityOfCart(productId: String, uid: String, quantity: String) {
+        val doc = firebaseDB.collection("Cart").document("Cart").collection(uid).document(productId)
+        doc.get().addOnSuccessListener {
+            doc.update("Quantity", quantity)
         }
     }
 
@@ -522,7 +644,7 @@ class DBRepository(private val application: Application) {
     ) {
         val time =
             SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
-        val orderID = System.currentTimeMillis()
+        val orderID = System.currentTimeMillis().toString()
 
         val data = mapOf(
             "Order ID" to orderID,
@@ -733,6 +855,40 @@ class DBRepository(private val application: Application) {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
 
+    }
+
+    fun saveAddress(
+        locality: String,
+        city: String,
+        postalNo: String,
+        state: String,
+        landmark: String,
+        uid: String
+    ) {
+        val data = mapOf(
+            "Locality" to locality,
+            "City" to city,
+            "Postal Code" to postalNo,
+            "State" to state,
+            "Landmark" to landmark
+        )
+
+        firebaseDB.collection("Addresses").document("Addresses").collection(uid).document("address")
+            .set(data).addOnSuccessListener {
+            dbResponseLiveData.postValue(Response.Success())
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
+
+    fun getAddress(uid: String) {
+        firebaseDB.collection("Addresses").document("Addresses").collection(uid).document("address").get().addOnSuccessListener {
+            if(it.exists()) {
+                addressLivedata.postValue(it)
+                dbResponseLiveData.postValue(Response.Success())
+            } else dbResponseLiveData.postValue(Response.Failure("No address found"))
+        }
     }
 
 

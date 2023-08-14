@@ -108,6 +108,7 @@ class OrdersDetails : Fragment() {
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setContentView(R.layout.select_date_dialog)
+        dialog.window?.attributes?.windowAnimations = R.anim.pop
 
         val calender: CalendarView = dialog.findViewById(R.id.calender_dialog)
         val chooseDateLayout: LinearLayout = dialog.findViewById(R.id.chooseDateLayout_dialog)
@@ -173,6 +174,7 @@ class OrdersDetails : Fragment() {
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setContentView(R.layout.reject_order_dialog)
+        dialog.window?.attributes?.windowAnimations = R.anim.pop
 
         val yesBtn: CardView = dialog.findViewById(R.id.yes_btn_dialog)
         val noBtn: CardView = dialog.findViewById(R.id.no_btn_dialog)

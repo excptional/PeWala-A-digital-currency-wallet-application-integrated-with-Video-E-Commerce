@@ -17,7 +17,7 @@ import com.example.trigeredgedigitalcurrencyproject.main_files.items.Transaction
 
 class TransactionHistoryAdapter(
     private val context: Context,
-    private val TransactionHistoryItems: ArrayList<TransactionHistoryItems>
+    private val transactionHistoryItems: ArrayList<TransactionHistoryItems>
 ) :
     RecyclerView.Adapter<TransactionHistoryAdapter.TransactionHistoryViewHolder>() {
     override fun onCreateViewHolder(
@@ -32,7 +32,7 @@ class TransactionHistoryAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: TransactionHistoryViewHolder, position: Int) {
-        val currentItem = TransactionHistoryItems[position]
+        val currentItem = transactionHistoryItems[position]
         holder.time.text = currentItem.time
         holder.amount.text = "₹${currentItem.amount}"
 
@@ -60,13 +60,13 @@ class TransactionHistoryAdapter(
     }
 
     override fun getItemCount(): Int {
-        return TransactionHistoryItems.size
+        return transactionHistoryItems.size
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateTransactionHistory(updateTransactionHistoryItems: ArrayList<TransactionHistoryItems>) {
-        TransactionHistoryItems.clear()
-        TransactionHistoryItems.addAll(updateTransactionHistoryItems)
+        transactionHistoryItems.clear()
+        transactionHistoryItems.addAll(updateTransactionHistoryItems)
         notifyDataSetChanged()
     }
 

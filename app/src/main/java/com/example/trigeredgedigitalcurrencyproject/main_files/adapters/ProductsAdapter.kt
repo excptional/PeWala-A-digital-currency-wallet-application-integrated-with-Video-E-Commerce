@@ -18,7 +18,7 @@ import com.example.trigeredgedigitalcurrencyproject.main_files.items.SellerProdu
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ProductsAdapter(
-    private val ProductItems: ArrayList<ProductsItems>
+    val productItems: ArrayList<ProductsItems>
 ) :
     RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -29,7 +29,7 @@ class ProductsAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val currentItem = ProductItems[position]
+        val currentItem = productItems[position]
         holder.productName.text = currentItem.productName
         holder.brandName.text = currentItem.brandName
         Glide.with(holder.itemView.context).load(currentItem.productImageUrl)
@@ -41,19 +41,8 @@ class ProductsAdapter(
         Glide.with(holder.itemView.context).load(currentItem.sellerImageUrl).into(holder.sellerImg)
 
         val bundle = Bundle()
-        bundle.putString("brandName", currentItem.brandName)
-        bundle.putString("productName", currentItem.productName)
-        bundle.putString("productImageUrl", currentItem.productImageUrl)
-        bundle.putString("productPrice", currentItem.price)
-        bundle.putString("productRating", currentItem.ratings)
-        bundle.putString("sellerName", currentItem.sellerName)
-        bundle.putString("sellerImageUrl", currentItem.sellerImageUrl)
-        bundle.putString("rating", currentItem.ratings)
-        bundle.putString("quantity", currentItem.quantity)
-        bundle.putString("description", currentItem.description)
         bundle.putString("productId", currentItem.productId)
         bundle.putString("category", currentItem.category)
-        bundle.putString("sellerUid", currentItem.sellerUID)
 
         holder.itemLayout.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.nav_order_place, bundle)
@@ -62,13 +51,13 @@ class ProductsAdapter(
     }
 
     override fun getItemCount(): Int {
-        return ProductItems.size
+        return productItems.size
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateProducts(updateProductsItems: ArrayList<ProductsItems>) {
-        ProductItems.clear()
-        ProductItems.addAll(updateProductsItems)
+        productItems.clear()
+        productItems.addAll(updateProductsItems)
         notifyDataSetChanged()
     }
 

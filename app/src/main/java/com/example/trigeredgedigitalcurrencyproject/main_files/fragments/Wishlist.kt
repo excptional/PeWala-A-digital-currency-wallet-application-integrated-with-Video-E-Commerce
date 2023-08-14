@@ -72,10 +72,6 @@ class Wishlist : Fragment() {
             shimmerContainerProducts.visibility = View.VISIBLE
             productsRecyclerView.visibility = View.GONE
             loadData()
-            dbViewModel!!.wishlistData.observe(viewLifecycleOwner) {
-                fetchProductsList(it)
-                swipeRefreshLayout.isRefreshing = false
-            }
             searchET.text = null
         }
 

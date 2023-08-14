@@ -151,4 +151,19 @@
         android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Wishlist"
         tools:layout="@layout/fragment_wishlist" />
 
+    <fragment
+        android:id="@+id/nav_cart"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Cart"
+        tools:layout="@layout/fragment_cart" />
+
+    <fragment
+        android:id="@+id/nav_remove_cart_items"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.RemoveCartItems"
+        tools:layout="@layout/fragment_remove_cart_items" />
+
+    <fragment
+        android:id="@+id/nav_address"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Address"
+        tools:layout="@layout/fragment_address" />
+
 </navigation>

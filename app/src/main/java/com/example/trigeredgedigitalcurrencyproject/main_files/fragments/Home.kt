@@ -121,6 +121,8 @@ class Home : Fragment() {
                 }
             } else Navigation.findNavController(view)
                 .navigate(R.id.nav_shop_buyer, bundle, navBuilder.build())
+//            Navigation.findNavController(view)
+//                .navigate(R.id.nav_address)
         }
 
         add.setOnClickListener {

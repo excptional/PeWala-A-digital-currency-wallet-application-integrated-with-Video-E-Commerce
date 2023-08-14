@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -38,13 +39,19 @@ class FinalOrderPlace : Fragment() {
     private lateinit var updatedProductPrice: TextView
     private lateinit var totalPrice: TextView
     private lateinit var finalAmount: TextView
-    private lateinit var address: EditText
+    private lateinit var address: LinearLayout
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
     private lateinit var whiteView: View
     private lateinit var loader: LottieAnimationView
     private var price = 0
     private var availableStocks by Delegates.notNull<Int>()
+    private var count = 1
+    private lateinit var uid: String
+    private lateinit var addressStr: String
+    private lateinit var locality: TextView
+    private lateinit var city_postal: TextView
+    private lateinit var state: TextView
 
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreateView(
@@ -66,23 +73,27 @@ class FinalOrderPlace : Fragment() {
         totalPrice = view.findViewById(R.id.totalPrice_order_summary)
         plusBtn = view.findViewById(R.id.plus_order_summary)
         minusBtn = view.findViewById(R.id.minus_order_summary)
-        finalAmount = view.findViewById(R.id.finalAmount_order_summary)
+        finalAmount = view.findViewById(R.id.final_amount_order_summary)
         placeOrder = view.findViewById(R.id.placeOrder_btn_order_summary)
         address = view.findViewById(R.id.address_order_summary)
         whiteView = view.findViewById(R.id.whiteView_order_summary)
         loader = view.findViewById(R.id.loader_order_summary)
+        locality = view.findViewById(R.id.area_order_summary)
+        city_postal = view.findViewById(R.id.city_postal_order_summary)
+        state = view.findViewById(R.id.state_order_summary)
+
+        whiteView.visibility = View.VISIBLE
+        loader.visibility = View.VISIBLE
 
         price = Integer.parseInt(requireArguments().getString("productPrice").toString())
-
         productName.text = requireArguments().getString("productName")
-//        updatedProductPrice.text = "₹" + requireArguments().getString("productPrice") + " INR"
         brandName.text = requireArguments().getString("brandName")
-//        quantity.text = "Quantity : " + requireArguments().getString("quantity")
         availableStocks = requireArguments().getString("quantity")!!.toInt()
         description.text = requireArguments().getString("description")
         Glide.with(view).load(requireArguments().getString("productImageUrl")).into(productImage)
 
-        var count = 1
+        load(view)
+
         var finalAmountInt = 0
         quantity.text = "1"
 
@@ -137,6 +148,10 @@ class FinalOrderPlace : Fragment() {
             }
         }
 
+        address.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.nav_address)
+        }
+
         placeOrder.setOnClickListener {
             whiteView.visibility = View.VISIBLE
             loader.visibility = View.VISIBLE
@@ -145,57 +160,37 @@ class FinalOrderPlace : Fragment() {
         return view
     }
 
-    private fun order() {
-        val addressStr = address.text.toString()
-        if (addressStr.isEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                "Enter your proper address to place order",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            authViewModel.userdata.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    dbViewModel.fetchAccountDetails(it.uid)
-                    dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                        dbViewModel.addOrder(
-                            list[0],
-                            list[1],
-                            addressStr,
-                            it.uid,
-                            requireArguments().getString("productName").toString(),
-                            requireArguments().getString("productImageUrl").toString(),
-                            requireArguments().getString("brandName").toString(),
-                            requireArguments().getString("productId").toString(),
-                            requireArguments().getString("category").toString(),
-                            requireArguments().getString("productPrice").toString(),
-                            quantity.text.toString(),
-                            requireArguments().getString("sellerUid").toString()
-                        )
-
-                        dbViewModel.dbResponse.observe(viewLifecycleOwner) {
-                            when (it) {
-                                is Response.Success -> {
+    @SuppressLint("SetTextI18n")
+    private fun load(view: View) {
+        authViewModel.userdata.observe(viewLifecycleOwner) {
+            if (it != null) {
+                uid = it.uid
+                dbViewModel.getAddress(uid)
+                dbViewModel.dbResponse.observe(viewLifecycleOwner) {
+                    when (it) {
+                        is Response.Success -> {
+                            dbViewModel.addressData.observe(viewLifecycleOwner) { doc ->
+                                if (doc.exists()) {
+                                    locality.text = doc.getString("Locality")
+                                    city_postal.text =
+                                        doc.getString("City") + ", " + doc.getString("Postal Code")
+                                    state.text = doc.getString("State")
+                                    addressStr =
+                                        "${doc.getString("Locality")}, ${doc.getString("Landmark")}, " +
+                                                "${doc.getString("City")}, ${doc.getString("Postal Code")}, " +
+                                                "${doc.getString("State")}"
                                     whiteView.visibility = View.GONE
                                     loader.visibility = View.GONE
-                                    requireActivity().onBackPressed()
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Your order placed successfully",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-
-                                is Response.Failure -> {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        it.errorMassage,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    whiteView.visibility = View.GONE
-                                    loader.visibility = View.GONE
+                                    address.visibility = View.VISIBLE
                                 }
                             }
+                        }
+
+                        is Response.Failure -> {
+                            whiteView.visibility = View.GONE
+                            loader.visibility = View.GONE
+//                            Navigation.findNavController(view).popBackStack()
+                            Navigation.findNavController(view).navigate(R.id.nav_address)
                         }
                     }
                 }
@@ -203,4 +198,48 @@ class FinalOrderPlace : Fragment() {
         }
     }
 
+    private fun order() {
+        dbViewModel.fetchAccountDetails(uid)
+        dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
+            dbViewModel.addOrder(
+                list[0],
+                list[1],
+                addressStr,
+                uid,
+                requireArguments().getString("brandName").toString(),
+                requireArguments().getString("productName").toString(),
+                requireArguments().getString("productImageUrl").toString(),
+                requireArguments().getString("productId").toString(),
+                requireArguments().getString("category").toString(),
+                requireArguments().getString("productPrice").toString(),
+                count.toString(),
+                requireArguments().getString("sellerUid").toString()
+            )
+
+            dbViewModel.dbResponse.observe(viewLifecycleOwner) {
+                when (it) {
+                    is Response.Success -> {
+                        whiteView.visibility = View.GONE
+                        loader.visibility = View.GONE
+                        Toast.makeText(
+                            requireContext(),
+                            "Your order placed successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        requireActivity().onBackPressed()
+                    }
+
+                    is Response.Failure -> {
+                        Toast.makeText(
+                            requireContext(),
+                            it.errorMassage,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        whiteView.visibility = View.GONE
+                        loader.visibility = View.GONE
+                    }
+                }
+            }
+        }
+    }
 }

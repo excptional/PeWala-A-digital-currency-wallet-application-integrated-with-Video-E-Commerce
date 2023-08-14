@@ -2,70 +2,62 @@
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipeRefreshLayout_wishlist"
+    android:id="@+id/swipeRefreshLayout_cart"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main_files.fragments.Wishlist">
+    tools:context=".main_files.fragments.Cart">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/main_layout_cart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/searchView_wishlist"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:background="@drawable/search_box_background"
-                android:layout_margin="@dimen/_10sdp"
-                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageButton
+                    android:id="@+id/back_btn_cart"
                     android:layout_width="@dimen/_35sdp"
                     android:layout_height="@dimen/_35sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
                     android:background="@null"
-                    android:src="@drawable/search_icon"/>
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/_4sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/back_black"
+                    tools:ignore="TouchTargetSizeCheck" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:boxBackgroundMode="none"
-                    app:hintEnabled="false">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/search_edit_text_wishlist"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="Wishlist"
-                        android:inputType="text"
-                        android:padding="@dimen/_5sdp"
-                        android:textColor="@color/material_black"
-                        android:textColorHint="@color/material_black"
-                        android:imeOptions="actionSearch"
-                        android:textSize="@dimen/_14sdp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My Cart"
+                    android:textColor="@color/material_black"
+                    android:textSize="@dimen/_16sdp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_wishlist"
+                android:id="@+id/recyclerView_cart"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 tools:ignore="RtlSymmetry"
-                android:visibility="gone"
-                tools:listitem="@layout/product_items" />
+                tools:listitem="@layout/cart_items" />
 
         </LinearLayout>
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/progressbar_wishlist"
+            android:id="@+id/progressbar_cart"
             android:layout_width="@dimen/_200sdp"
             android:layout_height="@dimen/_100sdp"
             android:layout_centerInParent="true"
@@ -77,12 +69,12 @@
             app:lottie_rawRes="@raw/black_round_loader" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer_view_wishlist"
+            android:id="@+id/shimmer_view_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             app:shimmer_duration="800">
 
             <LinearLayout
@@ -101,11 +93,11 @@
         </com.facebook.shimmer.ShimmerFrameLayout>
 
         <TextView
-            android:id="@+id/notFound_wishlist"
+            android:id="@+id/notFound_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Wishlist is empty"
+            android:text="Cart is empty"
             android:textColor="@color/material_black"
             android:textSize="@dimen/_12sdp"
             android:visibility="gone" />

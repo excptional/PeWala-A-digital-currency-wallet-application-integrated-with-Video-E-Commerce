@@ -147,7 +147,7 @@ class Products : Fragment() {
                         i.getString("Product Image"),
                         i.getString("Category"),
                         i.getString("Product Price"),
-                        i.getString("Quantity"),
+                        i.getString("Stocks"),
                         i.getString("Description"),
                         i.getString("Tags"),
                         i.getString("Ratings"),

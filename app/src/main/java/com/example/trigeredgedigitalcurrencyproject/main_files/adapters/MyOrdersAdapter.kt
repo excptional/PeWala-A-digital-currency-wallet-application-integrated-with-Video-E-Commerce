@@ -64,7 +64,6 @@ class MyOrdersAdapter(
         bundle.putString("orderId", currentItem.orderId)
         bundle.putString("productImg", currentItem.productImageUrl)
         bundle.putString("buyerUid", currentItem.buyerUid)
-        bundle.putString("buyerUid", currentItem.buyerUid)
 
         val navBuilder = NavOptions.Builder()
         navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)

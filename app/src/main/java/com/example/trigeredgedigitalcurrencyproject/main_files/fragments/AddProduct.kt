@@ -265,7 +265,8 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
                                 brandNameStr,
                                 productImageUri,
                                 priceStr,
-                                "$quantityStr $quantityTypeStr",
+                                quantityStr,
+                                quantityTypeStr,
                                 descriptionStr,
                                 productTypeStr,
                                 keywordsStr
