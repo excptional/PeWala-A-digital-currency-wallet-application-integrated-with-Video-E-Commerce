@@ -7,7 +7,7 @@ data class CartItems(
     val category: String? = null,
     val price: String? = null,
     val quantity: String? = null,
-    val unit: String? = null,
+//    val unit: String? = null,
     val description: String? = null,
     val sellerName: String? = null,
     val sellerImageUrl: String? = null,

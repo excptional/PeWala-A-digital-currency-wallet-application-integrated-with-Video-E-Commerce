@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.nav_history_)
         }
 
+        if(intent.getStringExtra("orderPlaced") == "order") {
+            navController.navigate(R.id.nav_orders)
+        }
+
         checkDeviceHasBiometric()
         executor = ContextCompat.getMainExecutor(this)
         biometricPrompt = BiometricPrompt(this, executor,

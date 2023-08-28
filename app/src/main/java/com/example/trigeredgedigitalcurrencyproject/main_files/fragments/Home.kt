@@ -187,9 +187,9 @@ class Home : Fragment() {
                 }
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if (list.isNotEmpty()) {
-                        userType = list[7]
-                        userStatus = list[8]
+                    if (list.exists()) {
+                        userType = list.getString("User").toString()
+                        userStatus = list.getString("Status").toString()
                         mainLayout.visibility = View.VISIBLE
                         loader.visibility = View.GONE
                     }

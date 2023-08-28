@@ -256,11 +256,11 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
                 if (it != null) {
                     dbViewModel.fetchAccountDetails(it.uid)
                     dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                        if(list.isNotEmpty()) {
+                        if(list.exists()) {
                             dbViewModel.addProduct(
                                 it.uid,
-                                list[0],
-                                list[3],
+                                list.getString("Name").toString(),
+                                list.getString("Image Url").toString(),
                                 productNameStr,
                                 brandNameStr,
                                 productImageUri,

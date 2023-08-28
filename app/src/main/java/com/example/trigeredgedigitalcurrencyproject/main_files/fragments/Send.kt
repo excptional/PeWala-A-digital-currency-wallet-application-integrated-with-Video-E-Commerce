@@ -144,8 +144,8 @@ class Send : Fragment() {
             if (it != null) {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if (list.isNotEmpty()) {
-                        phoneNum = list[1]
+                    if (list.exists()) {
+                        phoneNum = list.getString("Phone").toString()
                     }
                 }
                 dbViewModel.fetchContacts(it.uid)

@@ -137,9 +137,9 @@ class History : Fragment() {
         authViewModel.userdata.observe(viewLifecycleOwner) { it ->
             if (it != null) {
                 dbViewModel.fetchAccountDetails(it.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) {
-                    name = it[0]
-                    phone = it[1]
+                dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
+                    name = list.getString("Name").toString()
+                    phone = list.getString("Phone").toString()
                 }
             }
         }

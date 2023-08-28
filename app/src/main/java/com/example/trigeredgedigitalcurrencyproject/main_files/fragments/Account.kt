@@ -188,18 +188,18 @@ class Account : Fragment() {
                 myUser = it
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if(list.isNotEmpty()) {
-                        if(list[6] == ""){
+                    if(list.exists()) {
+                        if(list.getString("Status") == ""){
                             verifyIcon.visibility = View.GONE
                             pinText.text = "PIN : _ _ _ _ (Not set)"
                         } else {
                             pinText.text = "PIN : * * * *"
                             verifyIcon.visibility = View.VISIBLE
                         }
-                        nameAccount.text = list[0]
-                        phoneAccount.text = "Phone : +91 ${list[1]}"
-                        cardIdAccount.text = "Wallet id : ${list[2]}"
-                        Glide.with(view).load(list[3]).into(profileImg)
+                        nameAccount.text = list.getString("Name")
+                        phoneAccount.text = "Phone : +91 ${list.getString("Phone")}"
+                        cardIdAccount.text = "Wallet id : ${list.getString("Card Id")}"
+                        Glide.with(view).load(list.getString("Image Url")).into(profileImg)
                         mainLayout.visibility = View.VISIBLE
                         whiteView.visibility = View.GONE
                         loaderAccount.visibility = View.GONE

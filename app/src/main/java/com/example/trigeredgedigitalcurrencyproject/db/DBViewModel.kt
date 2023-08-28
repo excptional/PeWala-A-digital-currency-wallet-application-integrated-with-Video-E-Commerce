@@ -12,7 +12,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     private val dbRepository: DBRepository = DBRepository(application)
     val dbResponse: LiveData<Response<String>>
         get() = dbRepository.dbResponse
-    val accDetails: LiveData<ArrayList<String>>
+    val accDetails: LiveData<DocumentSnapshot>
         get() = dbRepository.accDetails
     val productDetails: LiveData<DocumentSnapshot>
         get() = dbRepository.productDetails
@@ -163,6 +163,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         userName: String,
         userNumber: String,
         userAddress: String,
+        orderType: String,
         userUID: String,
         brandName: String,
         productName: String,
@@ -177,6 +178,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
             userName,
             userNumber,
             userAddress,
+            orderType,
             userUID,
             brandName,
             productName,
@@ -266,6 +268,10 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getAddress(uid: String) {
         dbRepository.getAddress(uid)
+    }
+
+    fun payToAdmin(amount: String, senderUid: String) {
+        dbRepository.payToAdmin(amount, senderUid)
     }
 
 }

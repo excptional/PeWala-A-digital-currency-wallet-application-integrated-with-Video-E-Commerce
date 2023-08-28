@@ -154,7 +154,7 @@
             android:focusable="true"
             android:layout_gravity="center"
             android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/material_black"
+            app:cardBackgroundColor="#2196F3"
             app:cardCornerRadius="@dimen/_10sdp"
             app:cardElevation="@dimen/_5sdp">
 
@@ -190,6 +190,5 @@
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/black_round_loader" />
-
 
 </RelativeLayout>

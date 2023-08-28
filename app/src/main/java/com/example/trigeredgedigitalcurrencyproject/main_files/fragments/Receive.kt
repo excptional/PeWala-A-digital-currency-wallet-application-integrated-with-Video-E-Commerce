@@ -93,9 +93,9 @@ class Receive : Fragment() {
             if(it != null) {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if(list.isNotEmpty()) {
-                        Glide.with(view).load(list[4]).into(qrImage)
-                        cardId.text = "Your card id : ${list[2]}"
+                    if(list.exists()) {
+                        Glide.with(view).load(list.getString("QR Code")).into(qrImage)
+                        cardId.text = "Your card id : ${list.getString("Card Id")}"
                         mainLayout.visibility = View.VISIBLE
                         whiteView.visibility = View.GONE
                         loaderReceive.visibility = View.GONE

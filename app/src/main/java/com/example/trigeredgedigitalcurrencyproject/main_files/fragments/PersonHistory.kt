@@ -1,5 +1,6 @@
 package com.example.trigeredgedigitalcurrencyproject.main_files.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -113,16 +114,17 @@ class PersonHistory : Fragment() {
         mainLayout.visibility = View.VISIBLE
     }
 
+    @SuppressLint("SetTextI18n")
     private fun loadData() {
         authViewModel.userdata.observe(viewLifecycleOwner) { user ->
             if(user != null) {
                 dbViewModel.fetchAccountDetails(payerUid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) {
-                    name.text = it[0]
-                    payerPhone = it[1]
-                    phone.text = "Ph : ${it[1]}"
-                    walletId.text = "Wallet Id : ${it[2]}"
-                    Glide.with(requireView()).load(it[3]).into(profileImage)
+                    name.text = it.getString("Name")
+                    payerPhone = it.getString("Phone").toString()
+                    phone.text = "Ph : ${it.getString("Phone")}"
+                    walletId.text = "Wallet Id : ${it.getString("Card Id")}"
+                    Glide.with(requireView()).load(it.getString("Image Url")).into(profileImage)
                     dbViewModel.fetchTransactionDetails(user.uid)
                     dbViewModel.transactionDetails.observe(viewLifecycleOwner) { list ->
                         if (list.isNotEmpty()) {

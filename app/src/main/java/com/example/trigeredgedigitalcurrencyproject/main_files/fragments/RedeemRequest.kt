@@ -98,8 +98,8 @@ class RedeemRequest : Fragment() {
             if (user != null) {
                 dbViewModel.fetchAccountDetails(user.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) {
-                    name = it[0]
-                    phone = it[1]
+                    name = it.getString("Name").toString()
+                    phone = it.getString("Phone").toString()
                     dbViewModel.fetchRedeemRequest(user.uid)
                     dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list ->
                         if(list.isNotEmpty()) fetchData(list)

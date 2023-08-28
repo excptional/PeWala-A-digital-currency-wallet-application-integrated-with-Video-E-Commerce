@@ -69,8 +69,8 @@ class QRScanner : Fragment() {
             if (it != null) {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if (list.isNotEmpty()) {
-                        if(walletId == list[2]) {
+                    if (list.exists()) {
+                        if(walletId == list.getString("Card Id")) {
                             Toast.makeText(requireContext(), "You can't pay to your own account", Toast.LENGTH_SHORT).show()
                             requireActivity().onBackPressed()
                         } else {

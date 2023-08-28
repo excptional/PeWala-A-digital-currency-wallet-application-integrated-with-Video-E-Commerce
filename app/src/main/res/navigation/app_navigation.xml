@@ -166,4 +166,14 @@
         android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Address"
         tools:layout="@layout/fragment_address" />
 
+    <fragment
+        android:id="@+id/nav_digital_pay"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.DigitalPayment"
+        tools:layout="@layout/fragment_digital_payment" />
+
+    <fragment
+        android:id="@+id/nav_successfully_order_placed"
+        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.SuccessfullyOrderPlaced"
+        tools:layout="@layout/fragment_successfully_order_placed" />
+
 </navigation>

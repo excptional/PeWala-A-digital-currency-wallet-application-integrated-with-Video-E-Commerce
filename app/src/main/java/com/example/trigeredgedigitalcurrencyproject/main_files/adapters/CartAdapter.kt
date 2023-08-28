@@ -2,6 +2,7 @@ package com.example.trigeredgedigitalcurrencyproject.main_files.adapters
 
 import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.annotation.SuppressLint
+import android.app.ActionBar
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -40,7 +41,7 @@ class CartAdapter(
 
     val authViewModel = ViewModelProvider(viewModelStoreOwner)[AuthViewModel::class.java]
     val dbViewModel = ViewModelProvider(viewModelStoreOwner)[DBViewModel::class.java]
-    lateinit var newQuantity: String
+    private lateinit var newQuantity: String
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -60,9 +61,9 @@ class CartAdapter(
             .into(holder.productImage)
 
         holder.setQuantityBox.setOnClickListener {
-            authViewModel.userdata.observe(lifecycleOwner) {
-                if(it != null) {
-                    showQuantityDialog(holder.quantity, currentItem.productId!!, it.uid)
+            authViewModel.userdata.observe(lifecycleOwner) { user ->
+                if(user != null) {
+                    showQuantityDialog(holder.quantity, currentItem.productId!!, user.uid)
                 }
             }
         }
@@ -113,6 +114,7 @@ class CartAdapter(
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setGravity(Gravity.BOTTOM)
         dialog.setContentView(R.layout.set_quantity_dialog)
+        dialog.window?.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT)
         dialog.window?.attributes?.windowAnimations = R.anim.slide_up
 
         val closeBtn: ImageView = dialog.findViewById(R.id.close_btn_quantity_dialog)

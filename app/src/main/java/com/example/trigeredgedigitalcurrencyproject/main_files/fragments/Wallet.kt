@@ -104,14 +104,14 @@ class Wallet : Fragment() {
             if (user != null) {
                 dbViewModel.fetchAccountDetails(user.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list1 ->
-                    if (list1.isNotEmpty()) {
-                        walletBalance.text = "₹${list1[5]}"
+                    if (list1.exists()) {
+                        walletBalance.text = "₹${list1.getString("Balance")}"
                         mainLayout.visibility = View.VISIBLE
                         whiteView.visibility = View.GONE
                         loaderWallet.visibility = View.GONE
                         refreshLayout.isRefreshing = false
-                        name = list1[0]
-                        phone = list1[1]
+                        name = list1.getString("Name").toString()
+                        phone = list1.getString("Phone").toString()
                         dbViewModel.fetchRedeemRequest(user.uid)
                         dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list2 ->
                             if(list2.isNotEmpty()) fetchData(list2)

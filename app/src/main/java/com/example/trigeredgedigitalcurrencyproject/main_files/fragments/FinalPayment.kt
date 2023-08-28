@@ -54,8 +54,6 @@ class FinalPayment : Fragment() {
     private lateinit var noteEditText: TextInputEditText
     private lateinit var payBtn: CardView
     private lateinit var profileImg: CircleImageView
-    private lateinit var authViewModel: AuthViewModel
-    private lateinit var dbViewModel: DBViewModel
     private lateinit var receiverUid: String
     private lateinit var senderUid: String
     private lateinit var balance: String
@@ -71,6 +69,8 @@ class FinalPayment : Fragment() {
     private lateinit var amount: String
     private lateinit var note: String
     private lateinit var backBtn: ImageButton
+    private lateinit var authViewModel: AuthViewModel
+    private lateinit var dbViewModel: DBViewModel
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
@@ -126,8 +126,8 @@ class FinalPayment : Fragment() {
                 senderUid = it.uid
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list1 ->
-                    if (list1.isNotEmpty()) {
-                        if (list1[6].isEmpty()) {
+                    if (list1.exists()) {
+                        if (list1.getString("Status")!!.isEmpty()) {
                             Toast.makeText(
                                 requireContext(),
                                 "Set your 4 digit PIN before use this feature",
@@ -135,11 +135,11 @@ class FinalPayment : Fragment() {
                             ).show()
                             requireActivity().onBackPressed()
                         } else {
-                            senderName = list1[0]
-                            senderPhone = list1[1]
-                            senderWalletId = list1[2]
-                            balance = list1[5]
-                            originalPIN = list1[6]
+                            senderName = list1.getString("Name").toString()
+                            senderPhone = list1.getString("Phone").toString()
+                            senderWalletId = list1.getString("Card Id").toString()
+                            balance = list1.getString("Balance").toString()
+                            originalPIN = list1.getString("PIN").toString()
                             dbViewModel.getPayerDetails(
                                 requireArguments().getString("walletId").toString()
                             )

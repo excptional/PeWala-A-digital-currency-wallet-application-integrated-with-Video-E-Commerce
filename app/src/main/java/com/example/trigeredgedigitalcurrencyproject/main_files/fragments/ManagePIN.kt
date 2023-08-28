@@ -172,14 +172,14 @@ class ManagePIN : Fragment() {
                 myUser = it
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if (list.isNotEmpty()) {
-                        phone = list[1]
-                        if (list[6] == "") {
+                    if (list.exists()) {
+                        phone = list.getString("Phone").toString()
+                        if (list.getString("Status") == "") {
                             currentPINLayout.visibility = View.GONE
                             temp = "New PIN generated successfully"
                         } else {
                             currentPINLayout.visibility = View.VISIBLE
-                            prevPIN = list[6]
+                            prevPIN = list.getString("PIN").toString()
                             temp = "PIN changed successfully"
                         }
                         mainLayout.visibility = View.VISIBLE

@@ -28,8 +28,8 @@ class DBRepository(private val application: Application) {
     val dbResponse: LiveData<Response<String>>
         get() = dbResponseLiveData
 
-    private val accDetailsLiveData = MutableLiveData<ArrayList<String>>()
-    val accDetails: LiveData<ArrayList<String>>
+    private val accDetailsLiveData = MutableLiveData<DocumentSnapshot>()
+    val accDetails: LiveData<DocumentSnapshot>
         get() = accDetailsLiveData
 
     private val productDetailsLiveData = MutableLiveData<DocumentSnapshot>()
@@ -98,17 +98,17 @@ class DBRepository(private val application: Application) {
     fun fetchAccountDetails(uid: String) {
         firebaseDB.collection("Users").document(uid).get()
             .addOnSuccessListener {
-                val list = ArrayList<String>()
-                list.add(it.getString("Name").toString())
-                list.add(it.getString("Phone").toString())
-                list.add(it.getString("Card Id").toString())
-                list.add(it.getString("Image Url").toString())
-                list.add(it.getString("QR Code").toString())
-                list.add(it.getString("Balance").toString())
-                list.add(it.getString("PIN").toString())
-                list.add(it.getString("User").toString())
-                list.add(it.getString("Status").toString())
-                accDetailsLiveData.postValue(list)
+//                val list = ArrayList<String>()
+//                list.add(it.getString("Name").toString())
+//                list.add(it.getString("Phone").toString())
+//                list.add(it.getString("Card Id").toString())
+//                list.add(it.getString("Image Url").toString())
+//                list.add(it.getString("QR Code").toString())
+//                list.add(it.getString("Balance").toString())
+//                list.add(it.getString("PIN").toString())
+//                list.add(it.getString("User").toString())
+//                list.add(it.getString("Status").toString())
+                accDetailsLiveData.postValue(it)
                 dbResponseLiveData.postValue(Response.Success())
             }
             .addOnFailureListener {
@@ -567,7 +567,7 @@ class DBRepository(private val application: Application) {
                     "Brand Name" to doc.get("Brand Name").toString(),
                     "Seller Name" to doc.get("Seller Name").toString(),
                     "Seller Image" to doc.get("Seller Image").toString(),
-                    "Seller Uid" to doc.get("Seller Uid").toString(),
+                    "Seller UID" to doc.get("Seller UID").toString(),
                     "Description" to doc.get("Description").toString(),
                     "Quantity" to "1",
                     "Ratings" to doc.get("Ratings").toString(),
@@ -632,6 +632,7 @@ class DBRepository(private val application: Application) {
         userName: String,
         userNumber: String,
         userAddress: String,
+        orderType:  String,
         userUID: String,
         brandName: String,
         productName: String,
@@ -662,7 +663,8 @@ class DBRepository(private val application: Application) {
             "Product ID" to productId,
             "Order Time" to time,
             "Category" to productCategory,
-            "Status" to "Pending"
+            "Status" to "Pending",
+            "Order Type" to orderType
         )
 
         firebaseDB.collection("Orders").document("order_$orderID").set(data).addOnSuccessListener {
@@ -814,7 +816,6 @@ class DBRepository(private val application: Application) {
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
-
     }
 
     fun rejectOrders(sellerUid: String, buyerUid: String, orderId: String) {
@@ -891,6 +892,38 @@ class DBRepository(private val application: Application) {
         }
     }
 
+    fun payToAdmin(amount: String, senderUid: String) {
+        val adminId = "Jufm91ImZUat1ZUrFpA8CY1HMlw1"
+
+        val doc1 = firebaseDB.collection("Users").document(senderUid)
+        val doc2 = firebaseDB.collection("Users").document(adminId)
+
+        doc1.get().addOnSuccessListener {
+            if (it.exists()) {
+                val amountDouble = amount.toDouble()
+                val balance = it.getString("Balance")!!.toDouble()
+                val finalBalance = balance - amountDouble
+                doc1.update("Balance", finalBalance.toInt().toString())
+                dbResponseLiveData.postValue(Response.Success())
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+
+        doc2.get().addOnSuccessListener {
+            if (it.exists()) {
+                val amountDouble = amount.toDouble()
+                val balance = it.getString("Balance")!!.toDouble()
+                val finalBalance = balance + amountDouble
+                doc2.update("Balance", finalBalance.toInt().toString())
+                dbResponseLiveData.postValue(Response.Success())
+            }
+        }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+    }
 
     private fun getErrorMassage(e: Exception): String {
         val colonIndex = e.toString().indexOf(":")
