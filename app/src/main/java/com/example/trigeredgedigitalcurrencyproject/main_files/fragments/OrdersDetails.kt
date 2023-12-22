@@ -46,6 +46,7 @@ class OrdersDetails : Fragment() {
     private lateinit var orderIdString: String
     private lateinit var sellerUidString: String
     private lateinit var buyerUidString: String
+    private lateinit var btnLayout: LinearLayout
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
@@ -68,22 +69,28 @@ class OrdersDetails : Fragment() {
         whiteView = view.findViewById(R.id.whiteView_order_details)
         loader = view.findViewById(R.id.loader_order_details)
         orderId = view.findViewById(R.id.orderId_order_details)
+        btnLayout = view.findViewById(R.id.btn_layout_order_details)
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
+
+        if (requireArguments().getString("status").toString() != "Pending") {
+            btnLayout.visibility = View.GONE
+        }
 
         buyerUidString = requireArguments().getString("buyerUid").toString()
         sellerUidString = requireArguments().getString("sellerUid").toString()
         orderIdString = requireArguments().getString("orderId").toString()
         brandName.text = requireArguments().getString("brandName").toString()
         productName.text = requireArguments().getString("productName").toString()
-        productPrice.text = "₹"+ requireArguments().getString("productPrice").toString()
+        productPrice.text = "₹" + requireArguments().getString("productPrice").toString()
         buyerName.text = "Ordered by " + requireArguments().getString("buyerName").toString()
         address.text = requireArguments().getString("address").toString()
         quantity.text = "Quantity : " + requireArguments().getString("quantity").toString()
         orderTime.text = "Ordered on " + requireArguments().getString("orderTime").toString()
         orderId.text = "Ordered Id : " + requireArguments().getString("orderId").toString()
-        Glide.with(view).load(requireArguments().getString("productImg").toString()).into(productImg)
+        Glide.with(view).load(requireArguments().getString("productImg").toString())
+            .into(productImg)
 
         acceptBtn.setOnClickListener {
             showDialogAccept()
@@ -188,6 +195,7 @@ class OrdersDetails : Fragment() {
             dbViewModel.rejectOrders(sellerUidString, buyerUidString, orderIdString)
             dialog.hide()
             dbViewModel.dbResponse.observe(viewLifecycleOwner) {
+
                 when (it) {
                     is Response.Success -> {
                         whiteView.visibility = View.GONE
@@ -216,6 +224,7 @@ class OrdersDetails : Fragment() {
         noBtn.setOnClickListener {
             dialog.hide()
         }
+
         dialog.show()
     }
 

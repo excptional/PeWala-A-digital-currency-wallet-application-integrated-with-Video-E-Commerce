@@ -45,6 +45,7 @@ class FinalOrderPlace : Fragment() {
 
     private lateinit var closeBtn: ImageButton
     private lateinit var productImage: ImageView
+    private lateinit var productId: String
     private lateinit var productName: TextView
     private lateinit var brandName: TextView
     private lateinit var quantity: TextView
@@ -104,6 +105,7 @@ class FinalOrderPlace : Fragment() {
         loader.visibility = View.VISIBLE
 
         price = Integer.parseInt(requireArguments().getString("productPrice").toString())
+        productId = requireArguments().getString("productId").toString()
         productName.text = requireArguments().getString("productName")
         brandName.text = requireArguments().getString("brandName")
         availableStocks = requireArguments().getString("quantity")!!.toInt()
@@ -313,14 +315,14 @@ class FinalOrderPlace : Fragment() {
         dbViewModel.accDetails.observe(viewLifecycleOwner) { doc ->
             dbViewModel.addOrder(
                 doc.getString("Name").toString(),
-                doc.getString("Number").toString(),
+                doc.getString("Phone").toString(),
                 addressStr,
                 "COD",
                 uid,
                 requireArguments().getString("brandName").toString(),
                 requireArguments().getString("productName").toString(),
                 requireArguments().getString("productImageUrl").toString(),
-                requireArguments().getString("productId").toString(),
+                productId,
                 requireArguments().getString("category").toString(),
                 requireArguments().getString("productPrice").toString(),
                 count.toString(),

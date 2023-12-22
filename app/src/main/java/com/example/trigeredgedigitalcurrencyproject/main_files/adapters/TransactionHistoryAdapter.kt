@@ -10,13 +10,20 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trigeredgedigitalcurrencyproject.R
+import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
 import com.example.trigeredgedigitalcurrencyproject.db.DBViewModel
 import com.example.trigeredgedigitalcurrencyproject.main_files.items.TransactionHistoryItems
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 
 class TransactionHistoryAdapter(
     private val context: Context,
+    viewModelStoreOwner: ViewModelStoreOwner,
+    private val lifecycleOwner: LifecycleOwner,
     private val transactionHistoryItems: ArrayList<TransactionHistoryItems>
 ) :
     RecyclerView.Adapter<TransactionHistoryAdapter.TransactionHistoryViewHolder>() {
@@ -29,33 +36,47 @@ class TransactionHistoryAdapter(
         return TransactionHistoryViewHolder(view)
     }
 
+    val dbViewModel = ViewModelProvider(viewModelStoreOwner)[DBViewModel::class.java]
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: TransactionHistoryViewHolder, position: Int) {
         val currentItem = transactionHistoryItems[position]
-        holder.time.text = currentItem.time
-        holder.amount.text = "₹${currentItem.amount}"
+        val date = java.util.Date(currentItem.time!!.toLong())
+        val timeZone = TimeZone.getTimeZone("Asia/Kolkata")
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa")
+        dateFormat.timeZone = timeZone
 
-        holder.name.text = currentItem.name
-        when (currentItem.operation) {
-            "Send" -> {
-                holder.payType.text = "Send to +91 ${currentItem.phone}"
-                holder.icon.setImageDrawable(getDrawable(context, R.drawable.send_icon))
-            }
-            "Receive" -> {
-                holder.payType.text = "Receive from +91 ${currentItem.phone}"
-                holder.icon.setImageDrawable(getDrawable(context, R.drawable.receive_money))
+        dbViewModel.fetchAccountDetails(currentItem.uid.toString())
+        dbViewModel.accDetails.observe(lifecycleOwner) { doc ->
+            holder.name.text = doc.getString("Name").toString()
+            when (currentItem.operation) {
+                "Debit" -> {
+                    holder.payType.text = "Send to +91 ${doc.getString("Phone").toString()}"
+                    holder.icon.setImageDrawable(getDrawable(context, R.drawable.send_icon))
+                }
 
-            }
-            "Add" -> {
-                holder.payType.text = "Added to +91 ${currentItem.phone}"
-                holder.icon.setImageDrawable(getDrawable(context, R.drawable.receive_money))
+                "Credit" -> {
+                    holder.payType.text =
+                        "Receive from +91 ${doc.getString("Phone").toString()}"
+                    holder.icon.setImageDrawable(getDrawable(context, R.drawable.receive_money))
 
+                }
+
+                "Add" -> {
+                    holder.payType.text = "Added to +91 ${doc.getString("Phone").toString()}"
+                    holder.icon.setImageDrawable(getDrawable(context, R.drawable.receive_money))
+
+                }
+
+                else -> {
+                    holder.payType.text =
+                        "Withdraw from +91 ${doc.getString("Phone").toString()}"
+                    holder.icon.setImageDrawable(getDrawable(context, R.drawable.send_icon))
+                }
             }
-            else -> {
-                holder.payType.text = "Withdraw from +91 ${currentItem.phone}"
-                holder.icon.setImageDrawable(getDrawable(context, R.drawable.send_icon))
-            }
+            holder.time.text = dateFormat.format(date)
+            holder.amount.text = "₹${currentItem.amount}"
+            holder.tId.text = currentItem.tId
         }
     }
 
@@ -76,6 +97,7 @@ class TransactionHistoryAdapter(
         val icon: ImageView = itemView.findViewById(R.id.icon_item)
         val amount: TextView = itemView.findViewById(R.id.amount_item)
         val time: TextView = itemView.findViewById(R.id.time_item)
+        val tId: TextView = itemView.findViewById(R.id.tId_item)
         val body: LinearLayout = itemView.findViewById(R.id.body_item)
     }
 }

@@ -92,13 +92,15 @@ class Orders : Fragment() {
                         i.getString("Order Time"),
                         i.getString("Delivery Date"),
                         i.getString("Status"),
+                        i.getString("Product ID"),
                         i.getString("Product Name"),
                         i.getString("Brand Name"),
                         i.getString("Product Image Url"),
                         i.getString("Category"),
                         i.getString("Payable Amount"),
                         i.getString("Quantity"),
-                        i.getString("Order ID")
+                        i.getString("Order ID"),
+                        i.getString("Product Rating")
                     )
                     ordersItemsArray.add(order)
                 }

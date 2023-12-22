@@ -2,6 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -24,94 +25,138 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_5sdp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="@dimen/_5sdp">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
-                <ImageView
-                    android:id="@+id/productImg_order_buyer"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_95sdp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="@dimen/_3sdp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/coc" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_5sdp">
+
+                    <ImageView
+                        android:id="@+id/productImg_order_buyer"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_95sdp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/_3sdp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/coc" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_5sdp">
+
+                    <TextView
+                        android:id="@+id/brandName_order_buyer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="Coca Cola"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/productName_order_buyer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:singleLine="true"
+                        android:text="Coca Cola Black soda drink"
+                        android:textColor="@color/material_black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/quantity_order_buyer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:singleLine="true"
+                        android:text="Quantity : 5"
+                        android:textColor="@color/material_black"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <TextView
+                        android:id="@+id/time_order_buyer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:singleLine="true"
+                        android:text="Ordered on 14 July, 2023"
+                        android:textColor="@color/material_black"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <TextView
+                        android:id="@+id/delivery_date_order_buyer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:text="Your order will deliver on \n14 July, 2023"
+                        android:textColor="#2196F3"
+                        android:textSize="@dimen/_13sdp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_5sdp"
-                android:layout_weight="2"
+                android:id="@+id/rating_layout_order_buyer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:padding="@dimen/_5sdp">
+                android:weightSum="2"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/brandName_order_buyer"
+                <RatingBar
+                    android:id="@+id/ratingbar_order_buyer"
+                    style="?android:attr/ratingBarStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:text="Coca Cola"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:outlineAmbientShadowColor="#00000000"
+                    android:isIndicator="true"
+                    android:progress="3"
+                    android:stepSize="1"
+                    android:numStars="5" />
+
+
+                <TextView
+                    android:id="@+id/rateNowText_order_buyer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rate this \nproduct now"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@color/material_black"
+                    android:layout_weight="1"
                     android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/productName_order_buyer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_2sdp"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:singleLine="true"
-                    android:text="Coca Cola Black soda drink"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_12sdp" />
-
-                <TextView
-                    android:id="@+id/quantity_order_buyer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_2sdp"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:singleLine="true"
-                    android:text="Quantity : 5"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_13sdp" />
-
-                <TextView
-                    android:id="@+id/time_order_buyer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_2sdp"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:singleLine="true"
-                    android:text="Ordered on 14 July, 2023"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_13sdp" />
-
-                <TextView
-                    android:id="@+id/delivery_date_order_buyer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_2sdp"
-                    android:text="Your order will deliver on \n14 July, 2023"
-                    android:textColor="#2196F3"
-                    android:textSize="@dimen/_13sdp" />
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    tools:ignore="InefficientWeight" />
 
             </LinearLayout>
 

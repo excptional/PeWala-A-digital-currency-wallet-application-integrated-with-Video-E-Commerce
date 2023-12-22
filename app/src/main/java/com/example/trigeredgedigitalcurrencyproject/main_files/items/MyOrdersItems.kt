@@ -8,11 +8,13 @@ data class MyOrdersItems(
     val time: String? = null,
     val delivery_date: String? = null,
     val status: String? = null,
+    val productId: String? = null,
     val productName: String? = null,
     val brandName: String? = null,
     val productImageUrl: String? = null,
     val category: String? = null,
     val price: String? = null,
     val quantity: String? = null,
-    val orderId: String? = null
+    val orderId: String? = null,
+    val rating: String? = null
 )

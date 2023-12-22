@@ -11,12 +11,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.main_files.items.RedeemItems
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 
 class RedeemAdapter(
     private val context: Context,
     private val redeemItems: ArrayList<RedeemItems>
 ) :
     RecyclerView.Adapter<RedeemAdapter.RedeemViewHolder>() {
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -26,11 +29,15 @@ class RedeemAdapter(
         return RedeemViewHolder(view)
     }
 
-
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: RedeemViewHolder, position: Int) {
         val currentItem = redeemItems[position]
-        holder.time.text = currentItem.time
+        val date = java.util.Date(currentItem.time!!.toLong())
+        val timeZone = TimeZone.getTimeZone("Asia/Kolkata")
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa")
+        dateFormat.timeZone = timeZone
+
+        holder.time.text = dateFormat.format(date)
         holder.amount.text = "₹${currentItem.amount}"
         holder.phone.text = "Redeem from +91 ${currentItem.phone}"
         holder.name.text = currentItem.name

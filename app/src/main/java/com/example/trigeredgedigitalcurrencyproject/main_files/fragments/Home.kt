@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +26,6 @@ import com.example.trigeredgedigitalcurrencyproject.main_files.items.PeopleItems
 import com.example.trigeredgedigitalcurrencyproject.main_files.slider_files.SliderAdapter
 import com.google.firebase.firestore.DocumentSnapshot
 import com.smarteist.autoimageslider.SliderView
-
 
 class Home : Fragment() {
 
@@ -74,6 +74,12 @@ class Home : Fragment() {
 
         loadData()
 
+//        dbViewModel.addAccount("5100D0C7B6F0", "123456")
+//        dbViewModel.addAccount("5100C8940409", "123456")
+//        dbViewModel.addAccount("5100C7B9D5FA", "123456")
+//        dbViewModel.addAccount("5100C7FCBCD6", "123456")
+//        dbViewModel.addAccount("5100D15B06DD", "123456")
+
         peopleAdapter = PeopleAdapter(requireContext(), peopleItemsArray)
         recyclerview.layoutManager = GridLayoutManager(view.context, 3)
         recyclerview.setHasFixedSize(true)
@@ -104,6 +110,7 @@ class Home : Fragment() {
             .setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out)
 
         shop.setOnClickListener {
+//            Toast.makeText(requireContext(), "This feature is not implemented yet", Toast.LENGTH_SHORT).show()
             val bundle = Bundle()
             bundle.putString("userType", userType)
             requireFragmentManager().popBackStack()

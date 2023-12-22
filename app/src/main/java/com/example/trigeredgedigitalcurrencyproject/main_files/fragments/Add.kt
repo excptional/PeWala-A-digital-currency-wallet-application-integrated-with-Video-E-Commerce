@@ -80,72 +80,74 @@ class Add : Fragment() {
 
         addMoney.setOnClickListener {
 
-            whiteView.visibility = View.VISIBLE
-            loaderAdd.visibility = View.VISIBLE
-            amount = amountEditText.text.toString()
+            Toast.makeText(requireContext(), "This feature is not implemented yet", Toast.LENGTH_SHORT).show()
 
-            if (amount.isEmpty()) {
-                whiteView.visibility = View.GONE
-                loaderAdd.visibility = View.GONE
-                amountEditText.error = "Enter an amount"
-                Toast.makeText(requireContext(), "Enter an amount first", Toast.LENGTH_SHORT).show()
-            } else if (amount.toDouble() <= 0) {
-                whiteView.visibility = View.GONE
-                loaderAdd.visibility = View.GONE
-                amountEditText.error = "Enter an valid amount"
-                Toast.makeText(requireContext(), "Enter an valid amount", Toast.LENGTH_SHORT).show()
-            } else if (limit == 0.0) {
-                whiteView.visibility = View.GONE
-                loaderAdd.visibility = View.GONE
-                amountEditText.error = "Your daily add limit was reached, try again tomorrow"
-                Toast.makeText(
-                    requireContext(),
-                    "Your daily add limit was reached, try again tomorrow",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else if (amount.toDouble() > 5000) {
-                whiteView.visibility = View.GONE
-                loaderAdd.visibility = View.GONE
-                amountEditText.error = "Entered amount is over limit"
-                Toast.makeText(
-                    requireContext(),
-                    "You can't add more than 5000 rupees in your wallet in a day",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else if (amount.toDouble() > limit) {
-                whiteView.visibility = View.GONE
-                loaderAdd.visibility = View.GONE
-                amountEditText.error = "You can't add more than ${limit.toInt()} rupees"
-                Toast.makeText(
-                    requireContext(),
-                    "You can't add more than ${limit.toInt()} rupees according to your daily limit",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else if (amount.toDouble() + walletBalance.toDouble() > 20000) {
-                whiteView.visibility = View.GONE
-                loaderAdd.visibility = View.GONE
-                amountEditText.error = "You reach the maximum limit of your wallet"
-                Toast.makeText(
-                    requireContext(),
-                    "You reach the maximum limit of your wallet, your wallet limit is 20,000 rupees",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                tId = "TID${System.currentTimeMillis()}"
-                msg = "₹" + amount + " added in your smart wallet. " +
-                        "\nTransaction ID : " + tId
-                val payment = UPIPayment(
-                    vpa = "bd27official@okhdfcbank",
-                    name = "Trigredge",
-                    description = "Adding money to your Trigredge wallet",
-                    transactionId = tId,
-                    amount = "$amount.00"
-                )
-                whiteView.visibility = View.GONE
-                loaderAdd.visibility = View.GONE
-                val paymentIntent = startPayment(payment)
-                startActivityForResult(paymentIntent, UPI_PAYMENT_REQUEST_CODE)
-            }
+//            whiteView.visibility = View.VISIBLE
+//            loaderAdd.visibility = View.VISIBLE
+//            amount = amountEditText.text.toString()
+//
+//            if (amount.isEmpty()) {
+//                whiteView.visibility = View.GONE
+//                loaderAdd.visibility = View.GONE
+//                amountEditText.error = "Enter an amount"
+//                Toast.makeText(requireContext(), "Enter an amount first", Toast.LENGTH_SHORT).show()
+//            } else if (amount.toDouble() <= 0) {
+//                whiteView.visibility = View.GONE
+//                loaderAdd.visibility = View.GONE
+//                amountEditText.error = "Enter an valid amount"
+//                Toast.makeText(requireContext(), "Enter an valid amount", Toast.LENGTH_SHORT).show()
+//            } else if (limit == 0.0) {
+//                whiteView.visibility = View.GONE
+//                loaderAdd.visibility = View.GONE
+//                amountEditText.error = "Your daily add limit was reached, try again tomorrow"
+//                Toast.makeText(
+//                    requireContext(),
+//                    "Your daily add limit was reached, try again tomorrow",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            } else if (amount.toDouble() > 5000) {
+//                whiteView.visibility = View.GONE
+//                loaderAdd.visibility = View.GONE
+//                amountEditText.error = "Entered amount is over limit"
+//                Toast.makeText(
+//                    requireContext(),
+//                    "You can't add more than 5000 rupees in your wallet in a day",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            } else if (amount.toDouble() > limit) {
+//                whiteView.visibility = View.GONE
+//                loaderAdd.visibility = View.GONE
+//                amountEditText.error = "You can't add more than ${limit.toInt()} rupees"
+//                Toast.makeText(
+//                    requireContext(),
+//                    "You can't add more than ${limit.toInt()} rupees according to your daily limit",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            } else if (amount.toDouble() + walletBalance.toDouble() > 20000) {
+//                whiteView.visibility = View.GONE
+//                loaderAdd.visibility = View.GONE
+//                amountEditText.error = "You reach the maximum limit of your wallet"
+//                Toast.makeText(
+//                    requireContext(),
+//                    "You reach the maximum limit of your wallet, your wallet limit is 20,000 rupees",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            } else {
+//                tId = "TID${System.currentTimeMillis()}"
+//                msg = "₹" + amount + " added in your smart wallet. " +
+//                        "\nTransaction ID : " + tId
+//                val payment = UPIPayment(
+//                    vpa = "bd27official@okhdfcbank",
+//                    name = "Trigredge",
+//                    description = "Adding money to your Trigredge wallet",
+//                    transactionId = tId,
+//                    amount = "$amount.00"
+//                )
+//                whiteView.visibility = View.GONE
+//                loaderAdd.visibility = View.GONE
+//                val paymentIntent = startPayment(payment)
+//                startActivityForResult(paymentIntent, UPI_PAYMENT_REQUEST_CODE)
+//            }
         }
         return view
     }

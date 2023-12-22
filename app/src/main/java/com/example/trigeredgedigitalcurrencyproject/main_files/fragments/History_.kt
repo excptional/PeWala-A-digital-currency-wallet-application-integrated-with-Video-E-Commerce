@@ -34,8 +34,7 @@ class History_ : Fragment() {
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
     private lateinit var backBtn: ImageButton
-    private lateinit var name: String
-    private lateinit var phone: String
+    private lateinit var uid: String
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -65,7 +64,7 @@ class History_ : Fragment() {
         mainLayout.visibility = View.GONE
 
         transactionHistoryAdapter =
-            TransactionHistoryAdapter(requireContext(), transactionHistoryItems)
+            TransactionHistoryAdapter(requireContext(), this, viewLifecycleOwner, transactionHistoryItems)
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
         recyclerview.setHasFixedSize(true)
         recyclerview.setItemViewCacheSize(20)
@@ -107,8 +106,7 @@ class History_ : Fragment() {
             if (i.exists()) {
                 if(i.getString("User Id")!!.isEmpty()) {
                     val transactionData = TransactionHistoryItems(
-                        name,
-                        phone,
+                        uid,
                         i.getString("TId"),
                         i.getString("Operation"),
                         i.getString("Time"),
@@ -117,8 +115,7 @@ class History_ : Fragment() {
                     transactionHistoryItemsArray.add(transactionData)
                 }
                 val transactionData = TransactionHistoryItems(
-                    i.getString("User Name"),
-                    i.getString("User Phone"),
+                    i.getString("User Id"),
                     i.getString("TId"),
                     i.getString("Operation"),
                     i.getString("Time"),
@@ -137,11 +134,7 @@ class History_ : Fragment() {
     private fun loadData() {
         authViewModel.userdata.observe(viewLifecycleOwner) { it ->
             if (it != null) {
-                dbViewModel.fetchAccountDetails(it.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) {
-                    name = it.getString("Name").toString()
-                    phone = it.getString("Phone").toString()
-                }
+                uid = it.uid
             }
         }
     }

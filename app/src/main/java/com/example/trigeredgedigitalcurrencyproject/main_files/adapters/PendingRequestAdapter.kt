@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.main_files.items.RedeemItems
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 
 class PendingRequestAdapter(
     private val context: Context,
@@ -25,9 +27,16 @@ class PendingRequestAdapter(
     }
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: PendingRequestViewHolder, position: Int) {
         val currentItem = redeemItems[position]
+        val date = java.util.Date(currentItem.time!!.toLong())
+        val timeZone = TimeZone.getTimeZone("Asia/Kolkata")
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa")
+        dateFormat.timeZone = timeZone
+
+        holder.time.text = dateFormat.format(date)
+
         holder.time.text = currentItem.time
         holder.amount.text = "₹${currentItem.amount}"
     }

@@ -28,7 +28,6 @@
                 android:id="@+id/icon_item"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/send_icon"
                 android:layout_margin="@dimen/_10sdp"/>
 
         </androidx.cardview.widget.CardView>
@@ -44,14 +43,12 @@
                 android:id="@+id/pay_type_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Paid to +91 8420248002"
                 android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/name_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Madhumita Ghosh"
                 android:textColor="@color/material_black"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold"/>
@@ -60,14 +57,12 @@
                 android:id="@+id/tId_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Transaction ID : TD1234564563"
                 android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/time_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5 April, 2023 at 07:30 AM"
                 android:textStyle="italic"/>
 
         </LinearLayout>
@@ -76,7 +71,6 @@
             android:id="@+id/amount_item"
             android:layout_width="@dimen/_60sdp"
             android:layout_height="wrap_content"
-            android:text="₹5000"
             android:layout_margin="@dimen/_10sdp"
             android:textAlignment="center"
             android:textColor="@color/black"

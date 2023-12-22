@@ -95,7 +95,7 @@ class AuthRepository(private val application: Application) {
         firebaseAuth.createUserWithEmailAndPassword("$phone@gmail.com", password)
             .addOnSuccessListener {
                 val doc = firebaseDB.collection("Users").document(firebaseAuth.currentUser!!.uid)
-                if(userType == "Buyer") {
+                if (userType == "Buyer") {
                     doc.set(data1)
                     doc.get().addOnSuccessListener {
                         doc.update("Uid", firebaseAuth.currentUser!!.uid)

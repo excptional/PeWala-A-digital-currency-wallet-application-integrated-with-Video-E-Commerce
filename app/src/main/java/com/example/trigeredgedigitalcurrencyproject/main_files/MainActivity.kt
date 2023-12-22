@@ -52,7 +52,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.qrScanner.setOnClickListener {
-            navController.navigate(R.id.nav_qr_scanner)
+//            Toast.makeText(this, "This feature is not implemented yet", Toast.LENGTH_SHORT).show()
+            navController.navigate(R.id.nav_qr_scanner2)
         }
 
         if(intent.getStringExtra("fragmentToLoad") == "Send") {

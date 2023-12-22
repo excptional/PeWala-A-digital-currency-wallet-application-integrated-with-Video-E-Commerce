@@ -36,7 +36,7 @@ class ProductsAdapter(
             .into(holder.productImage)
         holder.productPrice.text = "₹" + currentItem.price
         holder.productRatingText.text = currentItem.ratings
-//        holder.productRatingBar.rating = currentItem.ratings!!.toFloat()
+        holder.productRatingBar.rating = currentItem.ratings!!.toFloat()
         holder.sellerName.text = currentItem.sellerName
         Glide.with(holder.itemView.context).load(currentItem.sellerImageUrl).into(holder.sellerImg)
 

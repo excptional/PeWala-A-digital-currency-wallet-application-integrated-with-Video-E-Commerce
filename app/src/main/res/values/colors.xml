@@ -10,4 +10,9 @@
     <color name="light_red">#FF725E</color>
     <color name="material_black">#495963</color>
     <color name="background">#dddddd</color>
+    <color name="rating_color_1">#E53935</color>
+    <color name="rating_color_2">#FFB300</color>
+    <color name="rating_color_3">#FDD835</color>
+    <color name="rating_color_4">#8BC34A</color>
+    <color name="rating_color_5">#00D509</color>
 </resources>

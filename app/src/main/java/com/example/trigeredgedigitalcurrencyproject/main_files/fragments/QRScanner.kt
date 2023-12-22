@@ -12,6 +12,7 @@ import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
+import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.example.trigeredgedigitalcurrencyproject.R
 import com.example.trigeredgedigitalcurrencyproject.db.AuthViewModel
@@ -47,6 +48,14 @@ class QRScanner : Fragment() {
                 loadData(it.text.toString())
             }
         }
+
+        codeScanner.errorCallback = ErrorCallback {
+            activity.runOnUiThread {
+                Toast.makeText(requireContext(), "Camera initialization error: ${it.message}",
+                    Toast.LENGTH_LONG).show()
+            }
+        }
+
         scannerView.setOnClickListener {
             codeScanner.startPreview()
         }

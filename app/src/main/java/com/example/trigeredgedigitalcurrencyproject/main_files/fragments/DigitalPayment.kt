@@ -43,6 +43,7 @@ class DigitalPayment : Fragment() {
     private var receiverName: String = "Admin"
     private var receiverPhone: String = "8000264639"
     private lateinit var senderWalletId: String
+    private lateinit var senderImageUrl: String
     private lateinit var balance: String
     private lateinit var whiteView: View
     private lateinit var loaderFinalPay: LottieAnimationView
@@ -159,6 +160,7 @@ class DigitalPayment : Fragment() {
                                 receiverUid,
                                 senderName,
                                 senderPhone,
+                                senderImageUrl,
                                 receiverName,
                                 receiverPhone,
                                 "",
@@ -193,7 +195,7 @@ class DigitalPayment : Fragment() {
         dbViewModel.accDetails.observe(viewLifecycleOwner) { doc ->
             dbViewModel.addOrder(
                 doc.getString("Name").toString(),
-                doc.getString("Number").toString(),
+                doc.getString("Phone").toString(),
                 requireArguments().getString("address").toString(),
                 "Digital Payment",
                 senderUid,
@@ -293,6 +295,7 @@ class DigitalPayment : Fragment() {
                             senderName = list1.getString("Name").toString()
                             senderPhone = list1.getString("Phone").toString()
                             senderWalletId = list1.getString("Card Id").toString()
+                            senderImageUrl = list1.getString("Image Url").toString()
                             balance = list1.getString("Balance").toString()
                             originalPIN = list1.getString("PIN").toString()
                             titleText.text = "Paying from $senderName \nFor ${

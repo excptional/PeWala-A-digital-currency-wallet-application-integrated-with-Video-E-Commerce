@@ -93,6 +93,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         receiverUid: String,
         senderName: String,
         senderPhone: String,
+        senderImgUrl: String,
         receiverName: String,
         receiverPhone: String,
         receiverImg: String,
@@ -106,6 +107,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
             receiverUid,
             senderName,
             senderPhone,
+            senderImgUrl,
             receiverName,
             receiverPhone,
             receiverImg,
@@ -163,7 +165,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         userName: String,
         userNumber: String,
         userAddress: String,
-        orderType: String,
+        paymentType: String,
         userUID: String,
         brandName: String,
         productName: String,
@@ -178,7 +180,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
             userName,
             userNumber,
             userAddress,
-            orderType,
+            paymentType,
             userUID,
             brandName,
             productName,
@@ -273,5 +275,23 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     fun payToAdmin(amount: String, senderUid: String) {
         dbRepository.payToAdmin(amount, senderUid)
     }
+
+    fun addReview(
+        buyerUID: String,
+        sellerUID: String,
+        productId: String,
+        orderId: String,
+        rating: Float,
+        feedback: String
+    ) {
+        dbRepository.addReview(buyerUID, sellerUID, productId, orderId, rating, feedback)
+    }
+
+//    fun addAccount(
+//        rfID: String,
+//        password: String
+//    ) {
+//        dbRepository.addAccount(rfID, password)
+//    }
 
 }

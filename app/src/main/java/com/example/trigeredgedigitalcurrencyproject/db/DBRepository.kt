@@ -98,16 +98,6 @@ class DBRepository(private val application: Application) {
     fun fetchAccountDetails(uid: String) {
         firebaseDB.collection("Users").document(uid).get()
             .addOnSuccessListener {
-//                val list = ArrayList<String>()
-//                list.add(it.getString("Name").toString())
-//                list.add(it.getString("Phone").toString())
-//                list.add(it.getString("Card Id").toString())
-//                list.add(it.getString("Image Url").toString())
-//                list.add(it.getString("QR Code").toString())
-//                list.add(it.getString("Balance").toString())
-//                list.add(it.getString("PIN").toString())
-//                list.add(it.getString("User").toString())
-//                list.add(it.getString("Status").toString())
                 accDetailsLiveData.postValue(it)
                 dbResponseLiveData.postValue(Response.Success())
             }
@@ -180,9 +170,10 @@ class DBRepository(private val application: Application) {
     }
 
     private fun addAddMoneyRecords(amount: String, note: String, tId: String, uid: String) {
-        val time =
-            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
-        val date = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault()).format(Date())
+        val time = System.currentTimeMillis().toString()
+//        val time =
+//            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
+//        val date = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault()).format(Date())
         val data1 = mapOf(
             "Amount" to amount,
             "TId" to tId,
@@ -299,6 +290,7 @@ class DBRepository(private val application: Application) {
         receiverUid: String,
         senderName: String,
         senderPhone: String,
+        senderImgUrl: String,
         receiverName: String,
         receiverPhone: String,
         receiverImgUrl: String,
@@ -308,10 +300,10 @@ class DBRepository(private val application: Application) {
             "Amount" to amount,
             "TId" to tId,
             "Time" to time,
-            "Operation" to "Send",
-            "User Id" to receiverUid,
-            "User Name" to receiverName,
-            "User Phone" to receiverPhone,
+            "Operation" to "Debit",
+            "Operator Id" to receiverUid,
+//            "Operator Name" to receiverName,
+//            "Operator Phone" to receiverPhone,
             "Note" to note
         )
 
@@ -319,10 +311,10 @@ class DBRepository(private val application: Application) {
             "Amount" to amount,
             "TId" to tId,
             "Time" to time,
-            "Operation" to "Receive",
-            "User Id" to senderUid,
-            "User Name" to senderName,
-            "User Phone" to senderPhone,
+            "Operation" to "Credit",
+            "Operator Id" to senderUid,
+//            "Operator Name" to senderName,
+//            "Operator Phone" to senderPhone,
             "Note" to note
         )
 
@@ -341,6 +333,7 @@ class DBRepository(private val application: Application) {
             .set(data2)
             .addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
+                addContacts(senderName, senderPhone, senderImgUrl, receiverUid, senderUid)
             }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
@@ -376,18 +369,18 @@ class DBRepository(private val application: Application) {
     }
 
     fun sendRedeemRequest(uid: String, amount: String) {
-        val time =
-            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
-        val timeInMillis = System.currentTimeMillis()
+//        val time =
+//            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
+        val timeInMillis = System.currentTimeMillis().toString()
         val data = mapOf(
             "Amount" to amount,
-            "Request send" to time,
+            "Request send" to timeInMillis,
             "Request approve" to "",
             "Status" to "Pending",
-            "Order" to System.currentTimeMillis()
+            "Order" to timeInMillis
         )
         firebaseDB.collection("Redeem Request").document("Redeem Request").collection(uid)
-            .document(timeInMillis.toString()).set(data)
+            .document(timeInMillis).set(data)
             .addOnSuccessListener {
                 redeem(uid, amount)
                 dbResponseLiveData.postValue(Response.Success())
@@ -450,8 +443,8 @@ class DBRepository(private val application: Application) {
                     "Seller UID" to sellerUid,
                     "Seller Name" to sellerName,
                     "Seller Image" to sellerImgUrl,
-                    "Raters" to "",
-                    "Ratings" to "0",
+                    "Raters" to 0,
+                    "Ratings" to 0,
                     "Product ID" to id,
                     "Unit" to unit
                 )
@@ -504,7 +497,9 @@ class DBRepository(private val application: Application) {
                     "Seller Name" to doc.get("Seller Name").toString(),
                     "Seller Image" to doc.get("Seller Image").toString(),
                     "Ratings" to doc.get("Ratings").toString(),
-                    "Product Price" to doc.get("Product Price").toString()
+                    "Product Price" to doc.get("Product Price").toString(),
+                    "Tags" to "${doc.get("Product Name").toString()}, ${doc.get("Brand Name").toString()}, ${doc.get("Category").toString()},"
+                    + "${doc.get("Product ID").toString()}, ${doc.get("Seller Name").toString()}"
                 )
 
                 firebaseDB.collection("Wishlist").document("Wishlist").collection(uid)
@@ -632,7 +627,7 @@ class DBRepository(private val application: Application) {
         userName: String,
         userNumber: String,
         userAddress: String,
-        orderType:  String,
+        paymentType: String,
         userUID: String,
         brandName: String,
         productName: String,
@@ -643,12 +638,12 @@ class DBRepository(private val application: Application) {
         quantity: String,
         sellerUID: String
     ) {
-        val time =
-            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
-        val orderID = System.currentTimeMillis().toString()
+//        val time =
+//            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
+        val time = System.currentTimeMillis().toString()
 
         val data = mapOf(
-            "Order ID" to orderID,
+            "Order ID" to time,
             "Buyer Name" to userName,
             "Buyer UID" to userUID,
             "Buyer Number" to userNumber,
@@ -664,18 +659,19 @@ class DBRepository(private val application: Application) {
             "Order Time" to time,
             "Category" to productCategory,
             "Status" to "Pending",
-            "Order Type" to orderType
+            "Payment Type" to paymentType,
+            "Product Rating" to 0
         )
 
-        firebaseDB.collection("Orders").document("order_$orderID").set(data).addOnSuccessListener {
+        firebaseDB.collection("Orders").document("order_$time").set(data).addOnSuccessListener {
             dbResponseLiveData.postValue(Response.Success())
         }
         firebaseDB.collection("My Orders").document("My Orders").collection(userUID)
-            .document("order_$orderID").set(data).addOnSuccessListener {
+            .document("order_$time").set(data).addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
             }
         firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUID)
-            .document("order_$orderID").set(data).addOnSuccessListener {
+            .document("order_$time").set(data).addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
             }
     }
@@ -855,7 +851,6 @@ class DBRepository(private val application: Application) {
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
-
     }
 
     fun saveAddress(
@@ -876,20 +871,21 @@ class DBRepository(private val application: Application) {
 
         firebaseDB.collection("Addresses").document("Addresses").collection(uid).document("address")
             .set(data).addOnSuccessListener {
-            dbResponseLiveData.postValue(Response.Success())
-        }
+                dbResponseLiveData.postValue(Response.Success())
+            }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
     }
 
     fun getAddress(uid: String) {
-        firebaseDB.collection("Addresses").document("Addresses").collection(uid).document("address").get().addOnSuccessListener {
-            if(it.exists()) {
-                addressLivedata.postValue(it)
-                dbResponseLiveData.postValue(Response.Success())
-            } else dbResponseLiveData.postValue(Response.Failure("No address found"))
-        }
+        firebaseDB.collection("Addresses").document("Addresses").collection(uid).document("address")
+            .get().addOnSuccessListener {
+                if (it.exists()) {
+                    addressLivedata.postValue(it)
+                    dbResponseLiveData.postValue(Response.Success())
+                } else dbResponseLiveData.postValue(Response.Failure("No address found"))
+            }
     }
 
     fun payToAdmin(amount: String, senderUid: String) {
@@ -930,17 +926,112 @@ class DBRepository(private val application: Application) {
         return e.toString().substring(colonIndex + 2)
     }
 
-    private fun generateUniqueId(): String {
-        val characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        val random = Random()
-        val idBuilder = StringBuilder()
+//    private fun generateUniqueId(): String {
+//        val characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+//        val random = Random()
+//        val idBuilder = StringBuilder()
+//
+//        repeat(8) {
+//            val randomIndex = random.nextInt(characters.length)
+//            idBuilder.append(characters[randomIndex])
+//        }
+//
+//        return idBuilder.toString()
+//    }
 
-        repeat(8) {
-            val randomIndex = random.nextInt(characters.length)
-            idBuilder.append(characters[randomIndex])
+    @SuppressLint("SuspiciousIndentation")
+    fun addReview(
+        buyerUID: String,
+        sellerUID: String,
+        productId: String,
+        orderId: String,
+        rating: Float,
+        feedback: String
+    ) {
+        val timeInMillis = System.currentTimeMillis().toString()
+        val data = mapOf(
+            "User UID" to buyerUID,
+            "Product ID" to productId,
+            "rating" to rating.toString(),
+            "Feedback" to feedback,
+            "Time" to timeInMillis,
+        )
+
+        firebaseDB.collection("Feedbacks").document(productId).collection(productId)
+            .document(timeInMillis).set(data)
+            .addOnSuccessListener {
+                var category = ""
+                val doc1 = firebaseDB.collection("Seller Products").document("Seller Products")
+                    .collection(sellerUID).document(productId)
+
+                doc1.get().addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        category = document.getString("Category").toString()
+                        val raters = document.getString("Raters")!!.toDouble()
+                        val avgRating = document.getString("Ratings")!!.toDouble()
+                        val newRaters = raters + 1;
+                        val newRating = ((raters * avgRating) + rating) / newRaters
+                        doc1.update("Raters", newRaters.toString())
+                        doc1.update("Ratings", newRating.toString())
+                        val doc2 = firebaseDB.collection("Products").document("Products")
+                            .collection(category).document(productId)
+                        doc2.get().addOnSuccessListener {
+                            if (it.exists()) {
+                                doc2.update("Raters", newRaters.toString())
+                                doc2.update("Ratings", newRating.toString())
+                            }
+                        }
+
+                    }
+                }
+                dbResponseLiveData.postValue(Response.Success())
+            }
+            .addOnFailureListener {
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+            }
+
+        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUID)
+            .document("order_$orderId")
+        doc3.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                doc3.update("Product Rating", rating.toString())
+            }
         }
 
-        return idBuilder.toString()
+        val doc4 = firebaseDB.collection("Orders").document("order_$orderId")
+        doc4.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                doc4.update("Product Rating", rating.toString())
+            }
+        }
+
     }
+
+//    fun addAccount(
+//        rfID: String,
+//        password: String
+//    ) {
+//        val salt = BCrypt.gensalt(10, SecureRandom())
+//        val hashedPassword = BCrypt.hashpw(password, salt)
+//        val data = mapOf(
+//            "Name" to "",
+//            "Password" to hashedPassword,
+//            "Phone" to "8621028791",
+//            "Card Id" to "8621028791@digital",
+//            "Aadhar" to "",
+//            "Uid" to rfID,
+//            "QR Code" to "",
+//            "PIN" to "1234",
+//            "Balance" to "10000",
+//            "User" to "Buyer",
+//            "Status" to "",
+//            "PAN No" to "",
+//            "GSTIN" to "",
+//            "Trade License" to "",
+//            "Image Url" to "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
+//        )
+//
+//        firebaseDB.collection("Users").document(rfID).set(data)
+//    }
 
 }

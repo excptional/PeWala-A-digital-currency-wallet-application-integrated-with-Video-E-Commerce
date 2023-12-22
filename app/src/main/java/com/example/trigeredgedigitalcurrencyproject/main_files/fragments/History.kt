@@ -37,7 +37,7 @@ class History : Fragment() {
     private lateinit var mainLayout: LinearLayout
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
-    private lateinit var name: String
+    private lateinit var uid: String
     private lateinit var phone: String
 
     @SuppressLint("MissingInflatedId")
@@ -63,7 +63,7 @@ class History : Fragment() {
         mainLayout.visibility = View.GONE
 
         transactionHistoryAdapter =
-            TransactionHistoryAdapter(requireContext(), transactionHistoryItems)
+            TransactionHistoryAdapter(requireContext(), this, viewLifecycleOwner, transactionHistoryItems)
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
         recyclerview.setHasFixedSize(true)
         recyclerview.setItemViewCacheSize(20)
@@ -103,10 +103,9 @@ class History : Fragment() {
         transactionHistoryItemsArray = arrayListOf()
         for (i in list) {
             if (i.exists()) {
-                if(i.getString("User Id")!!.isEmpty()) {
+                if(i.getString("Operator Id")!!.isEmpty()) {
                     val transactionData = TransactionHistoryItems(
-                        name,
-                        phone,
+                        uid,
                         i.getString("TId"),
                         i.getString("Operation"),
                         i.getString("Time"),
@@ -115,8 +114,7 @@ class History : Fragment() {
                     transactionHistoryItemsArray.add(transactionData)
                 } else {
                     val transactionData = TransactionHistoryItems(
-                        i.getString("User Name"),
-                        i.getString("User Phone"),
+                        i.getString("Operator Id"),
                         i.getString("TId"),
                         i.getString("Operation"),
                         i.getString("Time"),
@@ -136,11 +134,12 @@ class History : Fragment() {
     private fun loadData() {
         authViewModel.userdata.observe(viewLifecycleOwner) { it ->
             if (it != null) {
-                dbViewModel.fetchAccountDetails(it.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    name = list.getString("Name").toString()
-                    phone = list.getString("Phone").toString()
-                }
+                uid = it.uid;
+//                dbViewModel.fetchAccountDetails(it.uid)
+//                dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
+//                    name = list.getString("Name").toString()
+//                    phone = list.getString("Phone").toString()
+//                }
             }
         }
     }

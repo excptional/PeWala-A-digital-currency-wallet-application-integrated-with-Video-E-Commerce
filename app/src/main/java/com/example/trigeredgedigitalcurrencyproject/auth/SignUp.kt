@@ -42,6 +42,7 @@ class SignUp : Fragment() {
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         userType = requireArguments().getString("userType").toString()
+//        userType = "Buyer"
 
         phEditText = view.findViewById(R.id.ph_signUp)
         passwordEditText = view.findViewById(R.id.password_signUp)

@@ -60,6 +60,7 @@ class FinalPayment : Fragment() {
     private lateinit var senderWalletId: String
     private lateinit var senderName: String
     private lateinit var senderPhone: String
+    private lateinit var senderImageUrl: String
     private lateinit var receiverWalletId: String
     private lateinit var receiverName: String
     private lateinit var receiverPhone: String
@@ -138,6 +139,7 @@ class FinalPayment : Fragment() {
                             senderName = list1.getString("Name").toString()
                             senderPhone = list1.getString("Phone").toString()
                             senderWalletId = list1.getString("Card Id").toString()
+                            senderImageUrl = list1.getString("Image Url").toString()
                             balance = list1.getString("Balance").toString()
                             originalPIN = list1.getString("PIN").toString()
                             dbViewModel.getPayerDetails(
@@ -235,6 +237,7 @@ class FinalPayment : Fragment() {
                                 ).format(
                                     Date()
                                 )
+                            val timeInMillis = System.currentTimeMillis().toString()
                             val bundle = Bundle()
                             bundle.putString("senderName", senderName)
                             bundle.putString("senderPhone", senderPhone)
@@ -253,12 +256,13 @@ class FinalPayment : Fragment() {
                                 receiverUid,
                                 senderName,
                                 senderPhone,
+                                senderImageUrl,
                                 receiverName,
                                 receiverPhone,
                                 receiverImageUrl,
-                                time
+                                timeInMillis
                             )
-                            Navigation.findNavController(requireView()).popBackStack()
+//                            Navigation.findNavController(requireView()).popBackStack()
                             Navigation.findNavController(requireView()).popBackStack()
                             Navigation.findNavController(requireView())
                                 .navigate(R.id.nav_success, bundle)

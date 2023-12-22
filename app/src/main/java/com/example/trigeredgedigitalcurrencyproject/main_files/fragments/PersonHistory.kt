@@ -82,7 +82,7 @@ class PersonHistory : Fragment() {
         personalHistoryShimmer.visibility = View.VISIBLE
         mainLayout.visibility = View.GONE
 
-        transactionHistoryAdapter = TransactionHistoryAdapter(requireContext(), transactionHistoryItems)
+        transactionHistoryAdapter = TransactionHistoryAdapter(requireContext(), this, viewLifecycleOwner, transactionHistoryItems)
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
         recyclerview.setHasFixedSize(true)
         recyclerview.setItemViewCacheSize(20)
@@ -96,10 +96,9 @@ class PersonHistory : Fragment() {
     private fun fetchData(list: MutableList<DocumentSnapshot>) {
         transactionHistoryItems = arrayListOf()
         for (i in list) {
-            if (i.getString("User Id") == payerUid) {
+            if(i.getString("Operator Id") == payerUid) {
                 val transactionData = TransactionHistoryItems(
-                    i.getString("User Name"),
-                    i.getString("User Phone"),
+                    i.getString("Operator Id"),
                     i.getString("TId"),
                     i.getString("Operation"),
                     i.getString("Time"),
