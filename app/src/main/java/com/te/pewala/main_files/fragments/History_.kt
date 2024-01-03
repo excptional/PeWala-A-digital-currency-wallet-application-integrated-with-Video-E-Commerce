@@ -1,0 +1,142 @@
+package com.te.pewala.main_files.fragments
+
+import android.annotation.SuppressLint
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.te.pewala.R
+import com.te.pewala.db.AuthViewModel
+import com.te.pewala.db.DBViewModel
+import com.te.pewala.main_files.adapters.TransactionHistoryAdapter
+import com.te.pewala.main_files.items.TransactionHistoryItems
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.firebase.firestore.DocumentSnapshot
+
+class History_ : Fragment() {
+
+    private var transactionHistoryItemsArray = arrayListOf<TransactionHistoryItems>()
+    private lateinit var transactionHistoryAdapter: TransactionHistoryAdapter
+    private var transactionHistoryItems = arrayListOf<TransactionHistoryItems>()
+    private lateinit var historyShimmer: ShimmerFrameLayout
+    private lateinit var recyclerview: RecyclerView
+    private lateinit var refreshLayout: SwipeRefreshLayout
+    private lateinit var nothingFoundText: TextView
+    private lateinit var mainLayout: LinearLayout
+    private lateinit var authViewModel: AuthViewModel
+    private lateinit var dbViewModel: DBViewModel
+    private lateinit var backBtn: ImageButton
+    private lateinit var uid: String
+
+    @SuppressLint("MissingInflatedId")
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_history_, container, false)
+
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
+
+        loadData()
+
+        historyShimmer = view.findViewById(R.id.history_shimmer)
+        recyclerview = view.findViewById(R.id.recyclerView_history_)
+        refreshLayout = view.findViewById(R.id.swipe_refresh_layout_history_)
+        mainLayout = view.findViewById(R.id.mainLayout_history_)
+        nothingFoundText = view.findViewById(R.id.nothingFound_history_)
+        backBtn = view.findViewById(R.id.back_btn_history_)
+
+        backBtn.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
+        historyShimmer.startShimmer()
+        historyShimmer.visibility = View.VISIBLE
+        mainLayout.visibility = View.GONE
+
+        transactionHistoryAdapter =
+            TransactionHistoryAdapter(requireContext(), this, viewLifecycleOwner, transactionHistoryItems)
+        recyclerview.layoutManager = LinearLayoutManager(requireContext())
+        recyclerview.setHasFixedSize(true)
+        recyclerview.setItemViewCacheSize(20)
+        recyclerview.adapter = transactionHistoryAdapter
+
+        getData()
+
+        refreshLayout.setOnRefreshListener {
+            historyShimmer.startShimmer()
+            historyShimmer.visibility = View.VISIBLE
+            mainLayout.visibility = View.GONE
+            getData()
+        }
+
+        return view
+    }
+
+    private fun getData() {
+        authViewModel.userdata.observe(viewLifecycleOwner) {
+            if (it != null) {
+                dbViewModel.fetchTransactionDetails(it.uid)
+                dbViewModel.transactionDetails.observe(viewLifecycleOwner) { list ->
+                    if (list.isNotEmpty()) {
+                        nothingFoundText.visibility = View.GONE
+                        fetchData(list)
+                    } else {
+                        historyShimmer.visibility = View.GONE
+                        mainLayout.visibility = View.GONE
+                        nothingFoundText.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fetchData(list: MutableList<DocumentSnapshot>) {
+        transactionHistoryItemsArray = arrayListOf()
+        for (i in list) {
+            if (i.exists()) {
+                if(i.getString("User Id")!!.isEmpty()) {
+                    val transactionData = TransactionHistoryItems(
+                        uid,
+                        i.getString("TId"),
+                        i.getString("Operation"),
+                        i.getString("Time"),
+                        i.getString("Amount")
+                    )
+                    transactionHistoryItemsArray.add(transactionData)
+                }
+                val transactionData = TransactionHistoryItems(
+                    i.getString("User Id"),
+                    i.getString("TId"),
+                    i.getString("Operation"),
+                    i.getString("Time"),
+                    i.getString("Amount")
+                )
+                transactionHistoryItemsArray.add(transactionData)
+            }
+        }
+        transactionHistoryAdapter.updateTransactionHistory(transactionHistoryItemsArray)
+        historyShimmer.clearAnimation()
+        historyShimmer.visibility = View.GONE
+        mainLayout.visibility = View.VISIBLE
+        refreshLayout.isRefreshing = false
+    }
+
+    private fun loadData() {
+        authViewModel.userdata.observe(viewLifecycleOwner) { it ->
+            if (it != null) {
+                uid = it.uid
+            }
+        }
+    }
+
+}
