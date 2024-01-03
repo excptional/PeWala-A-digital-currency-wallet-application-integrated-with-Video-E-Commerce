@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.trigeredgedigitalcurrencyproject'
+    namespace 'com.te.pewala'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.trigeredgedigitalcurrencyproject"
+        applicationId "com.te.pewala"
         minSdk 23
         targetSdk 34
         versionCode 1

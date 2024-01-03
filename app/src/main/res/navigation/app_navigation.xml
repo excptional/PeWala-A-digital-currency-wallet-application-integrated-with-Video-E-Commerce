@@ -8,182 +8,182 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Home"
+        android:name="com.te.pewala.main_files.fragments.Home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_account"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Account"
+        android:name="com.te.pewala.main_files.fragments.Account"
         tools:layout="@layout/fragment_account" />
 
     <fragment
         android:id="@+id/nav_add"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Add"
+        android:name="com.te.pewala.main_files.fragments.Add"
         tools:layout="@layout/fragment_add" />
 
     <fragment
         android:id="@+id/nav_send"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Send"
+        android:name="com.te.pewala.main_files.fragments.Send"
         tools:layout="@layout/fragment_send" />
 
     <fragment
         android:id="@+id/nav_receive"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Receive"
+        android:name="com.te.pewala.main_files.fragments.Receive"
         tools:layout="@layout/fragment_receive" />
 
     <fragment
         android:id="@+id/nav_redeem"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Redeem"
+        android:name="com.te.pewala.main_files.fragments.Redeem"
         tools:layout="@layout/fragment_redeem" />
 
     <fragment
         android:id="@+id/nav_wallet"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Wallet"
+        android:name="com.te.pewala.main_files.fragments.Wallet"
         tools:layout="@layout/fragment_wallet" />
 
     <fragment
         android:id="@+id/nav_history"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.History"
+        android:name="com.te.pewala.main_files.fragments.History"
         tools:layout="@layout/fragment_history" />
 
     <fragment
         android:id="@+id/nav_shop_buyer"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.ShopBuyer"
+        android:name="com.te.pewala.main_files.fragments.ShopBuyer"
         tools:layout="@layout/fragment_shop_buyer" />
 
     <fragment
         android:id="@+id/nav_shop_seller"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.ShopSeller"
+        android:name="com.te.pewala.main_files.fragments.ShopSeller"
         tools:layout="@layout/fragment_shop_seller" />
 
     <fragment
         android:id="@+id/nav_history_"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.History_"
+        android:name="com.te.pewala.main_files.fragments.History_"
         tools:layout="@layout/fragment_history_" />
 
     <fragment
         android:id="@+id/nav_redeem_request"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.RedeemRequest"
+        android:name="com.te.pewala.main_files.fragments.RedeemRequest"
         tools:layout="@layout/fragment_redeem_request"/>
 
     <fragment
         android:id="@+id/nav_redeem_confirmation"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.RedeemConfirmation"
+        android:name="com.te.pewala.main_files.fragments.RedeemConfirmation"
         tools:layout="@layout/fragment_redeem_confirmation" />
 
     <fragment
         android:id="@+id/nav_qr_scanner"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.QRScanner"
+        android:name="com.te.pewala.main_files.fragments.QRScanner"
         tools:layout="@layout/fragment_q_r_scanner" />
 
     <fragment
         android:id="@+id/nav_qr_scanner2"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.QRScanner2"
+        android:name="com.te.pewala.main_files.fragments.QRScanner2"
         tools:layout="@layout/fragment_q_r_scanner2" />
 
     <fragment
         android:id="@+id/nav_final_pay"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.FinalPayment"
+        android:name="com.te.pewala.main_files.fragments.FinalPayment"
         tools:layout="@layout/fragment_final_payment" />
 
     <fragment
         android:id="@+id/nav_person_history"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PersonHistory"
+        android:name="com.te.pewala.main_files.fragments.PersonHistory"
         tools:layout="@layout/fragment_person_history" />
 
     <fragment
         android:id="@+id/nav_phone_verification"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PhoneVerification"
+        android:name="com.te.pewala.main_files.fragments.PhoneVerification"
         tools:layout="@layout/fragment_phone_varification" />
 
     <fragment
         android:id="@+id/nav_manage_pin"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.ManagePIN"
+        android:name="com.te.pewala.main_files.fragments.ManagePIN"
         tools:layout="@layout/fragment_manage_p_i_n" />
 
     <fragment
         android:id="@+id/nav_success"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PaymentSuccess"
+        android:name="com.te.pewala.main_files.fragments.PaymentSuccess"
         tools:layout="@layout/fragment_payment_success" />
 
     <fragment
         android:id="@+id/nav_fail"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.PaymentFail"
+        android:name="com.te.pewala.main_files.fragments.PaymentFail"
         tools:layout="@layout/fragment_payment_fail" />
 
     <fragment
         android:id="@+id/nav_add_product"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.AddProduct"
+        android:name="com.te.pewala.main_files.fragments.AddProduct"
         tools:layout="@layout/fragment_add_product" />
 
     <fragment
         android:id="@+id/nav_products"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Products"
+        android:name="com.te.pewala.main_files.fragments.Products"
         tools:layout="@layout/fragment_products" />
 
     <fragment
         android:id="@+id/nav_order_place"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.OrderPlace"
+        android:name="com.te.pewala.main_files.fragments.OrderPlace"
         tools:layout="@layout/fragment_order_place" />
 
     <fragment
         android:id="@+id/nav_final_order_place"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.FinalOrderPlace"
+        android:name="com.te.pewala.main_files.fragments.FinalOrderPlace"
         tools:layout="@layout/fragment_final_order_place" />
 
     <fragment
         android:id="@+id/nav_seller_doc"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.SellerDocumentation"
+        android:name="com.te.pewala.main_files.fragments.SellerDocumentation"
         tools:layout="@layout/fragment_seller_documentation" />
 
     <fragment
         android:id="@+id/nav_waiting"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Waiting"
+        android:name="com.te.pewala.main_files.fragments.Waiting"
         tools:layout="@layout/fragment_waiting" />
 
     <fragment
         android:id="@+id/nav_order_details"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.OrdersDetails"
+        android:name="com.te.pewala.main_files.fragments.OrdersDetails"
         tools:layout="@layout/fragment_orders_details" />
 
     <fragment
         android:id="@+id/nav_orders"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Orders"
+        android:name="com.te.pewala.main_files.fragments.Orders"
         tools:layout="@layout/fragment_orders" />
 
     <fragment
         android:id="@+id/nav_wishlist"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Wishlist"
+        android:name="com.te.pewala.main_files.fragments.Wishlist"
         tools:layout="@layout/fragment_wishlist" />
 
     <fragment
         android:id="@+id/nav_cart"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Cart"
+        android:name="com.te.pewala.main_files.fragments.Cart"
         tools:layout="@layout/fragment_cart" />
 
     <fragment
         android:id="@+id/nav_remove_cart_items"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.RemoveCartItems"
+        android:name="com.te.pewala.main_files.fragments.RemoveCartItems"
         tools:layout="@layout/fragment_remove_cart_items" />
 
     <fragment
         android:id="@+id/nav_address"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Address"
+        android:name="com.te.pewala.main_files.fragments.Address"
         tools:layout="@layout/fragment_address" />
 
     <fragment
         android:id="@+id/nav_digital_pay"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.DigitalPayment"
+        android:name="com.te.pewala.main_files.fragments.DigitalPayment"
         tools:layout="@layout/fragment_digital_payment" />
 
     <fragment
         android:id="@+id/nav_successfully_order_placed"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.SuccessfullyOrderPlaced"
+        android:name="com.te.pewala.main_files.fragments.SuccessfullyOrderPlaced"
         tools:layout="@layout/fragment_successfully_order_placed" />
 
     <fragment
         android:id="@+id/nav_feedback"
-        android:name="com.example.trigeredgedigitalcurrencyproject.main_files.fragments.Feedback"
+        android:name="com.te.pewala.main_files.fragments.Feedback"
         tools:layout="@layout/fragment_feedback" />
 
 </navigation>

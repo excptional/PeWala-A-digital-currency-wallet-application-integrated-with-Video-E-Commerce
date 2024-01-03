@@ -15,6 +15,6 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/scan_view"/>
+        android:src="@drawable/scan_view_white_bar"/>
 
 </RelativeLayout>
