@@ -144,11 +144,8 @@ class DigitalPayment : Fragment() {
                                 "Payment successful",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            tId = "TID" + System.currentTimeMillis()
-                            val time = SimpleDateFormat(
-                                "MMM dd, yyyy 'at' HH:mm aa",
-                                Locale.getDefault()
-                            ).format(Date())
+                            val time = System.currentTimeMillis().toString()
+                            tId = "TID$time"
 
                             dbViewModel.addTransaction(
                                 amountStr,

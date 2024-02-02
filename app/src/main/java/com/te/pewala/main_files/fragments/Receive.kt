@@ -71,7 +71,7 @@ class Receive : Fragment() {
         }
 
         scanBtn.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.nav_qr_scanner)
+            Navigation.findNavController(view).navigate(R.id.nav_qr_scanner2)
         }
 
         shareBtn.setOnClickListener {

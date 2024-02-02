@@ -15,6 +15,7 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.te.pewala.R
 import com.te.pewala.auth.AuthenticationActivity
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         binding.qrScanner.setOnClickListener {
 //            Toast.makeText(this, "This feature is not implemented yet", Toast.LENGTH_SHORT).show()
             navController.navigate(R.id.nav_qr_scanner2)
+//            navController.navigate(R.id.nav_qr_scanner)
         }
 
         if(intent.getStringExtra("fragmentToLoad") == "Send") {

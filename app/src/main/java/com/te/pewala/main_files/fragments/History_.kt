@@ -23,7 +23,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 
 class History_ : Fragment() {
 
-    private var transactionHistoryItemsArray = arrayListOf<TransactionHistoryItems>()
     private lateinit var transactionHistoryAdapter: TransactionHistoryAdapter
     private var transactionHistoryItems = arrayListOf<TransactionHistoryItems>()
     private lateinit var historyShimmer: ShimmerFrameLayout
@@ -46,14 +45,21 @@ class History_ : Fragment() {
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
-        loadData()
-
         historyShimmer = view.findViewById(R.id.history_shimmer)
         recyclerview = view.findViewById(R.id.recyclerView_history_)
         refreshLayout = view.findViewById(R.id.swipe_refresh_layout_history_)
         mainLayout = view.findViewById(R.id.mainLayout_history_)
         nothingFoundText = view.findViewById(R.id.nothingFound_history_)
         backBtn = view.findViewById(R.id.back_btn_history_)
+
+        transactionHistoryAdapter =
+            TransactionHistoryAdapter(requireContext(), transactionHistoryItems)
+        recyclerview.layoutManager = LinearLayoutManager(requireContext())
+        recyclerview.setHasFixedSize(true)
+        recyclerview.setItemViewCacheSize(20)
+        recyclerview.adapter = transactionHistoryAdapter
+
+        loadData()
 
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
@@ -62,15 +68,6 @@ class History_ : Fragment() {
         historyShimmer.startShimmer()
         historyShimmer.visibility = View.VISIBLE
         mainLayout.visibility = View.GONE
-
-        transactionHistoryAdapter =
-            TransactionHistoryAdapter(requireContext(), this, viewLifecycleOwner, transactionHistoryItems)
-        recyclerview.layoutManager = LinearLayoutManager(requireContext())
-        recyclerview.setHasFixedSize(true)
-        recyclerview.setItemViewCacheSize(20)
-        recyclerview.adapter = transactionHistoryAdapter
-
-        getData()
 
         refreshLayout.setOnRefreshListener {
             historyShimmer.startShimmer()
@@ -83,48 +80,37 @@ class History_ : Fragment() {
     }
 
     private fun getData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if (it != null) {
-                dbViewModel.fetchTransactionDetails(it.uid)
-                dbViewModel.transactionDetails.observe(viewLifecycleOwner) { list ->
-                    if (list.isNotEmpty()) {
-                        nothingFoundText.visibility = View.GONE
-                        fetchData(list)
-                    } else {
-                        historyShimmer.visibility = View.GONE
-                        mainLayout.visibility = View.GONE
-                        nothingFoundText.visibility = View.VISIBLE
-                    }
-                }
+        dbViewModel.fetchTransactionDetails(uid)
+        dbViewModel.transactionDetails.observe(viewLifecycleOwner) { list ->
+            if (list.isNotEmpty()) {
+                nothingFoundText.visibility = View.GONE
+                fetchData(list)
+            } else {
+                historyShimmer.visibility = View.GONE
+                mainLayout.visibility = View.GONE
+                nothingFoundText.visibility = View.VISIBLE
+                refreshLayout.isRefreshing = false
             }
         }
     }
 
     private fun fetchData(list: MutableList<DocumentSnapshot>) {
-        transactionHistoryItemsArray = arrayListOf()
+        transactionHistoryItems = arrayListOf()
         for (i in list) {
             if (i.exists()) {
-                if(i.getString("User Id")!!.isEmpty()) {
-                    val transactionData = TransactionHistoryItems(
-                        uid,
-                        i.getString("TId"),
-                        i.getString("Operation"),
-                        i.getString("Time"),
-                        i.getString("Amount")
-                    )
-                    transactionHistoryItemsArray.add(transactionData)
-                }
                 val transactionData = TransactionHistoryItems(
-                    i.getString("User Id"),
-                    i.getString("TId"),
+                    i.getString("Amount"),
                     i.getString("Operation"),
+                    i.getString("TId"),
                     i.getString("Time"),
-                    i.getString("Amount")
+                    i.getString("Operator Name"),
+                    i.getString("Operator Phone")
                 )
-                transactionHistoryItemsArray.add(transactionData)
+                transactionHistoryItems.add(transactionData)
+
             }
         }
-        transactionHistoryAdapter.updateTransactionHistory(transactionHistoryItemsArray)
+        transactionHistoryAdapter.updateTransactionHistory(transactionHistoryItems)
         historyShimmer.clearAnimation()
         historyShimmer.visibility = View.GONE
         mainLayout.visibility = View.VISIBLE
@@ -135,8 +121,8 @@ class History_ : Fragment() {
         authViewModel.userdata.observe(viewLifecycleOwner) { it ->
             if (it != null) {
                 uid = it.uid
+                getData()
             }
         }
     }
-
 }

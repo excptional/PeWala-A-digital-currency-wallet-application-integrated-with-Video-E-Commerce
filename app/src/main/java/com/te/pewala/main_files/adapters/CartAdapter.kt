@@ -52,7 +52,7 @@ class CartAdapter(
         newQuantity = currentItem.quantity.toString()
         holder.productName.text = currentItem.productName
         holder.brandName.text = currentItem.brandName
-        holder.price.text = "₹${currentItem.price}"
+        holder.price.text = "₹${Integer.parseInt(currentItem.price!!) * Integer.parseInt(currentItem.quantity!!)}"
         holder.quantity.text = "Quantity : ${currentItem.quantity}"
         Glide.with(holder.itemView.context).load(currentItem.productImageUrl)
             .into(holder.productImage)

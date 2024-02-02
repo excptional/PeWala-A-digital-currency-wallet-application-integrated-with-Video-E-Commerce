@@ -163,14 +163,13 @@ class Account : Fragment() {
     }
 
     private fun imageUploadToStorage(uri: Uri, view: View) {
+        loaderAccount.visibility = View.VISIBLE
+        whiteView.visibility = View.VISIBLE
         dbViewModel.uploadImageToStorage(uri, myUser)
         dbViewModel.dbResponse.observe(this.viewLifecycleOwner) {
             when (it) {
                 is Response.Success -> {
                     loadData(view)
-                    Toast.makeText(requireContext(), "Image changed successfully", Toast.LENGTH_SHORT).show()
-                    loaderAccount.visibility = View.GONE
-                    whiteView.visibility = View.GONE
                 }
                 is Response.Failure -> {
                     loaderAccount.visibility = View.GONE

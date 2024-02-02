@@ -19,8 +19,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.R
+import com.te.pewala.db.AuthViewModel
+import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.MainActivity
 
 class PaymentSuccess : Fragment() {
@@ -40,6 +43,8 @@ class PaymentSuccess : Fragment() {
     private lateinit var backBtn: CardView
     private lateinit var title: String
     private lateinit var msg: String
+    private lateinit var authViewModel: AuthViewModel
+    private lateinit var dbViewModel: DBViewModel
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
@@ -47,6 +52,9 @@ class PaymentSuccess : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_payment_success, container, false)
+
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
         mainLayout = view.findViewById(R.id.mainLayout_success)
         detailsLayout = view.findViewById(R.id.details_success)
@@ -94,6 +102,8 @@ class PaymentSuccess : Fragment() {
             sendNotification(requireContext(), title, msg)
         }, 3000)
 
+        loadData()
+
         return view
     }
 
@@ -124,7 +134,7 @@ class PaymentSuccess : Fragment() {
 
         // Build the notification
         val notificationBuilder = NotificationCompat.Builder(context, "default_channel_id")
-            .setSmallIcon(R.drawable.notification)
+            .setSmallIcon(R.drawable.pewala)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -133,6 +143,14 @@ class PaymentSuccess : Fragment() {
 
         // Show the notification
         notificationManager.notify(0, notificationBuilder.build())
+    }
+
+    private fun loadData() {
+        authViewModel.userdata.observe(viewLifecycleOwner) { it ->
+            if (it != null) {
+                dbViewModel.updateTransactorDetails(it.uid)
+            }
+        }
     }
 
 }

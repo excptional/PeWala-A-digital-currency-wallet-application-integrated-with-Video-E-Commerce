@@ -182,6 +182,7 @@ class Home : Fragment() {
     private fun loadData() {
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
+                dbViewModel.updateTransactorDetails(it.uid)
                 dbViewModel.fetchContacts(it.uid)
                 dbViewModel.contactDetails.observe(viewLifecycleOwner) {
                     if (it.isNotEmpty()) {

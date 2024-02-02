@@ -21,8 +21,6 @@ import java.util.TimeZone
 
 class TransactionHistoryAdapter(
     private val context: Context,
-    viewModelStoreOwner: ViewModelStoreOwner,
-    private val lifecycleOwner: LifecycleOwner,
     private val transactionHistoryItems: ArrayList<TransactionHistoryItems>
 ) :
     RecyclerView.Adapter<TransactionHistoryAdapter.TransactionHistoryViewHolder>() {
@@ -35,48 +33,48 @@ class TransactionHistoryAdapter(
         return TransactionHistoryViewHolder(view)
     }
 
-    val dbViewModel = ViewModelProvider(viewModelStoreOwner)[DBViewModel::class.java]
+//    val dbViewModel = ViewModelProvider(viewModelStoreOwner)[DBViewModel::class.java]
 
-    @SuppressLint("SetTextI18n", "SimpleDateFormat")
+    @SuppressLint("SetTextI18n", "SimpleDateFormat", "SuspiciousIndentation")
     override fun onBindViewHolder(holder: TransactionHistoryViewHolder, position: Int) {
         val currentItem = transactionHistoryItems[position]
-        val date = java.util.Date(currentItem.time!!.toLong())
+        val time: Long = currentItem.time!!.toLong()
+        val date = java.util.Date(time)
         val timeZone = TimeZone.getTimeZone("Asia/Kolkata")
         val dateFormat = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa")
         dateFormat.timeZone = timeZone
 
-        dbViewModel.fetchAccountDetails(currentItem.uid.toString())
-        dbViewModel.accDetails.observe(lifecycleOwner) { doc ->
-            holder.name.text = doc.getString("Name").toString()
-            when (currentItem.operation) {
-                "Debit" -> {
-                    holder.payType.text = "Send to +91 ${doc.getString("Phone").toString()}"
-                    holder.icon.setImageDrawable(getDrawable(context, R.drawable.send_icon))
-                }
 
-                "Credit" -> {
-                    holder.payType.text =
-                        "Receive from +91 ${doc.getString("Phone").toString()}"
-                    holder.icon.setImageDrawable(getDrawable(context, R.drawable.receive_money))
-
-                }
-
-                "Add" -> {
-                    holder.payType.text = "Added to +91 ${doc.getString("Phone").toString()}"
-                    holder.icon.setImageDrawable(getDrawable(context, R.drawable.receive_money))
-
-                }
-
-                else -> {
-                    holder.payType.text =
-                        "Withdraw from +91 ${doc.getString("Phone").toString()}"
-                    holder.icon.setImageDrawable(getDrawable(context, R.drawable.send_icon))
-                }
+        holder.name.text = currentItem.name
+        when (currentItem.operation) {
+            "Debit" -> {
+                holder.payType.text = "Send to +91 ${currentItem.phone}"
+                holder.icon.setImageDrawable(getDrawable(context, R.drawable.send_icon))
             }
-            holder.time.text = dateFormat.format(date)
-            holder.amount.text = "₹${currentItem.amount}"
-            holder.tId.text = currentItem.tId
+
+            "Credit" -> {
+                holder.payType.text =
+                    "Receive from +91 ${currentItem.phone}"
+                holder.icon.setImageDrawable(getDrawable(context, R.drawable.receive_money))
+
+            }
+
+            "Add" -> {
+                holder.payType.text = "Added to +91 ${currentItem.phone}"
+                holder.icon.setImageDrawable(getDrawable(context, R.drawable.receive_money))
+
+            }
+
+            else -> {
+                holder.payType.text =
+                    "Withdraw from +91 ${currentItem.phone}"
+                holder.icon.setImageDrawable(getDrawable(context, R.drawable.send_icon))
+            }
         }
+        holder.time.text = dateFormat.format(date)
+        holder.amount.text = "₹${currentItem.amount}"
+        holder.tId.text = currentItem.tId
+        
     }
 
     override fun getItemCount(): Int {

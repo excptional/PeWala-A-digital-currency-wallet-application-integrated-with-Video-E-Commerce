@@ -119,6 +119,28 @@ class DBRepository(private val application: Application) {
             }
     }
 
+    fun updateTransactorDetails(
+        uid: String
+    ) {
+        val doc = firebaseDB.collection("Transaction Records").document("Transaction Records")
+            .collection(uid)
+        doc.orderBy(
+            "TId", Query.Direction.DESCENDING
+        )
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document.exists() and document.getString("Operator Name").isNullOrEmpty()) {
+                        firebaseDB.collection("Users").document(document.getString("Operator Id")!!)
+                            .get().addOnSuccessListener { details ->
+                                doc.document(document.getString("TId")!!).update("Operator Name", details.getString("Name"))
+                                doc.document(document.getString("TId")!!).update("Operator Phone", details.getString("Phone"))
+                            }
+                    } else break
+                }
+            }
+    }
+
     fun uploadImageToStorage(imageUri: Uri, user: FirebaseUser) {
         val ref =
             firebaseStorage.reference.child("images/${user.uid}/${imageUri.lastPathSegment}")
@@ -141,8 +163,8 @@ class DBRepository(private val application: Application) {
         val doc = firebaseDB.collection("Users").document(user.uid)
         doc.get().addOnSuccessListener {
             if (it.exists()) {
-                dbResponseLiveData.postValue(Response.Success())
                 doc.update("Image Url", uri.toString())
+                dbResponseLiveData.postValue(Response.Success())
             }
         }
             .addOnFailureListener {
@@ -165,30 +187,31 @@ class DBRepository(private val application: Application) {
 
     private fun addAddMoneyRecords(amount: String, note: String, tId: String, uid: String) {
         val time = System.currentTimeMillis().toString()
-//        val time =
-//            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
-//        val date = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault()).format(Date())
+
         val data1 = mapOf(
             "Amount" to amount,
             "TId" to tId,
             "Time" to time
         )
-        val data2 = mapOf(
-            "Amount" to amount,
-            "TId" to tId,
-            "Time" to time,
-            "Operation" to "Add",
-            "User Id" to "",
-            "User Name" to "",
-            "User Phone" to "",
-            "Note" to note
-        )
 
         firebaseDB.collection("Add Money Records").document("Add Money Records")
             .collection(uid).document(tId).set(data1)
 
-        firebaseDB.collection("Transaction Records").document("Transaction Records")
-            .collection(uid).document(tId).set(data2)
+        firebaseDB.collection("Users").document(uid).get().addOnSuccessListener {
+            val data2 = mapOf(
+                "Amount" to amount,
+                "TId" to tId,
+                "Time" to time,
+                "Operation" to "Add",
+                "Operator Id" to uid,
+                "Operator Name" to it.getString("Name"),
+                "Operator Phone" to it.getString("Phone"),
+                "Note" to note
+            )
+
+            firebaseDB.collection("Transaction Records").document("Transaction Records")
+                .collection(uid).document(tId).set(data2)
+        }
 
     }
 
@@ -296,8 +319,8 @@ class DBRepository(private val application: Application) {
             "Time" to time,
             "Operation" to "Debit",
             "Operator Id" to receiverUid,
-//            "Operator Name" to receiverName,
-//            "Operator Phone" to receiverPhone,
+            "Operator Name" to null,
+            "Operator Phone" to null,
             "Note" to note
         )
 
@@ -307,8 +330,8 @@ class DBRepository(private val application: Application) {
             "Time" to time,
             "Operation" to "Credit",
             "Operator Id" to senderUid,
-//            "Operator Name" to senderName,
-//            "Operator Phone" to senderPhone,
+            "Operator Name" to null,
+            "Operator Phone" to null,
             "Note" to note
         )
 
@@ -492,8 +515,12 @@ class DBRepository(private val application: Application) {
                     "Seller Image" to doc.get("Seller Image").toString(),
                     "Ratings" to doc.get("Ratings").toString(),
                     "Product Price" to doc.get("Product Price").toString(),
-                    "Tags" to "${doc.get("Product Name").toString()}, ${doc.get("Brand Name").toString()}, ${doc.get("Category").toString()},"
-                    + "${doc.get("Product ID").toString()}, ${doc.get("Seller Name").toString()}"
+                    "Tags" to "${doc.get("Product Name").toString()}, ${
+                        doc.get("Brand Name").toString()
+                    }, ${doc.get("Category").toString()},"
+                            + "${doc.get("Product ID").toString()}, ${
+                        doc.get("Seller Name").toString()
+                    }"
                 )
 
                 firebaseDB.collection("Wishlist").document("Wishlist").collection(uid)
@@ -961,18 +988,18 @@ class DBRepository(private val application: Application) {
                 doc1.get().addOnSuccessListener { document ->
                     if (document.exists()) {
                         category = document.getString("Category").toString()
-                        val raters = document.getString("Raters")!!.toDouble()
+                        val raters = document.getString("Raters")!!.toInt()
                         val avgRating = document.getString("Ratings")!!.toDouble()
                         val newRaters = raters + 1;
                         val newRating = ((raters * avgRating) + rating) / newRaters
                         doc1.update("Raters", newRaters.toString())
-                        doc1.update("Ratings", newRating.toString())
+                        doc1.update("Ratings", newRating.toString().substring(0, 3))
                         val doc2 = firebaseDB.collection("Products").document("Products")
                             .collection(category).document(productId)
                         doc2.get().addOnSuccessListener {
                             if (it.exists()) {
                                 doc2.update("Raters", newRaters.toString())
-                                doc2.update("Ratings", newRating.toString())
+                                doc2.update("Ratings", newRating.toString().substring(0, 3))
                             }
                         }
 

@@ -61,6 +61,12 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         dbRepository.fetchTransactionDetails(uid)
     }
 
+    fun updateTransactorDetails(
+        uid: String
+    ) {
+        dbRepository.updateTransactorDetails(uid)
+    }
+
     fun uploadImageToStorage(imageUri: Uri, user: FirebaseUser) {
         dbRepository.uploadImageToStorage(imageUri, user)
     }

@@ -380,7 +380,7 @@ class FinalOrderPlace : Fragment() {
 
         // Build the notification
         val notificationBuilder = NotificationCompat.Builder(context, "default_channel_id")
-            .setSmallIcon(R.drawable.notification)
+            .setSmallIcon(R.drawable.pewala)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

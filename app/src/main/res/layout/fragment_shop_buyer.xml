@@ -411,6 +411,7 @@
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/coupons_buyer_shop"
                     android:layout_width="@dimen/_45sdp"
                     android:layout_height="@dimen/_45sdp"
                     android:clickable="true"
@@ -432,7 +433,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/_2sdp"
-                    android:text="Cupons"
+                    android:text="Coupons"
                     android:textAlignment="center"
                     android:textColor="@color/material_black"
                     android:textSize="@dimen/_10sdp" />
