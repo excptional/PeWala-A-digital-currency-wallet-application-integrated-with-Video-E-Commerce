@@ -5,6 +5,7 @@
     android:id="@+id/swipe_refresh_layout_account"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     tools:context=".main_files.fragments.Account">
 
     <RelativeLayout

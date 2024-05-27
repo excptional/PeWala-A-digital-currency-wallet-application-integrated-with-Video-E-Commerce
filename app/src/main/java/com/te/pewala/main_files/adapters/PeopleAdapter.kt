@@ -17,7 +17,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class PeopleAdapter(
     private val context: Context,
-    private val PeopleItems: ArrayList<PeopleItems>
+    private val peopleItems: ArrayList<PeopleItems>
 ) :
     RecyclerView.Adapter<PeopleAdapter.PeopleViewHolder>() {
     override fun onCreateViewHolder(
@@ -25,13 +25,13 @@ class PeopleAdapter(
         viewType: Int
     ): PeopleViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.people_items, parent, false)
+            .inflate(R.layout.item_people, parent, false)
         return PeopleViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: PeopleViewHolder, position: Int) {
-        val currentItem = PeopleItems[position]
+        val currentItem = peopleItems[position]
         holder.name.text = currentItem.name
         Glide.with(context).load(currentItem.icon).into(holder.icon)
         holder.peopleBody.setOnClickListener {
@@ -42,13 +42,13 @@ class PeopleAdapter(
     }
 
     override fun getItemCount(): Int {
-        return PeopleItems.size
+        return peopleItems.size
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updatePeople(updatePeopleItems: ArrayList<PeopleItems>) {
-        PeopleItems.clear()
-        PeopleItems.addAll(updatePeopleItems)
+        peopleItems.clear()
+        peopleItems.addAll(updatePeopleItems)
         notifyDataSetChanged()
     }
 

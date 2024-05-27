@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
@@ -52,6 +53,8 @@ class PaymentSuccess : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_payment_success, container, false)
+
+        requireActivity().window.statusBarColor = Color.WHITE
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
@@ -134,7 +137,7 @@ class PaymentSuccess : Fragment() {
 
         // Build the notification
         val notificationBuilder = NotificationCompat.Builder(context, "default_channel_id")
-            .setSmallIcon(R.drawable.pewala)
+            .setSmallIcon(R.drawable.pewala_icon1)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

@@ -9,12 +9,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.te.pewala.R
-import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.items.TransactionHistoryItems
 import java.text.SimpleDateFormat
 import java.util.TimeZone
@@ -29,7 +25,7 @@ class TransactionHistoryAdapter(
         viewType: Int
     ): TransactionHistoryViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.transaction_history_items, parent, false)
+            .inflate(R.layout.item_transaction_history, parent, false)
         return TransactionHistoryViewHolder(view)
     }
 

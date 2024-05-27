@@ -1,6 +1,7 @@
 package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +30,9 @@ import com.te.pewala.main_files.adapters.SellerReceivedOrdersAdapter
 import com.te.pewala.main_files.items.SellerProductsItems
 import com.te.pewala.main_files.items.SellerReceivedOrdersItems
 import com.google.firebase.firestore.DocumentSnapshot
+import com.te.pewala.db.AESCrypt
+import com.te.pewala.main_files.adapters.ConversationAdapter
+import com.te.pewala.main_files.items.ConversationItems
 
 class ShopSeller : Fragment() {
 
@@ -48,6 +54,13 @@ class ShopSeller : Fragment() {
     private lateinit var contentOrdersLayout: LinearLayout
     private lateinit var arrowPendingOrder: ImageView
     private lateinit var addProduct: CardView
+    private lateinit var conversationRecyclerView: RecyclerView
+    private lateinit var conversationBox: CardView
+    private lateinit var backBtn: ImageView
+    private lateinit var conversationAdapter: ConversationAdapter
+    private var conversationItemsArray = arrayListOf<ConversationItems>()
+    val aesCrypt = AESCrypt()
+    val key = ByteArray(32)
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -55,6 +68,8 @@ class ShopSeller : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_shop_seller, container, false)
+
+        requireActivity().window.statusBarColor = Color.parseColor("#F7F9FD")
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
@@ -69,20 +84,32 @@ class ShopSeller : Fragment() {
         contentOrdersLayout = view.findViewById(R.id.contentOrderLayout_seller_shop)
         arrowPendingOrder = view.findViewById(R.id.arrow_order_seller_shop)
         addProduct = view.findViewById(R.id.addProduct_seller_shop)
+        conversationBox = view.findViewById(R.id.chat_box_seller_shop)
+        conversationRecyclerView = view.findViewById(R.id.chat_recyclerview_seller_shop)
+        backBtn = view.findViewById(R.id.back_btn_seller_shop)
+
+        key.fill(1)
 
         productsAdapter = SellerProductsAdapter(productsItemsArray)
         productsRecyclerView.layoutManager =
             LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
-        productsRecyclerView.setHasFixedSize(true)
+//        productsRecyclerView.setHasFixedSize(true)
         productsRecyclerView.setItemViewCacheSize(20)
         productsRecyclerView.adapter = productsAdapter
 
         ordersAdapter = SellerReceivedOrdersAdapter(ordersItemsArray)
         ordersRecyclerView.layoutManager =
             LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
-        ordersRecyclerView.setHasFixedSize(true)
+//        ordersRecyclerView.setHasFixedSize(true)
         ordersRecyclerView.setItemViewCacheSize(20)
         ordersRecyclerView.adapter = ordersAdapter
+
+        conversationAdapter =
+            ConversationAdapter(requireContext(), conversationItemsArray, key)
+        conversationRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        conversationRecyclerView.setHasFixedSize(true)
+        conversationRecyclerView.setItemViewCacheSize(20)
+        conversationRecyclerView.adapter = conversationAdapter
 
         loadData()
 
@@ -109,6 +136,10 @@ class ShopSeller : Fragment() {
 
         addProduct.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.nav_add_product, null, navBuilder.build())
+        }
+
+        backBtn.setOnClickListener {
+            requireActivity().onBackPressed()
         }
 
         return view
@@ -153,7 +184,7 @@ class ShopSeller : Fragment() {
 
     private fun fetchOrdersList(list: MutableList<DocumentSnapshot>?) {
         ordersItemsArray = arrayListOf()
-        if (list!!.size == 0) {
+        if (list.isNullOrEmpty()) {
             noOrders.visibility = View.VISIBLE
             ordersRecyclerView.visibility = View.GONE
         } else {
@@ -184,17 +215,48 @@ class ShopSeller : Fragment() {
         }
     }
 
+    private fun fetchConversations(list: MutableList<DocumentSnapshot>) {
+        if (list.isNotEmpty()) {
+            conversationBox.visibility = View.VISIBLE
+            conversationItemsArray = arrayListOf()
+            val conversationData = ConversationItems(
+                list[0].getString("Name"),
+                list[0].getString("Image Url"),
+                list[0].getString("Last Message"),
+                sellerUid,
+                list[0].getString("Uid")
+            )
+            conversationItemsArray.add(conversationData)
+
+            if (list.size > 1) {
+                val conversationData = ConversationItems(
+                    list[1].getString("Name"),
+                    list[1].getString("Image Url"),
+                    list[1].getString("Last Message"),
+                    sellerUid,
+                    list[1].getString("Uid")
+                )
+                conversationItemsArray.add(conversationData)
+            }
+            conversationAdapter.updateConversations(conversationItemsArray)
+        }
+    }
+
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if (it != null) {
-                sellerUid = it.uid
-                dbViewModel.fetchSellerProducts(it.uid)
+        authViewModel.userdata.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                sellerUid = user.uid
+                dbViewModel.fetchSellerProducts(user.uid)
                 dbViewModel.sellerProductsData.observe(viewLifecycleOwner) { list1 ->
                     fetchProductsList(list1)
                 }
-                dbViewModel.fetchReceivedOrders(it.uid)
+                dbViewModel.fetchReceivedOrders(user.uid)
                 dbViewModel.sellerReceivedOrdersData.observe(viewLifecycleOwner) { list2 ->
                     fetchOrdersList(list2)
+                }
+                dbViewModel.getConversations(user.uid)
+                dbViewModel.conversations.observe(viewLifecycleOwner) { list3 ->
+                    fetchConversations(list3)
                 }
             }
         }

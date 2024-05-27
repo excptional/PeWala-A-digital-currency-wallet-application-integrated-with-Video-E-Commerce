@@ -56,7 +56,7 @@ class RedeemRequest : Fragment() {
 
         redeemAdapter = RedeemAdapter(requireContext(), redeemItemsArray)
         recyclerview.layoutManager = LinearLayoutManager(requireContext())
-        recyclerview.setHasFixedSize(true)
+//        recyclerview.setHasFixedSize(true)
         recyclerview.setItemViewCacheSize(20)
         recyclerview.adapter = redeemAdapter
 

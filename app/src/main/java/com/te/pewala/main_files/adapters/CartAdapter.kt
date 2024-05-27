@@ -42,7 +42,7 @@ class CartAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.cart_items, parent, false)
+            .inflate(R.layout.item_cart, parent, false)
         return CartViewHolder(view)
     }
 
@@ -110,7 +110,7 @@ class CartAdapter(
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setGravity(Gravity.BOTTOM)
-        dialog.setContentView(R.layout.set_quantity_dialog)
+        dialog.setContentView(R.layout.dialog_set_quantity)
         dialog.window?.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT)
         dialog.window?.attributes?.windowAnimations = R.anim.slide_up
 

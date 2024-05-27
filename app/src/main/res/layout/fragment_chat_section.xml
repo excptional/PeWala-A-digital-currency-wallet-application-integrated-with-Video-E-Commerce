@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout_chat"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".main_files.fragments.ChatSection">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/top_bar_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pewala_icon1" />
+
+                <TextView
+                    android:id="@+id/receiver_name_chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_toEndOf="@id/back_btn_chat"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Bikash Dutta"
+                    android:textColor="@color/material_black"
+                    android:textSize="@dimen/_16sdp" />
+
+                <ImageButton
+                    android:id="@+id/back_btn_chat"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:background="@drawable/back_black"
+                    android:scaleType="centerCrop" />
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:id="@+id/main_layout_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/top_bar_chat"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/_5sdp">
+
+            <LinearLayout
+                android:id="@+id/top_layout_chat"
+                android:layout_width="@dimen/_220sdp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/message_background_1"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:gravity="center"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Messages are end-to-end encrypted. No one outside of this chat can read them. Now you can message securely."
+                    android:textSize="@dimen/_8sdp"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_chat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/layout_input_chat"
+                
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                tools:itemCount="1"
+                tools:listitem="@layout/item_message_receiver" />
+
+            <LinearLayout
+                android:id="@+id/layout_input_chat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:layout_weight="2"
+                    android:background="@drawable/box_background"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        app:boxBackgroundMode="none"
+                        app:hintEnabled="false"
+                        tools:ignore="NestedWeights">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/msg_et_chat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="Type a message"
+                            android:imeOptions="flagNoEnterAction"
+                            android:inputType="textImeMultiLine"
+                            android:padding="@dimen/_5sdp"
+                            android:scrollbars="vertical"
+                            android:textColor="@color/material_black"
+                            android:textColorHint="@color/text_color2"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/mic_chat"
+                    android:layout_width="@dimen/_32sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:background="@drawable/mic" />
+
+                <ImageButton
+                    android:id="@+id/send_btn_chat"
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:background="@drawable/send_msg"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+            
+        </RelativeLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:layout_below="@id/top_bar_chat"
+            app:shimmer_duration="800">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/shimmer_chat" />
+                <include layout="@layout/shimmer_chat" />
+                <include layout="@layout/shimmer_chat" />
+                <include layout="@layout/shimmer_chat" />
+                <include layout="@layout/shimmer_chat" />
+                <include layout="@layout/shimmer_chat" />
+                <include layout="@layout/shimmer_chat" />
+                <include layout="@layout/shimmer_chat" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+        
+    </RelativeLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

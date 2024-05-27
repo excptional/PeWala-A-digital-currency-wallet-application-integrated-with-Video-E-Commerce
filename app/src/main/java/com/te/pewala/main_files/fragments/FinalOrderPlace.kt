@@ -29,6 +29,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
@@ -36,7 +42,7 @@ import com.te.pewala.db.Response
 import com.te.pewala.main_files.MainActivity
 import kotlin.properties.Delegates
 
-class FinalOrderPlace : Fragment() {
+class FinalOrderPlace : Fragment(), OnMapReadyCallback {
 
     private lateinit var closeBtn: ImageButton
     private lateinit var productImage: ImageView
@@ -45,7 +51,7 @@ class FinalOrderPlace : Fragment() {
     private lateinit var brandName: TextView
     private lateinit var quantity: TextView
     private lateinit var description: TextView
-    private lateinit var placeOrder: Button
+    private lateinit var placeOrder: CardView
     private lateinit var plusBtn: ImageButton
     private lateinit var minusBtn: ImageButton
     private lateinit var updatedProductPrice: TextView
@@ -57,7 +63,8 @@ class FinalOrderPlace : Fragment() {
     private lateinit var whiteView: View
     private lateinit var loader: LottieAnimationView
     private var price = 0
-    private var availableStocks by Delegates.notNull<Int>()
+
+    //    private var availableStocks by Delegates.notNull<Int>()
     private var count = 1
     private lateinit var uid: String
     private lateinit var addressStr: String
@@ -66,6 +73,10 @@ class FinalOrderPlace : Fragment() {
     private lateinit var state: TextView
     private lateinit var balanceStr: String
     private var finalAmountInt = 0
+    private lateinit var mapView: MapView
+    private lateinit var googleMap: GoogleMap
+    private var lat by Delegates.notNull<Double>()
+    private var long by Delegates.notNull<Double>()
 
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreateView(
@@ -95,7 +106,9 @@ class FinalOrderPlace : Fragment() {
         locality = view.findViewById(R.id.area_order_summary)
         city_postal = view.findViewById(R.id.city_postal_order_summary)
         state = view.findViewById(R.id.state_order_summary)
+        mapView = view.findViewById(R.id.map_order_summary)
 
+        address.visibility = View.GONE
         whiteView.visibility = View.VISIBLE
         loader.visibility = View.VISIBLE
 
@@ -103,11 +116,17 @@ class FinalOrderPlace : Fragment() {
         productId = requireArguments().getString("productId").toString()
         productName.text = requireArguments().getString("productName")
         brandName.text = requireArguments().getString("brandName")
-        availableStocks = requireArguments().getString("quantity")!!.toInt()
+//        availableStocks = requireArguments().getString("quantity")!!.toInt()
         description.text = requireArguments().getString("description")
         Glide.with(view).load(requireArguments().getString("productImageUrl")).into(productImage)
 
         load(view)
+
+        disableMapScrolling(mapView)
+        mapView.onCreate(savedInstanceState)
+
+//        onMapReady(googleMap)
+
 
         quantity.text = "1"
 
@@ -115,29 +134,29 @@ class FinalOrderPlace : Fragment() {
         var temp2 = temp1 + 30
         finalAmountInt = temp2
 
-        finalAmount.text = "₹$finalAmountInt"
+        finalAmount.text = "$finalAmountInt INR"
 
-        updatedProductPrice.text = "Product Price :  ₹$temp1"
-        totalPrice.text = "Total amount you have to pay : ₹$temp2 INR"
+        updatedProductPrice.text = "Product Price :  $temp1 INR"
+        totalPrice.text = "Total amount you have to pay : $temp2 INR"
 
         closeBtn.setOnClickListener {
             requireActivity().onBackPressed()
         }
 
         plusBtn.setOnClickListener {
-            if (count <= availableStocks) {
+            if (count <= 10) {
                 count++
                 quantity.text = "$count"
                 temp1 = price * count
                 temp2 = temp1 + 30
                 finalAmountInt = temp2
-                updatedProductPrice.text = "Product Price :  ₹$temp1"
-                totalPrice.text = "Total amount you have to pay : ₹$temp2 INR"
-                finalAmount.text = "₹$temp2"
+                updatedProductPrice.text = "Product Price :  $temp1 INR"
+                totalPrice.text = "Total amount you have to pay : $temp2 INR"
+                finalAmount.text = "$temp2 INR"
             } else {
                 Toast.makeText(
                     requireContext(),
-                    "You can't order more than 12 items",
+                    "You can't order more than 10 items",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -150,9 +169,9 @@ class FinalOrderPlace : Fragment() {
                 temp1 = price * count
                 temp2 = temp1 + 30
                 finalAmountInt = temp2
-                updatedProductPrice.text = "Product Price :  ₹$temp1"
-                totalPrice.text = "Total amount you have to pay : ₹$temp2 INR"
-                finalAmount.text = "₹$temp2"
+                updatedProductPrice.text = "Product Price :  $temp1 INR"
+                totalPrice.text = "Total amount you have to pay : $temp2 INR"
+                finalAmount.text = "$temp2 INR"
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -163,7 +182,10 @@ class FinalOrderPlace : Fragment() {
         }
 
         address.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.nav_address)
+            val bundle = Bundle()
+            bundle.putString("lat", lat.toString())
+            bundle.putString("long", long.toString())
+            Navigation.findNavController(view).navigate(R.id.nav_address, bundle)
         }
 
         placeOrder.setOnClickListener {
@@ -173,6 +195,30 @@ class FinalOrderPlace : Fragment() {
 //            order()
         }
         return view
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    fun disableMapScrolling(mapView: MapView) {
+        mapView.setOnTouchListener { _, _ -> true }
+        mapView.isScrollContainer = false
+        mapView.requestDisallowInterceptTouchEvent(true)
+    }
+
+    override fun onMapReady(map: GoogleMap) {
+        map.let {
+            googleMap = it
+        }
+        val location = LatLng(lat, long)
+        googleMap.addMarker(
+            MarkerOptions()
+                .position(location)
+                .title("Your location")
+        )
+        val pos = LatLng(lat, long)
+//        googleMap.setMapStyle(
+//            MapStyleOptions.loadRawResourceStyle(
+//                requireContext(), R.raw.map_style_dark))
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 15.0f))
     }
 
     @SuppressLint("SetTextI18n")
@@ -186,6 +232,10 @@ class FinalOrderPlace : Fragment() {
                         is Response.Success -> {
                             dbViewModel.addressData.observe(viewLifecycleOwner) { doc ->
                                 if (doc.exists()) {
+                                    lat = doc.getString("Latitude")!!.toDouble()
+                                    long = doc.getString("Longitude")!!.toDouble()
+                                    mapView.onResume()
+                                    mapView.getMapAsync(this)
                                     locality.text = doc.getString("Locality")
                                     city_postal.text =
                                         doc.getString("City") + ", " + doc.getString("Postal Code")
@@ -225,7 +275,7 @@ class FinalOrderPlace : Fragment() {
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setGravity(Gravity.BOTTOM)
-        dialog.setContentView(R.layout.payment_options_dialog)
+        dialog.setContentView(R.layout.dialog_payment_options)
         dialog.window?.attributes?.windowAnimations = R.anim.slide_up
         dialog.window?.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
 
@@ -292,6 +342,7 @@ class FinalOrderPlace : Fragment() {
                     Toast.makeText(requireContext(), "COD is not available now", Toast.LENGTH_SHORT)
                         .show()
                 }
+
                 else -> {
                     Toast.makeText(
                         requireContext(),
@@ -334,9 +385,11 @@ class FinalOrderPlace : Fragment() {
                             "Your order placed successfully",
                             Toast.LENGTH_SHORT
                         ).show()
-                        sendNotification(requireContext(), "Your order successfully placed", "For ${
-                            requireArguments().getString("brandName").toString()
-                        } ${requireArguments().getString("productName").toString()}")
+                        sendNotification(
+                            requireContext(), "Your order successfully placed", "For ${
+                                requireArguments().getString("brandName").toString()
+                            } ${requireArguments().getString("productName").toString()}"
+                        )
                         requireActivity().onBackPressed()
                     }
 
@@ -380,7 +433,7 @@ class FinalOrderPlace : Fragment() {
 
         // Build the notification
         val notificationBuilder = NotificationCompat.Builder(context, "default_channel_id")
-            .setSmallIcon(R.drawable.pewala)
+            .setSmallIcon(R.drawable.pewala_icon1)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

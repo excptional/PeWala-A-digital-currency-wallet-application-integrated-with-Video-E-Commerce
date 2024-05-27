@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/body_chat_receiver_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:padding="@dimen/_5sdp"
+        android:orientation="vertical"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/message_background_1">
+
+        <TextView
+            android:id="@+id/content_chat_receiver_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I a"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:fontFamily="@font/roboto_regular"
+            android:textColor="@color/material_black"
+            android:maxWidth="@dimen/_200sdp"
+            android:minWidth="@dimen/_120sdp"
+            android:textSize="@dimen/_12sdp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp">
+
+            <TextView
+                android:id="@+id/time_chat_receiver_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_9sdp"
+                android:textColor="@color/text_color2"
+                android:layout_alignParentStart="true"
+                android:singleLine="true"
+                android:text="12:45 Jun 12, 2024"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -31,6 +32,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import de.hdodenhof.circleimageview.CircleImageView
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 class Account : Fragment() {
 
@@ -55,6 +59,7 @@ class Account : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var uploadImage: FloatingActionButton
     private lateinit var myUser: FirebaseUser
+    private lateinit var imgUrl: String
 
     private val cropActivityResultContract = object : ActivityResultContract<Any?, Uri?>() {
         override fun createIntent(context: Context, input: Any?): Intent {
@@ -109,6 +114,7 @@ class Account : Fragment() {
                 whiteView.visibility = View.VISIBLE
                 uploadImage.isClickable = false
                 imageUploadToStorage(uri, view)
+//                replaceImage(uri, view)
             } else {
                 Toast.makeText(requireContext(), "No image is uploaded", Toast.LENGTH_SHORT).show()
             }
@@ -180,15 +186,36 @@ class Account : Fragment() {
         }
     }
 
+    private fun replaceImage(uri: Uri, view: View) {
+        loaderAccount.visibility = View.VISIBLE
+        whiteView.visibility = View.VISIBLE
+        val newImageByteArray: ByteArray = uriToByteArray(requireContext(), uri)
+        val newImageStream = ByteArrayInputStream(newImageByteArray)
+        dbViewModel.replaceImage(imgUrl, newImageStream)
+        dbViewModel.dbResponse.observe(this.viewLifecycleOwner) {
+            when (it) {
+                is Response.Success -> {
+                    loadData(view)
+                }
+
+                is Response.Failure -> {
+                    loaderAccount.visibility = View.GONE
+                    whiteView.visibility = View.GONE
+                    Toast.makeText(requireContext(), it.errorMassage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun loadData(view: View) {
         authViewModel.userdata.observe(viewLifecycleOwner) {
-            if(it != null) {
+            if (it != null) {
                 myUser = it
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if(list.exists()) {
-                        if(list.getString("Status") == ""){
+                    if (list.exists()) {
+                        if (list.getString("Status") == "") {
                             verifyIcon.visibility = View.GONE
                             pinText.text = "PIN : _ _ _ _ (Not set)"
                         } else {
@@ -199,6 +226,7 @@ class Account : Fragment() {
                         phoneAccount.text = "Phone : +91 ${list.getString("Phone")}"
                         cardIdAccount.text = "Wallet id : ${list.getString("Card Id")}"
                         Glide.with(view).load(list.getString("Image Url")).into(profileImg)
+                        imgUrl = list.getString("Image Url")!!
                         mainLayout.visibility = View.VISIBLE
                         whiteView.visibility = View.GONE
                         loaderAccount.visibility = View.GONE
@@ -216,6 +244,19 @@ class Account : Fragment() {
                 }
             }
         }
+    }
+
+    @SuppressLint("Recycle")
+    private fun uriToByteArray(context: Context, uri: Uri): ByteArray {
+        val contentResolver = context.contentResolver
+        val inputStream = contentResolver.openInputStream(uri)
+        val outputStream = ByteArrayOutputStream()
+        val buffer = ByteArray(1024)
+        var bytesRead: Int
+        while (inputStream?.read(buffer).also { bytesRead = it ?: 0 } != -1) {
+            outputStream.write(buffer, 0, bytesRead)
+        }
+        return outputStream.toByteArray()
     }
 
 }

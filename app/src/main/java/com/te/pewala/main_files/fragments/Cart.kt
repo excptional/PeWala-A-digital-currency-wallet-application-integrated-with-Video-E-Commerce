@@ -1,5 +1,6 @@
 package com.te.pewala.main_files.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -38,6 +39,8 @@ class Cart : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cart, container, false)
+
+        requireActivity().window.statusBarColor = Color.WHITE
 
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]

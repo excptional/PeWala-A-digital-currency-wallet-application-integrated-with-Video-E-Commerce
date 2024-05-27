@@ -25,7 +25,7 @@ class ContactAdapter(
         viewType: Int
     ): ContactViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.contact_items, parent, false)
+            .inflate(R.layout.item_contacts, parent, false)
         return ContactViewHolder(view)
     }
 

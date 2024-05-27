@@ -58,7 +58,7 @@
                     android:id="@+id/recyclerView_my_orders"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:listitem="@layout/my_orders_items"/>
+                    tools:listitem="@layout/item_my_order"/>
 
                 <TextView
                     android:id="@+id/nothingFound_my_orders"

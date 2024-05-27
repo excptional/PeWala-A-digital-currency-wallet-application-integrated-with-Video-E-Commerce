@@ -8,6 +8,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -42,7 +44,7 @@ class Add : Fragment() {
     private lateinit var whiteView: View
     private lateinit var loaderAdd: LottieAnimationView
     private lateinit var walletId: TextView
-    private lateinit var backBtn: ImageButton
+    private lateinit var backBtn: ImageView
     private lateinit var dbViewModel: DBViewModel
     private lateinit var authViewModel: AuthViewModel
     private lateinit var myUser: FirebaseUser
@@ -60,6 +62,8 @@ class Add : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_add, container, false)
 
+        requireActivity().window.statusBarColor = Color.WHITE
+
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
@@ -71,10 +75,22 @@ class Add : Fragment() {
         walletId = view.findViewById(R.id.walletId_add)
         mainLayout = view.findViewById(R.id.main_layout_add)
 
+        mainLayout.visibility = View.GONE
+
         loadData()
 
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        amountEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (amountEditText.text!!.isEmpty()) {
+                    amountEditText.hint = "00000"
+                }
+            } else {
+                amountEditText.hint = null
+            }
         }
 
         addMoney.setOnClickListener {

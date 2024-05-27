@@ -2,12 +2,16 @@ package com.te.pewala.auth
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -21,15 +25,16 @@ import com.te.pewala.R
 
 class SignIn : Fragment() {
 
-    private lateinit var phEditText: TextInputEditText
-    private lateinit var passwordEditText: TextInputEditText
+    private lateinit var phEditText: AppCompatEditText
+    private lateinit var passwordEditText: AppCompatEditText
     private lateinit var passwordLayout: TextInputLayout
     private lateinit var signInBtn: CardView
-    private lateinit var signUpBtn: CardView
+    private lateinit var registerText: TextView
     private lateinit var whiteView: View
     private lateinit var signInLoader: LottieAnimationView
     private val validPhoneNumberPattern by lazy { "^(\\+\\d{1,3}[- ]?)?\\d{10}\$" }
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var backBtn: ImageView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -38,23 +43,52 @@ class SignIn : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_sign_in, container, false)
 
+        requireActivity().window.statusBarColor = Color.parseColor("#F7F9FD")
+
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         signInBtn = view.findViewById(R.id.signInButton_signIn)
-        signUpBtn = view.findViewById(R.id.signUpButton_signIn)
+        registerText = view.findViewById(R.id.registerText_signIn)
         phEditText = view.findViewById(R.id.ph_signIn)
         passwordEditText = view.findViewById(R.id.password_signIn)
         passwordLayout = view.findViewById(R.id.passwordLayout_signIn)
         whiteView = view.findViewById(R.id.whiteView_signIn)
         signInLoader = view.findViewById(R.id.loader_signIn)
+        backBtn = view.findViewById(R.id.back_btn_signIn)
 
         signInBtn.setOnClickListener {
             signInBtn.isClickable = false
             signIn(view)
         }
 
-        signUpBtn.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.nav_user_type)
+        registerText.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("LastFragment", "SignIn")
+            Navigation.findNavController(it).navigate(R.id.nav_register, bundle)
+        }
+
+        phEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (phEditText.text!!.isEmpty()) {
+                    phEditText.hint = "Enter your 10 digits Phone Number"
+                }
+            } else {
+                phEditText.hint = null
+            }
+        }
+
+        passwordEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (passwordEditText.text!!.isEmpty()) {
+                    passwordEditText.hint = "Enter your password"
+                }
+            } else {
+                passwordEditText.hint = null
+            }
+        }
+
+        backBtn.setOnClickListener {
+            requireActivity().onBackPressed()
         }
 
         return view

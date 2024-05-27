@@ -44,6 +44,8 @@ class Redeem : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_redeem, container, false)
 
+        requireActivity().window.statusBarColor = Color.WHITE
+
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
@@ -110,7 +112,7 @@ class Redeem : Fragment() {
         dialog.setCanceledOnTouchOutside(false)
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setContentView(R.layout.enter_pin_dialog)
+        dialog.setContentView(R.layout.dialog_enter_pin)
 
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 

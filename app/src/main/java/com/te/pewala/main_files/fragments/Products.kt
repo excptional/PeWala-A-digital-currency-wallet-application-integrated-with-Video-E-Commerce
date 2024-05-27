@@ -1,6 +1,7 @@
 package com.te.pewala.main_files.fragments
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -32,9 +33,10 @@ class Products : Fragment() {
     private lateinit var productsRecyclerView: RecyclerView
     private lateinit var shimmerContainerProducts: ShimmerFrameLayout
     private lateinit var notFoundText: TextView
+    private lateinit var categoryText: TextView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var searchET: TextInputEditText
     private lateinit var searchView: LinearLayout
+    private lateinit var searchET: TextInputEditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,14 +44,21 @@ class Products : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_products, container, false)
 
+        requireActivity().window.statusBarColor = Color.WHITE
+
         val category = requireArguments().getString("Category").toString()
 
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout_products)
         productsRecyclerView = view.findViewById(R.id.recyclerView_products)
         notFoundText = view.findViewById(R.id.notFound_products)
+        categoryText = view.findViewById(R.id.category_products)
         searchET = view.findViewById(R.id.search_edit_text_products)
         searchView = view.findViewById(R.id.searchView_products)
+
+        categoryText.text = category
+        categoryText.visibility = View.GONE
+        searchView.visibility = View.GONE
 
         shimmerContainerProducts = view.findViewById(R.id.shimmer_view_products)
         shimmerContainerProducts.startShimmer()
@@ -138,10 +147,11 @@ class Products : Fragment() {
             notFoundText.visibility = View.VISIBLE
             shimmerContainerProducts.visibility = View.GONE
             productsRecyclerView.visibility = View.GONE
+            categoryText.visibility = View.GONE
         } else {
             for (i in list) {
                 if (i.exists()) {
-                    val acc = ProductsItems(
+                    val product = ProductsItems(
                         i.getString("Product Name"),
                         i.getString("Brand Name"),
                         i.getString("Product Image"),
@@ -157,22 +167,17 @@ class Products : Fragment() {
                         i.getString("Seller UID"),
                         i.getString("Product ID")
                     )
-                    productsItemsArray.add(acc)
+                    productsItemsArray.add(product)
                 }
             }
-            if(productsItemsArray.isEmpty()) {
-                notFoundText.visibility = View.VISIBLE
-                shimmerContainerProducts.visibility = View.GONE
-                productsRecyclerView.visibility = View.GONE
-            } else {
-                productsAdapter.updateProducts(productsItemsArray)
-                shimmerContainerProducts.clearAnimation()
-                shimmerContainerProducts.visibility = View.GONE
-                productsRecyclerView.visibility = View.VISIBLE
-                searchView.visibility = View.VISIBLE
-                notFoundText.visibility = View.GONE
-                swipeRefreshLayout.isRefreshing = false
-            }
+            productsAdapter.updateProducts(productsItemsArray)
+            shimmerContainerProducts.clearAnimation()
+            shimmerContainerProducts.visibility = View.GONE
+            productsRecyclerView.visibility = View.VISIBLE
+            searchView.visibility = View.VISIBLE
+            notFoundText.visibility = View.GONE
+            categoryText.visibility = View.VISIBLE
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -182,10 +187,11 @@ class Products : Fragment() {
             notFoundText.visibility = View.VISIBLE
             shimmerContainerProducts.visibility = View.GONE
             productsRecyclerView.visibility = View.GONE
+            categoryText.visibility = View.GONE
         } else {
             for (i in list) {
                 if (i.exists() and i.getString("Tags")!!.contains(s)) {
-                    val acc = ProductsItems(
+                    val product = ProductsItems(
                         i.getString("Product Name"),
                         i.getString("Brand Name"),
                         i.getString("Product Image"),
@@ -201,22 +207,17 @@ class Products : Fragment() {
                         i.getString("Seller UID"),
                         i.getString("Product ID")
                     )
-                    productsItemsArray.add(acc)
+                    productsItemsArray.add(product)
                 }
             }
-            if(productsItemsArray.isEmpty()) {
-                notFoundText.visibility = View.VISIBLE
-                shimmerContainerProducts.visibility = View.GONE
-                productsRecyclerView.visibility = View.GONE
-            } else {
-                productsAdapter.updateProducts(productsItemsArray)
-                shimmerContainerProducts.clearAnimation()
-                shimmerContainerProducts.visibility = View.GONE
-                productsRecyclerView.visibility = View.VISIBLE
-                searchView.visibility = View.VISIBLE
-                notFoundText.visibility = View.GONE
-                swipeRefreshLayout.isRefreshing = false
-            }
+            productsAdapter.updateProducts(productsItemsArray)
+            shimmerContainerProducts.clearAnimation()
+            shimmerContainerProducts.visibility = View.GONE
+            productsRecyclerView.visibility = View.VISIBLE
+            searchView.visibility = View.VISIBLE
+            notFoundText.visibility = View.GONE
+            categoryText.visibility = View.VISIBLE
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 

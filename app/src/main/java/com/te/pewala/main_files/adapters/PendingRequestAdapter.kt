@@ -22,7 +22,7 @@ class PendingRequestAdapter(
         viewType: Int
     ): PendingRequestViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.pending_redeem_request, parent, false)
+            .inflate(R.layout.item_pending_redeem_request, parent, false)
         return PendingRequestViewHolder(view)
     }
 

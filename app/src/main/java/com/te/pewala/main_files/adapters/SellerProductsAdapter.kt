@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.te.pewala.R
@@ -20,7 +21,7 @@ class SellerProductsAdapter(
     RecyclerView.Adapter<SellerProductsAdapter.SellerProductViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SellerProductViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.seller_products_items, parent, false)
+            .inflate(R.layout.item_product, parent, false)
         return SellerProductViewHolder(view)
     }
 
@@ -32,9 +33,7 @@ class SellerProductsAdapter(
         Glide.with(holder.itemView.context).load(currentItem.productImageUrl)
             .into(holder.sellerProductImage)
         holder.sellerProductPrice.text = "₹" + currentItem.price
-        holder.sellerProductRatingText.text = currentItem.ratings
         holder.sellerProductRatingBar.rating = currentItem.ratings!!.toFloat()
-        holder.stocks.text = "Stocks : " + currentItem.quantity
 
         val bundle = Bundle()
         bundle.putString("brandName", currentItem.brandName)
@@ -52,7 +51,7 @@ class SellerProductsAdapter(
         bundle.putString("sellerUid", currentItem.sellerUID)
 
         holder.itemLayout.setOnClickListener {
-
+            Navigation.findNavController(it).navigate(R.id.nav_edit_product_details_seller, bundle)
         }
 
     }
@@ -69,13 +68,11 @@ class SellerProductsAdapter(
     }
 
     class SellerProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val sellerProductName: TextView = itemView.findViewById(R.id.productName_seller_product)
-        val brandName: TextView = itemView.findViewById(R.id.brandName_seller_product)
-        val sellerProductImage: ImageView = itemView.findViewById(R.id.productImage_seller_product)
-        val sellerProductPrice: TextView = itemView.findViewById(R.id.productPrice_seller_product)
-        val sellerProductRatingBar: RatingBar = itemView.findViewById(R.id.ratingBar_seller_product)
-        val sellerProductRatingText: TextView = itemView.findViewById(R.id.ratingText_seller_product)
-        val stocks: TextView = itemView.findViewById(R.id.stocks_seller_product)
-        val itemLayout: CardView = itemView.findViewById(R.id.itemLayout_seller_product)
+        val sellerProductName: TextView = itemView.findViewById(R.id.product_name_product)
+        val brandName: TextView = itemView.findViewById(R.id.brand_name_product)
+        val sellerProductImage: ImageView = itemView.findViewById(R.id.product_image_product)
+        val sellerProductPrice: TextView = itemView.findViewById(R.id.product_price_product)
+        val sellerProductRatingBar: RatingBar = itemView.findViewById(R.id.ratingbar_product)
+        val itemLayout: CardView = itemView.findViewById(R.id.card_layout_product)
     }
 }

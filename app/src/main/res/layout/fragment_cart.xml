@@ -49,10 +49,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_cart"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:ignore="RtlSymmetry"
-                tools:listitem="@layout/cart_items" />
+                tools:listitem="@layout/item_cart" />
 
         </LinearLayout>
 
@@ -82,11 +82,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/products_shimmer" />
+                <include layout="@layout/shimmer_products" />
 
-                <include layout="@layout/products_shimmer" />
+                <include layout="@layout/shimmer_products" />
 
-                <include layout="@layout/products_shimmer" />
+                <include layout="@layout/shimmer_products" />
 
             </LinearLayout>
 

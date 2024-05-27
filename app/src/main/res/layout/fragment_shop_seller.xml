@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeRefreshLayout_seller_shop"
+    android:background="@color/app_background"
     tools:context=".main_files.fragments.ShopSeller">
 
     <RelativeLayout
@@ -23,15 +24,28 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="@dimen/_10sdp"
-                    android:text="My Shop"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_15sdp"
-                    android:textStyle="bold" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_15sdp">
+
+                    <ImageView
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_14sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/pewala_icon1" />
+
+                    <ImageView
+                        android:id="@+id/back_btn_seller_shop"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/back_black" />
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/products_layout__seller_shop"
@@ -44,29 +58,32 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
                         android:text="My products"
-                        android:textColor="@color/material_black"
+                        android:fontFamily="@font/roboto_medium"
+                        android:textColor="@color/text_color1"
                         android:textSize="@dimen/_14sdp" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/seller_products_recyclerView_seller_shop"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_250sdp"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
                         tools:ignore="RtlSymmetry"
                         android:visibility="visible"
-                        tools:listitem="@layout/seller_products_items" />
+                        tools:itemCount="1"
+                        tools:listitem="@layout/item_product" />
 
                 </LinearLayout>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/addProduct_seller_shop"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_45sdp"
+                    android:layout_height="@dimen/_40sdp"
                     android:layout_marginStart="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_15sdp"
                     android:layout_marginEnd="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -84,11 +101,12 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_marginStart="@dimen/_5sdp"
                             android:layout_weight="2"
+                            android:fontFamily="@font/roboto_regular"
                             android:text="List your product here"
-                            android:textColor="@color/material_black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textColor="@color/text_color1"
+                            android:textSize="@dimen/_14sdp" />
 
                         <ImageView
                             android:layout_width="@dimen/_30sdp"
@@ -111,6 +129,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:gravity="center_vertical"
                         android:padding="@dimen/_5sdp">
 
                         <LinearLayout
@@ -123,9 +142,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
+                                android:fontFamily="@font/roboto_regular"
                                 android:text="Pending orders"
                                 android:layout_marginStart="@dimen/_5sdp"
-                                android:textColor="@color/material_black"
+                                android:textColor="@color/text_color1"
                                 android:textSize="@dimen/_14sdp" />
 
                             <ImageView
@@ -157,7 +177,62 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:visibility="visible"
-                                tools:listitem="@layout/received_order_items" />
+                                tools:listitem="@layout/item_received_order" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/chat_box_seller_shop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_marginEnd="@dimen/_15sdp"
+                    android:layout_marginBottom="@dimen/_15sdp"
+                    app:cardCornerRadius="@dimen/_5sdp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_5sdp"
+                            android:text="Messages"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/chat_recyclerview_seller_shop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:itemCount="1"
+                            tools:listitem="@layout/item_chat"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_marginBottom="@dimen/_5sdp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="@dimen/_15sdp"
+                                android:layout_height="@dimen/_15sdp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/expand"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="View more"
+                                android:textSize="@dimen/_10sdp"
+                                android:layout_gravity="center"/>
 
                         </LinearLayout>
 

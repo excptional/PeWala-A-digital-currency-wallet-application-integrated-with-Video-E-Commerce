@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/body_edit"
+    android:layout_marginStart="@dimen/_5sdp"
+    android:layout_marginEnd="@dimen/_5sdp"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:layout_marginBottom="@dimen/_5sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="@dimen/_130sdp"
+        android:layout_height="@dimen/_230sdp"
+        android:background="@drawable/video_tutorials_bg"
+        android:layout_alignParentTop="true"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="@dimen/_10sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentBottom="true"
+                android:outlineProvider="none"
+                app:cardBackgroundColor="#A4000000">
+
+                <TextView
+                    android:id="@+id/description_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Overview of the bat"
+                    android:textSize="@dimen/_10sdp"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/roboto_medium"
+                    android:lines="4"
+                    android:ellipsize="end"
+                    />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <VideoView
+                android:id="@+id/video_view_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loader_edit"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:scaleType="centerCrop"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
+                android:visibility="visible"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/white_loader" />
+
+            <ImageView
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/edit_icon_white"/>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

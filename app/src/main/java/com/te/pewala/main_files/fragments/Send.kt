@@ -1,14 +1,17 @@
 package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -35,27 +38,28 @@ class Send : Fragment() {
     private lateinit var whiteView: View
     private lateinit var loaderSend: LottieAnimationView
     private lateinit var phoneNum: String
-    private lateinit var backBtn: ImageButton
+    private lateinit var backBtn: ImageView
     private var contactItemsArray = arrayListOf<ContactItems>()
     private lateinit var contactAdapter: ContactAdapter
     private var contactItems = arrayListOf<ContactItems>()
     private lateinit var recyclerview: RecyclerView
     private lateinit var contactLayout: LinearLayout
-    private var iconUrl = "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "ClickableViewAccessibility", "ResourceType")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_send, container, false)
 
+        requireActivity().window.statusBarColor = Color.WHITE
+
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
         loadData()
 
-        phoneEditText = view.findViewById(R.id.phoneEdiText_send)
+        phoneEditText = view.findViewById(R.id.phoneEditText_send)
         submitBtn = view.findViewById(R.id.submit_btn_send)
         whiteView = view.findViewById(R.id.whiteView_send)
         loaderSend = view.findViewById(R.id.loader_send)
@@ -118,6 +122,17 @@ class Send : Fragment() {
                 Navigation.findNavController(view).navigate(R.id.nav_final_pay, bundle)
             }
         }
+
+        phoneEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (phoneEditText.text!!.isEmpty()) {
+                    phoneEditText.hint = "0000000000"
+                }
+            } else {
+                phoneEditText.hint = null
+            }
+        }
+
         return view
     }
 

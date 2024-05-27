@@ -4,36 +4,109 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
-    android:padding="@dimen/_10sdp"
+    android:background="@color/app_background"
     tools:context=".main_files.fragments.Address">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_marginBottom="@dimen/_60sdp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/map_layout_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_180sdp"
+                    android:gravity="center">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/use_current_location_btn_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10sdp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        app:cardBackgroundColor="#A3000000"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:outlineProvider="none"
+                        app:cardCornerRadius="@dimen/_5sdp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/_6sdp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="@dimen/_5sdp"
+                                android:text="Current Location"
+                                android:textAllCaps="true"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_8sdp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="@dimen/_11sdp"
+                                android:layout_height="@dimen/_11sdp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/gps_icon"/>
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/map_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerInside"
+                        android:outlineSpotShadowColor="@color/black"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/back_btn_address"
+                        android:layout_width="@dimen/_35sdp"
+                        android:layout_height="@dimen/_35sdp"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:background="@null"
+                        android:contentDescription="@string/app_name"
+                        android:padding="@dimen/_4sdp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/back_rounded_2"
+                        tools:ignore="TouchTargetSizeCheck" />
+
+                </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_below="@id/map_layout_address"
+                android:padding="@dimen/_15sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/back_btn_address"
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:background="@null"
-                    android:contentDescription="@string/app_name"
-                    android:padding="@dimen/_4sdp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/back_black"
-                    tools:ignore="TouchTargetSizeCheck" />
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -41,209 +114,188 @@
                     android:text="Enter Address"
                     android:textColor="@color/material_black"
                     android:textSize="@dimen/_16sdp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/roboto_bold"
+                    />
 
-            </LinearLayout>
+                <TextView
+                    android:textSize="@dimen/_11sdp"
+                    android:textColor="@color/text_color1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="Area Name"
+                    />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_200sdp"
-                android:scaleType="centerInside"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:src="@drawable/delivery_address" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/use_current_location_btn_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_5sdp"
-                android:gravity="center"
-                android:layout_gravity="center"
-                app:cardBackgroundColor="#FE735C"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardCornerRadius="@dimen/_10sdp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/areaName_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_35sdp"
+                    android:hint="---"
+                    android:inputType="textPersonName"
+                    android:padding="@dimen/_10sdp"
+                    android:textColor="@color/material_black"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColorHint="@color/text_color2"
+                    android:singleLine="true"
+                    android:scrollHorizontally="true"
+                    android:background="@color/white"
+                    android:textSize="@dimen/_13sdp" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_7sdp"
-                    android:paddingBottom="@dimen/_7sdp">
+                    android:weightSum="10">
 
-                    <ImageView
-                        android:layout_width="@dimen/_15sdp"
-                        android:layout_height="@dimen/_15sdp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/gps_icon"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        android:text="Use Current Location"
-                        android:textAllCaps="true"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:layout_weight="6"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textSize="@dimen/_11sdp"
+                            android:textColor="@color/text_color1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_5sdp"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="City Name"
+                            />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/cityName_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp"
+                            android:hint="---"
+                            android:inputType="textPersonName"
+                            android:padding="@dimen/_10sdp"
+                            android:scrollbarAlwaysDrawHorizontalTrack="true"
+                            android:singleLine="true"
+                            android:scrollHorizontally="true"
+                            android:textColor="@color/material_black"
+                            android:fontFamily="@font/roboto_medium"
+                            android:textColorHint="@color/text_color2"
+                            android:background="@color/white"
+                            android:textSize="@dimen/_13sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textSize="@dimen/_11sdp"
+                            android:textColor="@color/text_color1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_5sdp"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="Area PIN"
+                            />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/postal_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_35sdp"
+                            android:hint="---"
+                            android:inputType="numberDecimal"
+                            android:padding="@dimen/_10sdp"
+                            android:scrollbarAlwaysDrawHorizontalTrack="true"
+                            android:singleLine="true"
+                            android:scrollHorizontally="true"
+                            android:textColor="@color/material_black"
+                            android:textColorHint="@color/text_color2"
+                            android:fontFamily="@font/roboto_medium"
+                            android:background="@color/white"
+                            android:textSize="@dimen/_13sdp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Or"
-                android:textAlignment="center"
-                android:textStyle="bold"
-                android:textColor="@color/material_black"
-                android:textSize="@dimen/_16sdp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:background="@drawable/box_background"
-                    app:boxBackgroundMode="none"
-                    app:hintEnabled="false">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/areaName_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Area Name *"
-                        android:inputType="textPersonName"
-                        android:padding="@dimen/_10sdp"
-                        android:textColor="@color/black"
-                        android:singleLine="true"
-                        android:scrollHorizontally="true"
-                        android:textSize="@dimen/_13sdp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="10">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:layout_weight="6"
-                    android:background="@drawable/box_background"
-                    app:boxBackgroundMode="none"
-                    app:hintEnabled="false">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/cityName_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="City Name *"
-                        android:inputType="textPersonName"
-                        android:padding="@dimen/_10sdp"
-                        android:scrollbarAlwaysDrawHorizontalTrack="true"
-                        android:singleLine="true"
-                        android:scrollHorizontally="true"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:layout_weight="4"
-                    android:background="@drawable/box_background"
-                    app:boxBackgroundMode="none"
-                    app:hintEnabled="false">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/postal_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Area PIN *"
-                        android:inputType="textPersonName"
-                        android:padding="@dimen/_10sdp"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:background="@drawable/box_background"
-                app:boxBackgroundMode="none"
-                app:hintEnabled="false">
+                <TextView
+                    android:textSize="@dimen/_11sdp"
+                    android:textColor="@color/text_color1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="State Name"
+                    />
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/state_address"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="State Name *"
+                    android:layout_height="@dimen/_35sdp"
+                    android:hint="---"
                     android:inputType="textPersonName"
                     android:padding="@dimen/_10sdp"
                     android:scrollbarAlwaysDrawHorizontalTrack="true"
                     android:singleLine="true"
                     android:scrollHorizontally="true"
-                    android:textColor="@color/black"
+                    android:textColor="@color/material_black"
+                    android:textColorHint="@color/text_color2"
+                    android:fontFamily="@font/roboto_medium"
+                    android:background="@color/white"
                     android:textSize="@dimen/_13sdp" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:background="@drawable/box_background"
-                app:boxBackgroundMode="none"
-                app:hintEnabled="false">
+                <TextView
+                    android:textSize="@dimen/_11sdp"
+                    android:textColor="@color/text_color1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="Landmark"
+                    />
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/landmark_address"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Landmark"
+                    android:layout_height="@dimen/_35sdp"
+                    android:hint="---"
                     android:inputType="textPersonName"
                     android:padding="@dimen/_10sdp"
                     android:scrollbarAlwaysDrawHorizontalTrack="true"
                     android:singleLine="true"
                     android:scrollHorizontally="true"
-                    android:textColor="@color/black"
+                    android:textColor="@color/material_black"
+                    android:textColorHint="@color/text_color2"
+                    android:background="@color/white"
+                    android:fontFamily="@font/roboto_medium"
                     android:textSize="@dimen/_13sdp" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-        </LinearLayout>
+            </RelativeLayout>
+
+
+        </RelativeLayout>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/save_btn_address"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:gravity="center"
-            app:cardBackgroundColor="@color/material_black"
+            app:cardBackgroundColor="@color/t_2"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:layout_alignParentBottom="true"
-            app:cardCornerRadius="@dimen/_10sdp">
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_25sdp"
+            android:layout_marginEnd="@dimen/_25sdp"
+            app:cardCornerRadius="@dimen/_5sdp">
 
             <TextView
                 android:layout_width="wrap_content"

@@ -238,7 +238,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:visibility="gone"
-                        tools:listitem="@layout/pending_redeem_request" />
+                        tools:listitem="@layout/item_pending_redeem_request" />
 
                     <View
                         android:layout_width="match_parent"

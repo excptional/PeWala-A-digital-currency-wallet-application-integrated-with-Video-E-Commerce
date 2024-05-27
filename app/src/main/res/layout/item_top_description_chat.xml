@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="@dimen/_220sdp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/message_background_1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:gravity="center"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Messages are end-to-end encrypted. No one outside of this chat can read them. Now you can message securely."
+            android:textSize="@dimen/_8sdp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

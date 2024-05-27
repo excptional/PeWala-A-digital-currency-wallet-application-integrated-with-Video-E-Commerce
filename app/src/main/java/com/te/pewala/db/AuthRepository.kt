@@ -85,7 +85,7 @@ class AuthRepository(private val application: Application) {
             "PIN" to "",
             "Balance" to "0",
             "User" to userType,
-            "Status" to "Not verified",
+            "Status" to "",
             "PAN No" to "",
             "GSTIN" to "",
             "Trade License" to "",

@@ -1,6 +1,7 @@
 package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -25,6 +26,8 @@ class PaymentFail : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_payment_fail, container, false)
+
+        requireActivity().window.statusBarColor = Color.WHITE
 
         mainLayout = view.findViewById(R.id.mainLayout_fail)
         detailsLayout = view.findViewById(R.id.details_fail)

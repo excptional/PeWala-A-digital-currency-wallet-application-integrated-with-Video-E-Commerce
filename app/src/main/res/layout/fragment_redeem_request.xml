@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_50sdp"
-                tools:listitem="@layout/redeem_items"/>
+                tools:listitem="@layout/item_redeem"/>
 
         </LinearLayout>
 
@@ -62,14 +62,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
 
 
             </LinearLayout>

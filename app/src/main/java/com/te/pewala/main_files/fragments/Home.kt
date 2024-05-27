@@ -1,6 +1,7 @@
 package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +57,8 @@ class Home : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        requireActivity().window.statusBarColor = Color.parseColor("#F7F9FD")
+
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
@@ -81,7 +84,7 @@ class Home : Fragment() {
 
         peopleAdapter = PeopleAdapter(requireContext(), peopleItemsArray)
         recyclerview.layoutManager = GridLayoutManager(view.context, 3)
-        recyclerview.setHasFixedSize(true)
+//        recyclerview.setHasFixedSize(true)
         recyclerview.setItemViewCacheSize(20)
         recyclerview.adapter = peopleAdapter
 

@@ -91,7 +91,7 @@ class RemoveCartItems : Fragment() {
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setGravity(Gravity.CENTER)
-        dialog.setContentView(R.layout.remove_cart_dialog)
+        dialog.setContentView(R.layout.dialog_remove_cart)
         dialog.window?.attributes?.windowAnimations = R.anim.pop
 
         val yesBtnDialog: CardView = dialog.findViewById(R.id.yes_btn_dialog_cart)

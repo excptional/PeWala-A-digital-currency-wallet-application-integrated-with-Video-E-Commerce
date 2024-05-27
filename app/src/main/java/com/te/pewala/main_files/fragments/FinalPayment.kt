@@ -168,7 +168,7 @@ class FinalPayment : Fragment() {
         dialog.setCanceledOnTouchOutside(false)
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setContentView(R.layout.enter_pin_dialog)
+        dialog.setContentView(R.layout.dialog_enter_pin)
 
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

@@ -23,7 +23,7 @@ class RedeemAdapter(
         viewType: Int
     ): RedeemViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.redeem_items, parent, false)
+            .inflate(R.layout.item_redeem, parent, false)
         return RedeemViewHolder(view)
     }
 

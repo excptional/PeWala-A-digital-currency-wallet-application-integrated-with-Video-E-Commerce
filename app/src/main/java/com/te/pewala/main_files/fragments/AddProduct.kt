@@ -3,6 +3,7 @@ package com.te.pewala.main_files.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
@@ -70,7 +71,7 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
         override fun createIntent(context: Context, input: Any?): Intent {
             return CropImage.activity()
                 .setCropShape(CropImageView.CropShape.RECTANGLE)
-                .setAspectRatio(8, 10)
+                .setAspectRatio(6, 7)
                 .setOutputCompressQuality(50)
                 .getIntent(requireContext())
         }
@@ -88,6 +89,8 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_add_product, container, false)
+
+        requireActivity().window.statusBarColor = Color.WHITE
 
         productName = view.findViewById(R.id.productName)
         price = view.findViewById(R.id.price)

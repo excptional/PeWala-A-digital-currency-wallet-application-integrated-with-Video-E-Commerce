@@ -30,9 +30,6 @@ import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.db.Response
 import com.te.pewala.main_files.MainActivity
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class DigitalPayment : Fragment() {
 
@@ -97,7 +94,7 @@ class DigitalPayment : Fragment() {
         dialog.setCanceledOnTouchOutside(false)
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setContentView(R.layout.enter_pin_dialog)
+        dialog.setContentView(R.layout.dialog_enter_pin)
 
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

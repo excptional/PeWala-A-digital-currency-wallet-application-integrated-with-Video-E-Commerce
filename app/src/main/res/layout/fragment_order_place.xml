@@ -1,328 +1,351 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     tools:context=".main_files.fragments.OrderPlace">
 
-    <RelativeLayout
-        android:id="@+id/main_layout_order"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/btn_layout_order"
+        <RelativeLayout
+            android:id="@+id/main_layout_order"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_alignParentBottom="true">
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
-            <RelativeLayout
-                android:id="@+id/add_to_card_order"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <TextView
-                    android:id="@+id/cart_text_order"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="Add to cart"
-                    android:textAllCaps="true"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_15sdp"
-                    android:textStyle="bold" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/place_order"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#2196F3"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Place Order"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_15sdp"
-                    android:layout_centerInParent="true"
-                    android:textStyle="bold"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/btn_layout_order"
-            android:layout_alignParentTop="true"
-            android:scrollbars="none">
-
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_alignParentTop="true"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_36sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:orientation="horizontal" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_70sdp"
+                    android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0">
+
+                            <ImageButton
+                                android:id="@+id/back_btn_order"
+                                android:layout_width="@dimen/_35sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:background="@null"
+                                android:contentDescription="@string/app_name"
+                                android:padding="@dimen/_4sdp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/back_black"
+                                tools:ignore="TouchTargetSizeCheck" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/title_productName_order"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/roboto_medium"
+                            android:singleLine="true"
+                            android:text="Pedigree Pet Food"
+                            android:textColor="@color/material_black"
+                            android:textSize="@dimen/_16sdp" />
 
                         <ImageButton
-                            android:id="@+id/back_btn_order"
+                            android:id="@+id/add_to_whishlist_order"
                             android:layout_width="@dimen/_35sdp"
                             android:layout_height="@dimen/_35sdp"
                             android:background="@null"
                             android:contentDescription="@string/app_name"
                             android:padding="@dimen/_4sdp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/back_black"
+                            android:src="@drawable/whishlist_icon"
                             tools:ignore="TouchTargetSizeCheck" />
 
-                    </RelativeLayout>
+                        <ImageButton
+                            android:id="@+id/share_order"
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_marginEnd="@dimen/_5sdp"
+                            android:background="@null"
+                            android:contentDescription="@string/app_name"
+                            android:padding="@dimen/_4sdp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/share"
+                            tools:ignore="TouchTargetSizeCheck" />
 
-                    <ImageButton
-                        android:id="@+id/add_to_whishlist_order"
-                        android:layout_width="@dimen/_35sdp"
-                        android:layout_height="@dimen/_35sdp"
-                        android:background="@null"
-                        android:contentDescription="@string/app_name"
-                        android:padding="@dimen/_4sdp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/whishlist_icon"
-                        tools:ignore="TouchTargetSizeCheck" />
+                    </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/share_order"
-                        android:layout_width="@dimen/_35sdp"
-                        android:layout_height="@dimen/_35sdp"
-                        android:background="@null"
-                        android:layout_marginEnd="@dimen/_5sdp"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        android:contentDescription="@string/app_name"
-                        android:padding="@dimen/_4sdp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/share_icon"
-                        tools:ignore="TouchTargetSizeCheck" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/productImage_order"
-                    android:layout_width="@dimen/_200sdp"
-                    android:layout_height="@dimen/_200sdp"
-                    android:layout_marginStart="@dimen/_20sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:layout_marginEnd="@dimen/_20sdp"
-                    android:layout_marginBottom="@dimen/_10sdp"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/coc" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@color/background"/>
-
-                <TextView
-                    android:id="@+id/brandName_order"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:text="Coca cola"
-                    android:textAlignment="textStart"
-                    android:textColor="#0277BD"
-                    android:textSize="@dimen/_12sdp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/productName_order"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Pedigree Pet Food"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_2sdp"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_20sdp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_2sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:orientation="horizontal">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/sellerImage_order"
-                        android:layout_width="@dimen/_15sdp"
-                        android:layout_height="@dimen/_15sdp"
-                        android:src="@drawable/user2" />
-
-                    <TextView
-                        android:id="@+id/sellerName_order"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        android:text="Bikash Dutta"
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="@dimen/_300sdp"
+                        android:layout_height="@dimen/_350sdp"
                         android:layout_gravity="center"
-                        android:textColor="@color/material_black"
-                        android:textSize="@dimen/_11sdp" />
+                        app:cardCornerRadius="@dimen/_10sdp"
+                        app:cardElevation="@dimen/_5sdp"
+                        app:cardUseCompatPadding="true">
 
-                </LinearLayout>
+                        <ImageView
+                            android:id="@+id/productImage_order"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/shirt_demo" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:orientation="horizontal">
+                    </androidx.cardview.widget.CardView>
 
-                    <RatingBar
-                        android:id="@+id/ratingbar_order"
-                        style="?android:attr/ratingBarStyleSmall"
-                        android:layout_width="wrap_content"
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView_order"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:numStars="5"
-                        android:stepSize="0.1" />
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        tools:itemCount="1"
+                        tools:listitem="@layout/item_order_place_view" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:background="@color/background" />
 
                     <TextView
-                        android:id="@+id/rating_text_order"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/brandName_order"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        android:text="3.8"
-                        android:textColor="@color/material_black"
-                        android:textSize="@dimen/_11sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:fontFamily="@font/roboto_black"
+                        android:text="Coca cola"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/stocks_order"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_3sdp"
-                    android:text="Stocks : 1 Unit"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_12sdp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@color/background"/>
-
-                <TextView
-                    android:id="@+id/product_price_order"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:text="₹499 INR"
-                    android:textColor="#1565C0"
-                    android:textSize="@dimen/_30sdp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:orientation="horizontal">
-
                     <TextView
+                        android:id="@+id/productName_order"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="Pedigree Pet Food"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/material_black"
+                        android:textSize="@dimen/_20sdp" />
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        android:text="Delivery charge ₹30 only"
-                        android:textColor="@color/material_black"
-                        android:textSize="@dimen/_15sdp"
-                        android:textStyle="bold" />
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="@dimen/_25sdp"
-                        android:layout_height="@dimen/_25sdp"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        android:src="@drawable/delivery" />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/sellerImage_order"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:src="@drawable/user2" />
+
+                        <TextView
+                            android:id="@+id/sellerName_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="Bikash Dutta"
+                            android:textColor="@color/text_color2"
+                            android:textSize="@dimen/_11sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:orientation="horizontal">
+
+                        <RatingBar
+                            android:id="@+id/ratingbar_order"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:numStars="5"
+                            android:stepSize="0.1" />
+
+                        <TextView
+                            android:id="@+id/rating_text_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:text="3.8"
+                            android:textColor="@color/material_black"
+                            android:textSize="@dimen/_11sdp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/product_price_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:fontFamily="@font/roboto_black"
+                        android:text="499 INR"
+                        android:textColor="@color/t_2"
+                        android:textSize="@dimen/_28sdp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="Description"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/text_color2"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/description_order"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_3sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:text="This coc is very tasty and energetic. This coc is very tasty and energetic. This coc is very tasty and energetic."
+                        android:textAlignment="textStart"
+                        android:textColor="@color/material_black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="Have any queries or doubts? Ask the seller."
+                        android:textAlignment="textStart"
+                        android:textColor="@color/text_color2"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/message_order"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_38sdp"
+                        android:layout_margin="@dimen/_10sdp"
+                        app:cardBackgroundColor="#2196F3"
+                        app:cardCornerRadius="@dimen/_5sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="Message"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_13sdp" />
+
+                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@color/background"/>
+            </ScrollView>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_3sdp"
-                    android:text="Details"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/description_order"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_3sdp"
-                    android:text="This coc is very tasty and energetic. This coc is very tasty and energetic. This coc is very tasty and energetic."
-                    android:textAlignment="textStart"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_14sdp" />
+    </ScrollView>
 
-            </LinearLayout>
+    <LinearLayout
+        android:id="@+id/btn_layout_order"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_70sdp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@drawable/rectangle_bottom"
+        android:backgroundTint="@null"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-        </ScrollView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/add_to_card_order"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_22sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/t_3"
+            app:cardCornerRadius="@dimen/_5sdp">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/cart_text_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Add to cart"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13sdp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/place_order"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_22sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/t_2"
+            app:cardCornerRadius="@dimen/_5sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Order now"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13sdp" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
 
     <View
         android:id="@+id/whiteView_order"

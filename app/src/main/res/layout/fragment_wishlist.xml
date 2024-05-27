@@ -56,11 +56,11 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_wishlist"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:ignore="RtlSymmetry"
                 android:visibility="gone"
-                tools:listitem="@layout/product_items" />
+                tools:listitem="@layout/item_product" />
 
         </LinearLayout>
 
@@ -90,11 +90,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/products_shimmer" />
+                <include layout="@layout/shimmer_products" />
 
-                <include layout="@layout/products_shimmer" />
+                <include layout="@layout/shimmer_products" />
 
-                <include layout="@layout/products_shimmer" />
+                <include layout="@layout/shimmer_products" />
 
             </LinearLayout>
 

@@ -31,9 +31,17 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.textfield.TextInputEditText
+import kotlin.properties.Delegates
 
-class Address : Fragment() {
+class Address : Fragment(), OnMapReadyCallback {
 
     private lateinit var area: TextInputEditText
     private lateinit var city: TextInputEditText
@@ -57,6 +65,10 @@ class Address : Fragment() {
     private lateinit var stateStr: String
     private lateinit var landmarkStr: String
     private lateinit var uid: String
+    private lateinit var mapView:MapView
+    private lateinit var googleMap: GoogleMap
+    private var latitude by Delegates.notNull<Double>()
+    private var longitude by Delegates.notNull<Double>()
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 1234
@@ -81,6 +93,15 @@ class Address : Fragment() {
         loader = view.findViewById(R.id.loader_address)
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
+        mapView = view.findViewById(R.id.map_address)
+
+        disableMapScrolling(mapView)
+        latitude = requireArguments().getString("lat")!!.toDouble()
+        longitude = requireArguments().getString("long")!!.toDouble()
+
+        mapView.onCreate(savedInstanceState)
+        mapView.onResume()
+        mapView.getMapAsync(this)
 
         load()
 
@@ -123,6 +144,56 @@ class Address : Fragment() {
             saveAddress(view)
         }
 
+        area.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (area.text!!.isEmpty()) {
+                    area.hint = "---"
+                }
+            } else {
+                area.hint = null
+            }
+        }
+
+        city.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (city.text!!.isEmpty()) {
+                    city.hint = "---"
+                }
+            } else {
+                city.hint = null
+            }
+        }
+
+        state.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (state.text!!.isEmpty()) {
+                    state.hint = "---"
+                }
+            } else {
+                state.hint = null
+            }
+        }
+
+        postalCode.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (postalCode.text!!.isEmpty()) {
+                    postalCode.hint = "---"
+                }
+            } else {
+                postalCode.hint = null
+            }
+        }
+
+        landmark.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (landmark.text!!.isEmpty()) {
+                    landmark.hint = "---"
+                }
+            } else {
+                landmark.hint = null
+            }
+        }
+
         return view
     }
 
@@ -162,7 +233,8 @@ class Address : Fragment() {
             whiteView.visibility = View.GONE
             loader.visibility = View.GONE
         } else {
-            dbViewModel.saveAddress(localityStr, cityStr, postalCodeStr, stateStr, landmarkStr, uid)
+
+            dbViewModel.saveAddress(latitude.toString(), longitude.toString(), localityStr, cityStr, postalCodeStr, stateStr, landmarkStr, uid)
             dbViewModel.dbResponse.observe(viewLifecycleOwner) {
                 when (it) {
                     is Response.Success -> {
@@ -253,6 +325,7 @@ class Address : Fragment() {
 
     private fun updateUI(location: Location) {
         getCurrentLocation(location.latitude, location.longitude)
+        onMapReady(googleMap)
     }
 
     @Deprecated("Deprecated in Java")
@@ -280,16 +353,12 @@ class Address : Fragment() {
     private fun getCurrentLocation(lat: Double, long: Double) {
         val geocoder = Geocoder(requireContext())
         val addressList: MutableList<Address>
+        latitude = lat
+        longitude = long
         try {
             addressList = geocoder.getFromLocation(lat, long, 1)!!
             if (addressList.isNotEmpty()) {
                 val address = addressList[0]
-//                val sb = StringBuilder()
-//                for (i in 0 until address.maxAddressLineIndex) {
-//                    sb.append(address.getAddressLine(i)).append("\n")
-//                }
-//                if (address.premises != null)
-//                    sb.append(address.premises).append(", ")
 
                 if(!flag) {
                     area.setText(address.subLocality)
@@ -302,11 +371,6 @@ class Address : Fragment() {
                 whiteView.visibility = View.GONE
                 loader.visibility = View.GONE
 
-//                sb.append(address.subLocality).append(", ")
-//                sb.append(address.locality).append(", ")
-//                sb.append(address.adminArea).append(", ")
-//                sb.append(address.countryName).append(", ")
-//                sb.append(address.postalCode)
 
             }
 
@@ -328,5 +392,29 @@ class Address : Fragment() {
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if(it != null) uid = it.uid
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    fun disableMapScrolling(mapView: MapView) {
+        mapView.setOnTouchListener { _, _ -> true }
+        mapView.isScrollContainer = false
+        mapView.requestDisallowInterceptTouchEvent(true)
+    }
+
+    override fun onMapReady(map: GoogleMap) {
+        map.let {
+            googleMap = it
+        }
+        val location = LatLng(latitude, longitude)
+        googleMap.addMarker(
+            MarkerOptions()
+                .position(location)
+                .title("Your location")
+        )
+        val pos = LatLng(latitude, longitude)
+//        googleMap.setMapStyle(
+//            MapStyleOptions.loadRawResourceStyle(
+//                requireContext(), R.raw.map_style_dark))
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 15.0f))
     }
 }

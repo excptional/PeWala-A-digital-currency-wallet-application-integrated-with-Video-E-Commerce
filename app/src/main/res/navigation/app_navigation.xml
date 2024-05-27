@@ -124,7 +124,8 @@
     <fragment
         android:id="@+id/nav_order_place"
         android:name="com.te.pewala.main_files.fragments.OrderPlace"
-        tools:layout="@layout/fragment_order_place" />
+        tools:layout="@layout/fragment_order_place" >
+    </fragment>
 
     <fragment
         android:id="@+id/nav_final_order_place"
@@ -185,5 +186,25 @@
         android:id="@+id/nav_feedback"
         android:name="com.te.pewala.main_files.fragments.Feedback"
         tools:layout="@layout/fragment_feedback" />
+
+    <fragment
+        android:id="@+id/nav_product_feed"
+        android:name="com.te.pewala.main_files.fragments.ProductsFeed"
+        tools:layout="@layout/fragment_products_feed" />
+
+    <fragment
+        android:id="@+id/nav_chat"
+        android:name="com.te.pewala.main_files.fragments.ChatSection"
+        tools:layout="@layout/fragment_chat_section" />
+
+    <fragment
+        android:id="@+id/nav_upload_video_tutorials"
+        android:name="com.te.pewala.main_files.fragments.UploadVideoTutorials"
+        tools:layout="@layout/fragment_upload_video_tutorials" />
+
+    <fragment
+        android:id="@+id/nav_edit_product_details_seller"
+        android:name="com.te.pewala.main_files.fragments.EditProductDetailsSeller"
+        tools:layout="@layout/fragment_edit_product_details_seller" />
 
 </navigation>

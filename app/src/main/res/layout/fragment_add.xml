@@ -1,119 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".main_files.fragments.Add">
 
     <RelativeLayout
         android:id="@+id/main_layout_add"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_50sdp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_5sdp">
 
-                <ImageButton
+                <ImageView
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pewala_icon1" />
+
+                <ImageView
                     android:id="@+id/back_btn_add"
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:padding="@dimen/_4sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:background="@null"
-                    android:contentDescription="@string/app_name"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/back_black"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    android:src="@drawable/back_black" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Add To Wallet"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_16sdp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="textStart"
                 android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_11sdp"
-                android:textSize="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Add to"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20sdp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="Write the amount to add into your wallet"
+                android:textAlignment="textStart"
                 android:textColor="@color/material_black"
-                android:text="Write the amount to add into your wallet"/>
+                android:textSize="@dimen/_12sdp" />
 
             <TextView
                 android:id="@+id/walletId_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="textStart"
                 android:layout_marginStart="@dimen/_15sdp"
+                android:text="8621028794@digital"
+                android:textAlignment="textStart"
+                android:textColor="@color/t_2"
                 android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="8621028794@digital"/>
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
+                android:layout_height="@dimen/_35sdp"
                 android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_gravity="center"
-                android:hint="Enter amount"
-                app:hintTextColor="#1E88E5"
-                app:boxCornerRadiusTopEnd="@dimen/_10sdp"
-                app:boxCornerRadiusBottomStart="@dimen/_10sdp"
-                app:boxCornerRadiusTopStart="@dimen/_10sdp"
-                app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
-                app:startIconScaleType="centerInside"
-                app:boxStrokeWidth="@dimen/_2sdp"
-                app:boxStrokeColor="#1E88E5"
-                app:startIconDrawable="@drawable/rupee_icon">
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/et_outline_bg"
+                app:startIconDrawable="@drawable/rupee_icon"
+                app:boxBackgroundMode="none"
+                app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/amount_add"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="@dimen/_16sdp"
-                    android:maxLength="5"
-                    android:textColor="#1E88E5"
-                    android:inputType="numberDecimal"/>
+                    android:hint="00000"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal"
+                    android:padding="@dimen/_5sdp"
+                    android:textColor="@color/material_black"
+                    android:textColorHint="@color/text_color2"
+                    android:textSize="@dimen/_16sdp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
+
         </LinearLayout>
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/add_money_btn_add"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
+            android:layout_alignParentBottom="true"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_20sdp"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/_15sdp"
-            app:cardElevation="@dimen/_5sdp"
-            app:cardBackgroundColor="@color/material_black"
             android:foreground="?attr/selectableItemBackground"
-            app:cardCornerRadius="@dimen/_10sdp">
+            android:gravity="center"
+            app:cardBackgroundColor="@color/t_2"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:cardElevation="@dimen/_5sdp">
 
             <TextView
                 android:layout_width="wrap_content"

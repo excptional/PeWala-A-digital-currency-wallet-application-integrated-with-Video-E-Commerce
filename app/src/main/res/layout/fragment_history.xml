@@ -42,9 +42,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_history"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/_50sdp"
-                tools:listitem="@layout/transaction_history_items"/>
+                tools:listitem="@layout/item_transaction_history"/>
 
         </LinearLayout>
 
@@ -62,14 +62,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
-                <include layout="@layout/history_shimmer" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
+                <include layout="@layout/shimmer_history" />
 
             </LinearLayout>
 

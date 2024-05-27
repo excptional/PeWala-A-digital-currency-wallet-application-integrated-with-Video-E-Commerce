@@ -5,9 +5,11 @@
     android:id="@+id/swipeRefreshLayout_products"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".main_files.fragments.Products">
 
     <RelativeLayout
+        android:id="@+id/main_layout_products"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -22,8 +24,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:background="@drawable/search_box_background"
-                android:layout_margin="@dimen/_10sdp"
-                android:visibility="gone"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
                 android:orientation="horizontal">
 
                 <ImageButton
@@ -54,13 +58,27 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/category_products"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Fashion"
+                android:textAlignment="textStart"
+                android:textColor="@color/blue_2"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_products"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:ignore="RtlSymmetry"
-                android:visibility="gone"
-                tools:listitem="@layout/product_items" />
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                tools:listitem="@layout/item_product" />
 
         </LinearLayout>
 
@@ -90,11 +108,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/products_shimmer" />
+                <include layout="@layout/shimmer_products" />
 
-                <include layout="@layout/products_shimmer" />
+                <include layout="@layout/shimmer_products" />
 
-                <include layout="@layout/products_shimmer" />
+                <include layout="@layout/shimmer_products" />
 
             </LinearLayout>
 

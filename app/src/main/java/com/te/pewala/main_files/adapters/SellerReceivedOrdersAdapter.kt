@@ -29,7 +29,7 @@ class SellerReceivedOrdersAdapter(
         viewType: Int
     ): SellerReceivedOrdersViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.received_order_items, parent, false)
+            .inflate(R.layout.item_received_order, parent, false)
         return SellerReceivedOrdersViewHolder(view)
     }
 

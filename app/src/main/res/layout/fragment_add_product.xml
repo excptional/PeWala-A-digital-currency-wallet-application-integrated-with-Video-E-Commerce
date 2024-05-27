@@ -286,13 +286,13 @@
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_20sdp"
                 android:gravity="center"
-                app:cardBackgroundColor="@color/material_black"
+                app:cardBackgroundColor="@color/t_2"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardCornerRadius="@dimen/_10sdp">
+                app:cardCornerRadius="@dimen/_5sdp">
 
                 <TextView
                     android:layout_width="wrap_content"

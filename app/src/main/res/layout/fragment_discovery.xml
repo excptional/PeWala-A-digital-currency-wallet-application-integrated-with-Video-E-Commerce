@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".auth.Discovery">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/top_img_discovery"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_280sdp"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/discovery_gif" />
+
+    <TextView
+        android:id="@+id/title_discovery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome to PeWala"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_24sdp"
+        android:layout_below="@id/top_img_discovery"
+        android:textAlignment="center"
+        android:fontFamily="@font/roboto_bold"/>
+
+    <TextView
+        android:id="@+id/description_discovery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:text="Experience seamless digital payments and featuring immersive video commerce. Browse, watch, and securely purchase products, all in one convenient platform for an enhanced shopping experience."
+        android:textColor="@color/text_color1"
+        android:textSize="@dimen/_14sdp"
+        android:layout_below="@id/title_discovery"
+        android:textAlignment="center"
+        android:fontFamily="@font/roboto_regular"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/description_discovery"
+        android:layout_marginStart="@dimen/_25sdp"
+        android:layout_marginEnd="@dimen/_25sdp"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:orientation="vertical" >
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btn_signIn_discovery"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:gravity="center"
+            app:cardBackgroundColor="@color/t_2"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:layout_marginBottom="@dimen/_15sdp"
+            app:cardCornerRadius="@dimen/_5sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Sign in"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_create_account_discovery"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:background="@drawable/border_background"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:backgroundTint="@null"
+            android:text="Create new account"
+            android:textColor="@color/t_2"
+            android:gravity="center"
+            android:textSize="@dimen/_12sdp"
+            android:fontFamily="@font/roboto_bold" />
+
+    </LinearLayout>
+
+</RelativeLayout>

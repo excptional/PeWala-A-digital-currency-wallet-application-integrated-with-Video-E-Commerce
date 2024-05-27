@@ -15,7 +15,6 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.te.pewala.R
 import com.te.pewala.auth.AuthenticationActivity
@@ -37,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        window.statusBarColor = Color.parseColor("#F7F9FD")
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         navController = findNavController(R.id.nav_host_fragment)
 
@@ -45,11 +47,6 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, AuthenticationActivity::class.java))
                 finish()
             }
-        }
-
-        window.statusBarColor = Color.parseColor("#4FC4D9E6")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
         binding.qrScanner.setOnClickListener {

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".main_files.fragments.Send">
 
     <RelativeLayout
@@ -17,66 +16,78 @@
             android:layout_marginBottom="@dimen/_50sdp"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/top_bar_send"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_5sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pewala_icon1" />
+
+                <ImageView
+                    android:id="@+id/back_btn_send"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/back_black" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:fontFamily="@font/roboto_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:textSize="@dimen/_20sdp"
+                android:textColor="@color/black"
+                android:text="Send to"
+                />
 
-                <ImageButton
-                    android:id="@+id/back_btn_send"
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:background="@null"
-                    android:contentDescription="@string/app_name"
-                    android:padding="@dimen/_4sdp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/back_black"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Send To Phone Number"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_16sdp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+            <TextView
+                android:textSize="@dimen/_11sdp"
+                android:textColor="@color/text_color2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Phone number"
+                />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/phone_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_gravity="center"
+                android:layout_height="@dimen/_35sdp"
+                android:background="@drawable/et_outline_bg"
                 android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
-                android:hint="Enter 10 digits phone number"
-                app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
-                app:boxCornerRadiusBottomStart="@dimen/_10sdp"
-                app:boxCornerRadiusTopEnd="@dimen/_10sdp"
-                app:boxCornerRadiusTopStart="@dimen/_10sdp"
-                app:boxStrokeColor="#1E88E5"
-                app:boxStrokeWidth="@dimen/_2sdp"
-                app:hintTextColor="#1E88E5"
-                app:startIconDrawable="@drawable/phone_icon_white"
-                app:startIconScaleType="centerInside">
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                app:boxBackgroundMode="none"
+                app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phoneEdiText_send"
+                    android:id="@+id/phoneEditText_send"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:hint="0000000000"
                     android:inputType="numberDecimal"
+                    android:padding="@dimen/_5sdp"
+                    android:textColor="@color/material_black"
+                    android:textColorHint="@color/text_color2"
+                    android:imeOptions="actionDone"
                     android:maxLength="10"
-                    android:textColor="#1E88E5"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <LinearLayout
                 android:id="@+id/contacts_layout"
@@ -94,8 +105,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/contact_recyclerview_send"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:listitem="@layout/contact_items"/>
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/item_contacts"/>
 
             </LinearLayout>
 
@@ -105,15 +116,15 @@
             android:id="@+id/submit_btn_send"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
+            android:gravity="center"
+            app:cardBackgroundColor="@color/t_2"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_15sdp"
-            android:foreground="?attr/selectableItemBackground"
-            android:gravity="center"
-            app:cardBackgroundColor="@color/material_black"
-            app:cardCornerRadius="@dimen/_10sdp"
-            app:cardElevation="@dimen/_5sdp">
+            app:cardCornerRadius="@dimen/_5sdp">
 
             <TextView
                 android:layout_width="wrap_content"

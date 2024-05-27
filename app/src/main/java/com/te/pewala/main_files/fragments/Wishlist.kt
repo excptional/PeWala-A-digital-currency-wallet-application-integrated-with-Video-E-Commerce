@@ -209,6 +209,7 @@ package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -252,6 +253,8 @@ class Wishlist : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_wishlist, container, false)
+
+        requireActivity().window.statusBarColor = Color.WHITE
 
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]

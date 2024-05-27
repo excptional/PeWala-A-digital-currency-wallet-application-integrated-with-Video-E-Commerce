@@ -2,30 +2,54 @@ package com.te.pewala.db
 
 import android.app.Application
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.InputStream
 
 class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dbRepository: DBRepository = DBRepository(application)
     val dbResponse: LiveData<Response<String>>
         get() = dbRepository.dbResponse
+
     val accDetails: LiveData<DocumentSnapshot>
         get() = dbRepository.accDetails
+
     val productDetails: LiveData<DocumentSnapshot>
         get() = dbRepository.productDetails
+
     val contactDetails: LiveData<ArrayList<DocumentSnapshot>>
         get() = dbRepository.contactDetails
+
+    val feedVideos: LiveData<ArrayList<DocumentSnapshot>>
+        get() = dbRepository.feedVideos
+
     val redeemRequestDetails: LiveData<ArrayList<DocumentSnapshot>>
         get() = dbRepository.redeemRequestDetails
+
     val transactionDetails: LiveData<ArrayList<DocumentSnapshot>>
         get() = dbRepository.transactionDetails
+
+    val chats: LiveData<ArrayList<DocumentSnapshot>>
+        get() = dbRepository.chats
+
+    val isConversation: LiveData<Boolean>
+        get() = dbRepository.isConversation
+
     val payerDetails: LiveData<ArrayList<String>>
         get() = dbRepository.payerDetails
+
     val dailyAddLimit: LiveData<Double>
         get() = dbRepository.limitData
+
     val productsData: LiveData<MutableList<DocumentSnapshot>>
         get() = dbRepository.productsData
 
@@ -53,6 +77,12 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     val addressData: LiveData<DocumentSnapshot>
         get() = dbRepository.addressData
 
+    val conversations: LiveData<MutableList<DocumentSnapshot>>
+        get() = dbRepository.conversation
+
+    val videoTutorialsData: LiveData<MutableList<DocumentSnapshot>>
+        get() = dbRepository.videoTutorialsData
+
     fun fetchAccountDetails(uid: String) {
         dbRepository.fetchAccountDetails(uid)
     }
@@ -69,6 +99,10 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     fun uploadImageToStorage(imageUri: Uri, user: FirebaseUser) {
         dbRepository.uploadImageToStorage(imageUri, user)
+    }
+
+    fun replaceImage(imageUrl: String, newImageStream: InputStream) {
+        dbRepository.replaceImage(imageUrl, newImageStream)
     }
 
     fun checkDailyAddAmountLimit(user: FirebaseUser) {
@@ -264,6 +298,8 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun saveAddress(
+        lat: String,
+        long: String,
         locality: String,
         city: String,
         postalNo: String,
@@ -271,7 +307,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         landmark: String,
         uid: String
     ) {
-        dbRepository.saveAddress(locality, city, postalNo, state, landmark, uid)
+        dbRepository.saveAddress(lat ,long, locality, city, postalNo, state, landmark, uid)
     }
 
     fun getAddress(uid: String) {
@@ -291,6 +327,44 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         feedback: String
     ) {
         dbRepository.addReview(buyerUID, sellerUID, productId, orderId, rating, feedback)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createConversation(uid1: String, uid2: String, msg: String, time: String, cId: String) {
+        dbRepository.createConversation(uid1, uid2, msg, time, cId)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun insertMessage(uid1: String, uid2: String, msg: String, time: String, cId: String) {
+        dbRepository.insertMessage(uid1, uid2, msg, time, cId)
+    }
+
+    fun isConversationPresent(uid1: String, uid2: String) {
+        dbRepository.isConversationPresent(uid1, uid2)
+    }
+
+    fun fetchMessages(cId: String) {
+        dbRepository.fetchMessages(cId)
+    }
+
+    fun readMessage(cId: String, msgId: String) {
+        dbRepository.readMessage(cId, msgId)
+    }
+
+    fun getConversations(uid: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val peopleList = dbRepository.getConversations(uid)
+//            _conversationList.postValue(peopleList)
+//        }
+        dbRepository.getConversations(uid)
+    }
+
+    fun uploadVideoTutorial(video: Uri, description: String, productId: String) {
+        dbRepository.uploadVideoTutorial(video, description, productId)
+    }
+
+    fun getVideoTutorials(productId: String) {
+        dbRepository.getVideoTutorials(productId)
     }
 
 //    fun addAccount(
