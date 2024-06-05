@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.TimeZone
 
 class SellerReceivedOrdersAdapter(
-    private val OrdersItems: ArrayList<SellerReceivedOrdersItems>
+    private val ordersItems: ArrayList<SellerReceivedOrdersItems>
 ) :
     RecyclerView.Adapter<SellerReceivedOrdersAdapter.SellerReceivedOrdersViewHolder>() {
 
@@ -35,7 +35,7 @@ class SellerReceivedOrdersAdapter(
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: SellerReceivedOrdersViewHolder, position: Int) {
-        val currentItem = OrdersItems[position]
+        val currentItem = ordersItems[position]
         val date = java.util.Date(currentItem.time!!.toLong())
         val timeZone = TimeZone.getTimeZone("Asia/Kolkata")
         val dateFormat = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa")
@@ -85,13 +85,13 @@ class SellerReceivedOrdersAdapter(
     }
 
     override fun getItemCount(): Int {
-        return OrdersItems.size
+        return ordersItems.size
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateSellerReceivedOrders(updateSellerReceivedOrdersItems: ArrayList<SellerReceivedOrdersItems>) {
-        OrdersItems.clear()
-        OrdersItems.addAll(updateSellerReceivedOrdersItems)
+        ordersItems.clear()
+        ordersItems.addAll(updateSellerReceivedOrdersItems)
         notifyDataSetChanged()
     }
 

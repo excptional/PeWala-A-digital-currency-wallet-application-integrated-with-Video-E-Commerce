@@ -12,9 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -24,6 +26,7 @@ import com.te.pewala.db.*
 import com.te.pewala.db.MessageResponse
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Response
 
 
 class PhoneVerification : Fragment() {
@@ -47,7 +50,8 @@ class PhoneVerification : Fragment() {
     private lateinit var uid: String
     private lateinit var pin: String
     private lateinit var temp: String
-    private lateinit var backBtn: ImageButton
+    private lateinit var backBtn: ImageView
+
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
@@ -120,18 +124,18 @@ class PhoneVerification : Fragment() {
 
         call!!.enqueue(object : Callback<MessageResponse?> {
 
-            override fun onFailure(call: Call<MessageResponse?>?, t: Throwable) {
+            override fun onFailure(call: Call<MessageResponse?>, t: Throwable) {
                 Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
                 whiteView.visibility = View.GONE
                 otpLoader.visibility = View.GONE
             }
 
             override fun onResponse(
-                call: Call<MessageResponse?>?,
-                response: retrofit2.Response<MessageResponse?>?
+                call: Call<MessageResponse?>,
+                response: Response<MessageResponse?>
             ) {
                 try {
-                    if (response!!.body()!!.getStatus().equals("Success")) {
+                    if (response.body()!!.getStatus().equals("Success")) {
                         dbViewModel.changePIN(uid, pin)
                         Handler().postDelayed({
                             Toast.makeText(
@@ -165,19 +169,23 @@ class PhoneVerification : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onTick(millisUntilFinished: Long) {
                 if (millisUntilFinished < 10000)
-                    timerText.text = "Remaining : 00:0" + millisUntilFinished / 1000
-                else timerText.text = "Remaining : 00:" + millisUntilFinished / 1000
+                    timerText.text = "Resend in : 00:0" + millisUntilFinished / 1000
+                else timerText.text = "Resend in : 00:" + millisUntilFinished / 1000
             }
 
-            @SuppressLint("SetTextI18n")
+            @SuppressLint("SetTextI18n", "ResourceAsColor")
             override fun onFinish() {
                 timerText.isClickable = true
+                timerText.setTextColor(R.color.t_2)
                 timerText.text = "Resend OTP"
             }
         }.start()
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun resendOTP() {
+        timerText.setTextColor(R.color.material_black)
+
         val apiService: ApiInterface =
             ApiClient().getClient()!!.create(ApiInterface::class.java)
 
@@ -185,15 +193,15 @@ class PhoneVerification : Fragment() {
             apiService.sentOTP(apiKey, phNum)
         call!!.enqueue(object : Callback<MessageResponse?> {
 
-            override fun onFailure(call: Call<MessageResponse?>?, t: Throwable) {
+            override fun onFailure(call: Call<MessageResponse?>, t: Throwable) {
                 Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(
-                call: Call<MessageResponse?>?,
-                response: retrofit2.Response<MessageResponse?>?
+                call: Call<MessageResponse?>,
+                response: Response<MessageResponse?>
             ) {
-                sessionId = response!!.body()!!.getDetails()!!
+                sessionId = response.body()!!.getDetails()!!
                 resendTimer()
             }
         })

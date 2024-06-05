@@ -261,8 +261,8 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
                         if(list.exists()) {
                             dbViewModel.addProduct(
                                 it.uid,
-                                list.getString("Name").toString(),
-                                list.getString("Image Url").toString(),
+                                list.getString("name").toString(),
+                                list.getString("image_url").toString(),
                                 productNameStr,
                                 brandNameStr,
                                 productImageUri,
@@ -280,10 +280,6 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
                 }
             }
         }
-    }
-
-    private fun loadData() {
-
     }
 
 }

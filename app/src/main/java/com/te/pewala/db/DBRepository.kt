@@ -119,12 +119,11 @@ class DBRepository(private val application: Application) {
     val videoTutorialsData: LiveData<MutableList<DocumentSnapshot>>
         get() = videoTutorialsLivedata
 
-
     private val firebaseDB: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
 
     fun fetchAccountDetails(uid: String) {
-        firebaseDB.collection("Users").document(uid).get()
+        firebaseDB.collection("users").document(uid).get()
             .addOnSuccessListener {
                 accDetailsLiveData.postValue(it)
                 dbResponseLiveData.postValue(Response.Success())
@@ -135,9 +134,9 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchTransactionDetails(uid: String) {
-        firebaseDB.collection("Transaction Records").document("Transaction Records").collection(uid)
+        firebaseDB.collection("transaction_records").document("transaction_records").collection(uid)
             .orderBy(
-                "TId", Query.Direction.DESCENDING
+                "tid", Query.Direction.DESCENDING
             )
             .get()
             .addOnSuccessListener { documents ->
@@ -156,21 +155,21 @@ class DBRepository(private val application: Application) {
     fun updateTransactorDetails(
         uid: String
     ) {
-        val doc = firebaseDB.collection("Transaction Records").document("Transaction Records")
+        val doc = firebaseDB.collection("transaction_records").document("transaction_records")
             .collection(uid)
         doc.orderBy(
-            "TId", Query.Direction.DESCENDING
+            "tid", Query.Direction.DESCENDING
         )
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    if (document.exists() and document.getString("Operator Name").isNullOrEmpty()) {
-                        firebaseDB.collection("Users").document(document.getString("Operator Id")!!)
+                    if (document.exists() and document.getString("operator_name").isNullOrEmpty()) {
+                        firebaseDB.collection("users").document(document.getString("operator_id")!!)
                             .get().addOnSuccessListener { details ->
-                                doc.document(document.getString("TId")!!)
-                                    .update("Operator Name", details.getString("Name"))
-                                doc.document(document.getString("TId")!!)
-                                    .update("Operator Phone", details.getString("Phone"))
+                                doc.document(document.getString("tid")!!)
+                                    .update("operator_name", details.getString("name"))
+                                doc.document(document.getString("tid")!!)
+                                    .update("operator_phone", details.getString("phone"))
                             }
                     } else break
                 }
@@ -179,7 +178,7 @@ class DBRepository(private val application: Application) {
 
     fun uploadImageToStorage(imageUri: Uri, user: FirebaseUser) {
         val ref =
-            firebaseStorage.reference.child("images/${user.uid}/${imageUri.lastPathSegment}")
+            firebaseStorage.reference.child("profile_images/${user.uid}/${imageUri.lastPathSegment}")
         ref.putFile(imageUri)
             .addOnSuccessListener {
                 ref.downloadUrl
@@ -196,10 +195,10 @@ class DBRepository(private val application: Application) {
     }
 
     private fun uploadImageUrlToDatabase(uri: Uri, user: FirebaseUser) {
-        val doc = firebaseDB.collection("Users").document(user.uid)
+        val doc = firebaseDB.collection("users").document(user.uid)
         doc.get().addOnSuccessListener {
             if (it.exists()) {
-                doc.update("Image Url", uri.toString())
+                doc.update("image_url", uri.toString())
                 dbResponseLiveData.postValue(Response.Success())
             }
         }
@@ -226,58 +225,48 @@ class DBRepository(private val application: Application) {
 
     }
 
-    fun checkDailyAddAmountLimit(user: FirebaseUser) {
-        val date = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault()).format(Date())
-        var temp = 0
-        firebaseDB.collection("Add Money Records").document(user.uid).collection(date).get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    temp += Integer.parseInt(document.getString("Amount").toString())
-                }
-                val limit = 10000.00 - temp
-                limitLivedata.postValue(limit)
-            }
-    }
+//    fun checkDailyAddAmountLimit(user: FirebaseUser) {
+//        val date = SimpleDateFormat("yyyy_MM_dd", Locale.getDefault()).format(Date())
+//        var temp = 0
+//        firebaseDB.collection("Add Money Records").document(user.uid).collection(date).get()
+//            .addOnSuccessListener { documents ->
+//                for (document in documents) {
+//                    temp += Integer.parseInt(document.getString("Amount").toString())
+//                }
+//                val limit = 10000.00 - temp
+//                limitLivedata.postValue(limit)
+//            }
+//    }
 
     private fun addAddMoneyRecords(amount: String, note: String, tId: String, uid: String) {
         val time = System.currentTimeMillis().toString()
 
-        val data1 = mapOf(
-            "Amount" to amount,
-            "TId" to tId,
-            "Time" to time
-        )
-
-        firebaseDB.collection("Add Money Records").document("Add Money Records")
-            .collection(uid).document(tId).set(data1)
-
-        firebaseDB.collection("Users").document(uid).get().addOnSuccessListener {
+        firebaseDB.collection("users").document(uid).get().addOnSuccessListener {
             val data2 = mapOf(
-                "Amount" to amount,
-                "TId" to tId,
-                "Time" to time,
-                "Operation" to "Add",
-                "Operator Id" to uid,
-                "Operator Name" to it.getString("Name"),
-                "Operator Phone" to it.getString("Phone"),
-                "Note" to note
+                "amount" to amount,
+                "tid" to tId,
+                "time" to time,
+                "operation" to "Add",
+                "operator_id" to uid,
+                "operator_name" to it.getString("name"),
+                "operator_phone" to it.getString("phone"),
+                "note" to note
             )
 
-            firebaseDB.collection("Transaction Records").document("Transaction Records")
+            firebaseDB.collection("transaction_records").document("transaction_records")
                 .collection(uid).document(tId).set(data2)
         }
-
     }
 
     @SuppressLint("SuspiciousIndentation")
     fun addMoney(amount: String, note: String, tId: String, uid: String) {
-        val doc = firebaseDB.collection("Users").document(uid)
+        val doc = firebaseDB.collection("users").document(uid)
         doc.get().addOnSuccessListener {
             if (it.exists()) {
                 val amountDouble = amount.toDouble()
-                val balance = it.getString("Balance")!!.toDouble()
+                val balance = it.getString("balance")!!.toDouble()
                 val finalBalance = balance + amountDouble
-                doc.update("Balance", finalBalance.toInt().toString())
+                doc.update("balance", finalBalance.toInt().toString())
                 addAddMoneyRecords(amount, note, tId, uid)
                 dbResponseLiveData.postValue(Response.Success())
             }
@@ -288,15 +277,15 @@ class DBRepository(private val application: Application) {
     }
 
     fun getPayerDetails(id: String) {
-        val ref = firebaseDB.collection("Users")
+        val ref = firebaseDB.collection("users")
         ref.get().addOnSuccessListener { documents ->
             for (document in documents) {
                 val list = arrayListOf<String>()
-                if (document.getString("Card Id") == id) {
-                    list.add(document.getString("Name").toString())
-                    list.add(document.getString("Phone").toString())
-                    list.add(document.getString("Image Url").toString())
-                    list.add(document.getString("Uid").toString())
+                if (document.getString("card_id") == id) {
+                    list.add(document.getString("name").toString())
+                    list.add(document.getString("phone").toString())
+                    list.add(document.getString("image_url").toString())
+                    list.add(document.getString("uid").toString())
                     payerDetailsLiveData.postValue(list)
                     break
                 } else {
@@ -306,14 +295,15 @@ class DBRepository(private val application: Application) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun changePIN(uid: String, PIN: String) {
-        val salt = BCrypt.gensalt(10, SecureRandom())
-        val hashedPIN = BCrypt.hashpw(PIN, salt)
-        val doc = firebaseDB.collection("Users").document(uid)
+        key.fill(1)
+        val hashedPIN = aesCrypt.encrypt(PIN, key)
+        val doc = firebaseDB.collection("users").document(uid)
         doc.get().addOnSuccessListener {
             if (it.exists()) {
                 dbResponseLiveData.postValue(Response.Success())
-                doc.update("PIN", hashedPIN)
+                doc.update("pin", hashedPIN)
             }
         }
             .addOnFailureListener {
@@ -323,15 +313,15 @@ class DBRepository(private val application: Application) {
 
     fun payment(senderUid: String, receiverUid: String, amount: String, note: String) {
 
-        val doc1 = firebaseDB.collection("Users").document(senderUid)
-        val doc2 = firebaseDB.collection("Users").document(receiverUid)
+        val doc1 = firebaseDB.collection("users").document(senderUid)
+        val doc2 = firebaseDB.collection("users").document(receiverUid)
 
         doc1.get().addOnSuccessListener {
             if (it.exists()) {
                 val amountDouble = amount.toDouble()
-                val balance = it.getString("Balance")!!.toDouble()
+                val balance = it.getString("balance")!!.toDouble()
                 val finalBalance = balance - amountDouble
-                doc1.update("Balance", finalBalance.toInt().toString())
+                doc1.update("balance", finalBalance.toInt().toString())
                 dbResponseLiveData.postValue(Response.Success())
             }
         }
@@ -342,9 +332,9 @@ class DBRepository(private val application: Application) {
         doc2.get().addOnSuccessListener {
             if (it.exists()) {
                 val amountDouble = amount.toDouble()
-                val balance = it.getString("Balance")!!.toDouble()
+                val balance = it.getString("balance")!!.toDouble()
                 val finalBalance = balance + amountDouble
-                doc2.update("Balance", finalBalance.toInt().toString())
+                doc2.update("balance", finalBalance.toInt().toString())
                 dbResponseLiveData.postValue(Response.Success())
             }
         }
@@ -368,28 +358,28 @@ class DBRepository(private val application: Application) {
         time: String
     ) {
         val data1 = mapOf(
-            "Amount" to amount,
-            "TId" to tId,
-            "Time" to time,
-            "Operation" to "Debit",
-            "Operator Id" to receiverUid,
-            "Operator Name" to null,
-            "Operator Phone" to null,
-            "Note" to note
+            "amount" to amount,
+            "tid" to tId,
+            "time" to time,
+            "operation" to "Debit",
+            "operator_id" to receiverUid,
+            "operator_name" to null,
+            "operator_phone" to null,
+            "note" to note
         )
 
         val data2 = mapOf(
-            "Amount" to amount,
-            "TId" to tId,
-            "Time" to time,
-            "Operation" to "Credit",
-            "Operator Id" to senderUid,
-            "Operator Name" to null,
-            "Operator Phone" to null,
-            "Note" to note
+            "amount" to amount,
+            "tid" to tId,
+            "time" to time,
+            "operation" to "Credit",
+            "operator_id" to senderUid,
+            "operator_name" to null,
+            "operator_phone" to null,
+            "note" to note
         )
 
-        firebaseDB.collection("Transaction Records").document("Transaction Records")
+        firebaseDB.collection("transaction_records").document("transaction_records")
             .collection(senderUid).document(tId)
             .set(data1)
             .addOnSuccessListener {
@@ -399,7 +389,7 @@ class DBRepository(private val application: Application) {
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
-        firebaseDB.collection("Transaction Records").document("Transaction Records")
+        firebaseDB.collection("transaction_records").document("transaction_records")
             .collection(receiverUid).document(tId)
             .set(data2)
             .addOnSuccessListener {
@@ -419,17 +409,17 @@ class DBRepository(private val application: Application) {
         contactUid: String
     ) {
         val data = mapOf(
-            "Name" to name,
-            "Phone No" to phone,
-            "Image Url" to imgUrl,
-            "Uid" to contactUid
+            "name" to name,
+            "phone" to phone,
+            "image_url" to imgUrl,
+            "uid" to contactUid
         )
-        firebaseDB.collection("Contacts").document("Contacts").collection(selfUid)
+        firebaseDB.collection("contacts").document("contacts").collection(selfUid)
             .document(contactUid).set(data)
     }
 
     fun fetchContacts(uid: String) {
-        firebaseDB.collection("Contacts").document("Contacts").collection(uid).get()
+        firebaseDB.collection("contacts").document("contacts").collection(uid).get()
             .addOnSuccessListener { documents ->
                 val list = arrayListOf<DocumentSnapshot>()
                 for (document in documents) {
@@ -444,13 +434,13 @@ class DBRepository(private val application: Application) {
 //            SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa", Locale.getDefault()).format(Date())
         val timeInMillis = System.currentTimeMillis().toString()
         val data = mapOf(
-            "Amount" to amount,
-            "Request send" to timeInMillis,
-            "Request approve" to "",
-            "Status" to "Pending",
-            "Order" to timeInMillis
+            "amount" to amount,
+            "request_send_time" to timeInMillis,
+            "request_approve_time" to "",
+            "status" to "Pending",
+            "order_time" to timeInMillis
         )
-        firebaseDB.collection("Redeem Request").document("Redeem Request").collection(uid)
+        firebaseDB.collection("redeem_request").document("redeem_request").collection(uid)
             .document(timeInMillis).set(data)
             .addOnSuccessListener {
                 redeem(uid, amount)
@@ -462,18 +452,18 @@ class DBRepository(private val application: Application) {
     }
 
     private fun redeem(uid: String, amount: String) {
-        val doc = firebaseDB.collection("Users").document(uid)
+        val doc = firebaseDB.collection("users").document(uid)
         doc.get().addOnSuccessListener {
             if (it.exists()) {
-                val updatedAmount = it.getString("Balance")!!.toDouble() - amount.toDouble()
-                doc.update("Balance", updatedAmount.toInt().toString())
+                val updatedAmount = it.getString("balance")!!.toDouble() - amount.toDouble()
+                doc.update("balance", updatedAmount.toInt().toString())
             }
         }
     }
 
     fun fetchRedeemRequest(uid: String) {
-        firebaseDB.collection("Redeem Request").document("Redeem Request").collection(uid)
-            .orderBy("Order", Query.Direction.DESCENDING).get()
+        firebaseDB.collection("redeem_request").document("redeem_request").collection(uid)
+            .orderBy("order_time", Query.Direction.DESCENDING).get()
             .addOnSuccessListener { documents ->
                 val list = arrayListOf<DocumentSnapshot>()
                 for (document in documents) {
@@ -491,45 +481,45 @@ class DBRepository(private val application: Application) {
         brandName: String,
         productImage: Uri,
         productPrice: String,
-        quantity: String,
+        stocks: String,
         unit: String,
         description: String,
-        productType: String,
+        category: String,
         keywords: String
     ) {
         val id = System.currentTimeMillis().toString()
         val doc =
-            firebaseStorage.reference.child("food and accessories/${productImage.lastPathSegment}")
+            firebaseStorage.reference.child("products/PID$id/images/${productImage.lastPathSegment}")
         doc.putFile(productImage).addOnSuccessListener {
             doc.downloadUrl.addOnSuccessListener {
                 val data = hashMapOf(
-                    "Product Name" to productName,
-                    "Brand Name" to brandName,
-                    "Product Image" to it.toString(),
-                    "Product Price" to productPrice,
-                    "Stocks" to quantity,
-                    "Description" to description,
-                    "Category" to productType,
-                    "Tags" to keywords,
-                    "Seller UID" to sellerUid,
-                    "Seller Name" to sellerName,
-                    "Seller Image" to sellerImgUrl,
-                    "Raters" to "0",
-                    "Ratings" to "0",
-                    "Product ID" to id,
-                    "Unit" to unit
+                    "product_name" to productName,
+                    "brand_name" to brandName,
+                    "product_image_url" to it.toString(),
+                    "product_price" to productPrice,
+                    "stocks" to stocks,
+                    "description" to description,
+                    "category" to category,
+                    "tags" to keywords,
+                    "seller_uid" to sellerUid,
+                    "seller_name" to sellerName,
+                    "seller_image_url" to sellerImgUrl,
+                    "raters" to "0",
+                    "ratings" to "0",
+                    "product_id" to "PID$id",
+                    "unit" to unit
                 )
-                firebaseDB.collection("Products").document("Products").collection(productType)
-                    .document(id).set(data)
-                firebaseDB.collection("Seller Products").document("Seller Products")
+                firebaseDB.collection("products").document("products").collection(category)
+                    .document("PID$id").set(data)
+                firebaseDB.collection("seller_products").document("seller_products")
                     .collection(sellerUid)
-                    .document(id).set(data)
+                    .document("PID$id").set(data)
             }
         }
     }
 
     fun fetchProducts(category: String) {
-        firebaseDB.collection("Products").document("Products").collection(category).get()
+        firebaseDB.collection("products").document("products").collection(category).get()
             .addOnSuccessListener { documents ->
                 val list = mutableListOf<DocumentSnapshot>()
                 for (document in documents) {
@@ -544,7 +534,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun getProductDetails(category: String, productId: String) {
-        firebaseDB.collection("Products").document("Products").collection(category)
+        firebaseDB.collection("products").document("products").collection(category)
             .document(productId).get()
             .addOnSuccessListener {
                 productDetailsLiveData.postValue(it)
@@ -556,28 +546,28 @@ class DBRepository(private val application: Application) {
     }
 
     fun addToWishlist(category: String, productId: String, uid: String) {
-        firebaseDB.collection("Products").document("Products").collection(category)
+        firebaseDB.collection("products").document("products").collection(category)
             .document(productId).get().addOnSuccessListener { doc ->
 
                 val data = mapOf(
-                    "Category" to doc.get("Category").toString(),
-                    "Product ID" to doc.get("Product ID").toString(),
-                    "Product Name" to doc.get("Product Name").toString(),
-                    "Product Image" to doc.get("Product Image").toString(),
-                    "Brand Name" to doc.get("Brand Name").toString(),
-                    "Seller Name" to doc.get("Seller Name").toString(),
-                    "Seller Image" to doc.get("Seller Image").toString(),
-                    "Ratings" to doc.get("Ratings").toString(),
-                    "Product Price" to doc.get("Product Price").toString(),
-                    "Tags" to "${doc.get("Product Name").toString()}, ${
-                        doc.get("Brand Name").toString()
-                    }, ${doc.get("Category").toString()},"
-                            + "${doc.get("Product ID").toString()}, ${
-                        doc.get("Seller Name").toString()
+                    "category" to doc.get("category").toString(),
+                    "product_id" to doc.get("product_id").toString(),
+                    "product_name" to doc.get("product_name").toString(),
+                    "product_image_url" to doc.get("product_image_url").toString(),
+                    "brand_name" to doc.get("brand_name").toString(),
+                    "seller_name" to doc.get("seller_name").toString(),
+                    "seller_image_url" to doc.get("seller_image_url").toString(),
+                    "ratings" to doc.get("ratings").toString(),
+                    "product_price" to doc.get("product_price").toString(),
+                    "tags" to "${doc.get("product_name").toString()}, ${
+                        doc.get("brand_name").toString()
+                    }, ${doc.get("category").toString()},"
+                            + "${doc.get("product_id").toString()}, ${
+                        doc.get("seller_name").toString()
                     }"
                 )
 
-                firebaseDB.collection("Wishlist").document("Wishlist").collection(uid)
+                firebaseDB.collection("wishlist").document("wishlist").collection(uid)
                     .document(productId)
                     .set(data).addOnSuccessListener {
                         dbResponseLiveData.postValue(Response.Success())
@@ -589,7 +579,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun isInWishList(productId: String, uid: String) {
-        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).get()
+        firebaseDB.collection("wishlist").document("wishlist").collection(uid).get()
             .addOnSuccessListener {
                 val documents = it.toList()
                 val foundDocument = binarySearchDocuments(documents, productId)
@@ -603,7 +593,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun removeFromWishlist(productId: String, uid: String) {
-        val doc = firebaseDB.collection("Wishlist").document("Wishlist").collection(uid)
+        val doc = firebaseDB.collection("wishlist").document("wishlist").collection(uid)
             .document(productId)
         doc.get().addOnSuccessListener {
             doc.delete()
@@ -615,7 +605,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchWishlistItems(uid: String) {
-        firebaseDB.collection("Wishlist").document("Wishlist").collection(uid).get()
+        firebaseDB.collection("wishlist").document("wishlist").collection(uid).get()
             .addOnSuccessListener { documents ->
                 val list = mutableListOf<DocumentSnapshot>()
                 for (document in documents) {
@@ -626,27 +616,27 @@ class DBRepository(private val application: Application) {
     }
 
     fun addToCart(category: String, productId: String, uid: String) {
-        firebaseDB.collection("Products").document("Products").collection(category)
+        firebaseDB.collection("products").document("products").collection(category)
             .document(productId).get().addOnSuccessListener { doc ->
 
                 val data = mapOf(
-                    "Category" to doc.get("Category").toString(),
-                    "Product ID" to doc.get("Product ID").toString(),
-                    "Product Name" to doc.get("Product Name").toString(),
-                    "Product Image" to doc.get("Product Image").toString(),
-                    "Brand Name" to doc.get("Brand Name").toString(),
-                    "Seller Name" to doc.get("Seller Name").toString(),
-                    "Seller Image" to doc.get("Seller Image").toString(),
-                    "Seller UID" to doc.get("Seller UID").toString(),
-                    "Description" to doc.get("Description").toString(),
-                    "Quantity" to "1",
-                    "Ratings" to doc.get("Ratings").toString(),
-                    "Product Price" to doc.get("Product Price").toString()
+                    "category" to doc.get("category").toString(),
+                    "product_id" to doc.get("product_id").toString(),
+                    "product_name" to doc.get("product_name").toString(),
+                    "product_image_url" to doc.get("product_image_url").toString(),
+                    "brand_name" to doc.get("brand_name").toString(),
+                    "seller_name" to doc.get("seller_name").toString(),
+                    "seller_image_url" to doc.get("seller_image_url").toString(),
+                    "seller_uid" to doc.get("seller_uid").toString(),
+                    "description" to doc.get("description").toString(),
+                    "ratings" to doc.get("ratings").toString(),
+                    "product_price" to doc.get("product_price").toString(),
+                    "quantity" to "1",
                 )
 
-                firebaseDB.collection("Cart").document("Cart").collection(uid).document(productId)
+                firebaseDB.collection("cart").document("cart").collection(uid).document(productId)
                     .set(data).addOnSuccessListener {
-                        firebaseDB.collection("Cart").document("Cart").collection(uid)
+                        firebaseDB.collection("cart").document("cart").collection(uid)
                         dbResponseLiveData.postValue(Response.Success())
                     }
                     .addOnFailureListener {
@@ -656,7 +646,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun isInCart(productId: String, uid: String) {
-        firebaseDB.collection("Cart").document("Cart").collection(uid).get()
+        firebaseDB.collection("cart").document("cart").collection(uid).get()
             .addOnSuccessListener {
                 val documents = it.toList()
                 val foundDocument = binarySearchDocuments(documents, productId)
@@ -669,7 +659,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchCartItems(uid: String) {
-        firebaseDB.collection("Cart").document("Cart").collection(uid).get()
+        firebaseDB.collection("cart").document("cart").collection(uid).get()
             .addOnSuccessListener { documents ->
                 val list = mutableListOf<DocumentSnapshot>()
                 for (document in documents) {
@@ -680,7 +670,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun removeFromCart(productId: String, uid: String) {
-        val doc = firebaseDB.collection("Cart").document("Cart").collection(uid)
+        val doc = firebaseDB.collection("cart").document("cart").collection(uid)
             .document(productId)
         doc.get().addOnSuccessListener {
             doc.delete()
@@ -692,9 +682,9 @@ class DBRepository(private val application: Application) {
     }
 
     fun updateQuantityOfCart(productId: String, uid: String, quantity: String) {
-        val doc = firebaseDB.collection("Cart").document("Cart").collection(uid).document(productId)
+        val doc = firebaseDB.collection("cart").document("cart").collection(uid).document(productId)
         doc.get().addOnSuccessListener {
-            doc.update("Quantity", quantity)
+            doc.update("quantity", quantity)
         }
     }
 
@@ -717,53 +707,54 @@ class DBRepository(private val application: Application) {
         val time = System.currentTimeMillis().toString()
 
         val data = mapOf(
-            "Order ID" to time,
-            "Buyer Name" to userName,
-            "Buyer UID" to userUID,
-            "Buyer Number" to userNumber,
-            "Buyer Address" to userAddress,
-            "Quantity" to quantity,
-            "Brand Name" to brandName,
-            "Product Name" to productName,
-            "Payable Amount" to payableAmount,
-            "Product Image Url" to productImageUrl,
-            "Delivery Date" to "NA",
-            "Seller UID" to sellerUID,
-            "Product ID" to productId,
-            "Order Time" to time,
-            "Category" to productCategory,
-            "Status" to "Pending",
-            "Payment Type" to paymentType,
-            "Product Rating" to "0"
+            "order_id" to "OID$time",
+            "buyer_name" to userName,
+            "buyer_uid" to userUID,
+            "buyer_phone" to userNumber,
+            "buyer_address" to userAddress,
+            "quantity" to quantity,
+            "brand_name" to brandName,
+            "product_name" to productName,
+            "payable_amount" to payableAmount,
+            "product_image_url" to productImageUrl,
+            "delivery_date" to "NA",
+            "seller_uid" to sellerUID,
+            "product_id" to productId,
+            "order_time" to time,
+            "category" to productCategory,
+            "status" to "Pending",
+            "payment_type" to paymentType,
+            "product_rating" to "0"
         )
 
-//        firebaseDB.collection("Orders").document("order_$time").set(data).addOnSuccessListener {
-//            dbResponseLiveData.postValue(Response.Success())
-//        }
-        firebaseDB.collection("My Orders").document("My Orders").collection(userUID)
-            .document("order_$time").set(data).addOnSuccessListener {
+        firebaseDB.collection("my_orders").document("my_orders").collection(userUID)
+            .document("OID$time").set(data).addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
             }
-        firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUID)
-            .document("order_$time").set(data).addOnSuccessListener {
+        firebaseDB.collection("seller_orders").document("seller_orders").collection(sellerUID)
+            .document("OID$time").set(data).addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
             }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun uploadSellerDoc(pan: String, gstin: String, uri: Uri, uid: String) {
-        val doc = firebaseDB.collection("Users").document(uid)
+        key.fill(1)
+        val hashedPAN = aesCrypt.encrypt(pan, key)
+        val hashedGSTIN = aesCrypt.encrypt(gstin, key)
+        val doc = firebaseDB.collection("users").document(uid)
         doc.get().addOnSuccessListener {
             if (it.exists()) {
                 val ref =
-                    firebaseStorage.reference.child("images/${uid}/${uri.lastPathSegment}")
+                    firebaseStorage.reference.child("seller_document/${uid}/${uri.lastPathSegment}")
                 ref.putFile(uri)
                     .addOnSuccessListener {
                         ref.downloadUrl
                             .addOnSuccessListener {
-                                doc.update("PAN No", pan)
-                                doc.update("GSTIN", gstin)
-                                doc.update("Trade License", it.toString())
-                                doc.update("Status", "Checking")
+                                doc.update("pan", hashedPAN)
+                                doc.update("gstin", hashedGSTIN)
+                                doc.update("trade_license", it.toString())
+                                doc.update("status", "Checking")
                                 dbResponseLiveData.postValue(Response.Success())
                             }
                             .addOnFailureListener {
@@ -778,7 +769,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchSellerProducts(sellerUid: String) {
-        firebaseDB.collection("Seller Products").document("Seller Products").collection(sellerUid)
+        firebaseDB.collection("seller_products").document("seller_products").collection(sellerUid)
             .get()
             .addOnSuccessListener { documents ->
                 val list = mutableListOf<DocumentSnapshot>()
@@ -794,9 +785,9 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchReceivedOrders(sellerUid: String) {
-        firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid)
+        firebaseDB.collection("seller_orders").document("seller_orders").collection(sellerUid)
             .orderBy(
-                "Order Time", Query.Direction.DESCENDING
+                "order_time", Query.Direction.DESCENDING
             ).get()
             .addOnSuccessListener { documents ->
                 val list = mutableListOf<DocumentSnapshot>()
@@ -812,9 +803,9 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchMyOrders(buyerUid: String) {
-        firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid)
+        firebaseDB.collection("my_orders").document("my_orders").collection(buyerUid)
             .orderBy(
-                "Order Time", Query.Direction.DESCENDING
+                "order_time", Query.Direction.DESCENDING
             ).get()
             .addOnSuccessListener { documents ->
                 val list = mutableListOf<DocumentSnapshot>()
@@ -830,29 +821,17 @@ class DBRepository(private val application: Application) {
     }
 
     fun acceptOrders(sellerUid: String, buyerUid: String, orderId: String, date: String) {
-//        val doc1 = firebaseDB.collection("Orders").document("order_$orderId")
         val doc2 =
-            firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid)
-                .document("order_$orderId")
-        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid)
-            .document("order_$orderId")
-
-//        doc1.get().addOnSuccessListener {
-//            if (it.exists()) {
-//                dbResponseLiveData.postValue(Response.Success())
-//                doc1.update("Delivery Date", date)
-//                doc1.update("Status", "Accepted")
-//            }
-//        }
-//            .addOnFailureListener {
-//                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
-//            }
+            firebaseDB.collection("seller_orders").document("seller_orders").collection(sellerUid)
+                .document(orderId)
+        val doc3 = firebaseDB.collection("my_orders").document("my_orders").collection(buyerUid)
+            .document(orderId)
 
         doc2.get().addOnSuccessListener {
             if (it.exists()) {
                 dbResponseLiveData.postValue(Response.Success())
-                doc2.update("Delivery Date", date)
-                doc2.update("Status", "Accepted")
+                doc2.update("delivery_date", date)
+                doc2.update("status", "Accepted")
             }
         }
             .addOnFailureListener {
@@ -862,8 +841,8 @@ class DBRepository(private val application: Application) {
         doc3.get().addOnSuccessListener {
             if (it.exists()) {
                 dbResponseLiveData.postValue(Response.Success())
-                doc3.update("Delivery Date", date)
-                doc3.update("Status", "Accepted")
+                doc3.update("delivery_date", date)
+                doc3.update("status", "Accepted")
             }
         }
             .addOnFailureListener {
@@ -872,22 +851,11 @@ class DBRepository(private val application: Application) {
     }
 
     fun rejectOrders(sellerUid: String, buyerUid: String, orderId: String) {
-//        val doc1 = firebaseDB.collection("Orders").document("order_$orderId")
         val doc2 =
-            firebaseDB.collection("Seller Orders").document("Seller Orders").collection(sellerUid)
-                .document("order_$orderId")
-        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUid)
-            .document("order_$orderId")
-
-//        doc1.get().addOnSuccessListener {
-//            if (it.exists()) {
-//                dbResponseLiveData.postValue(Response.Success())
-//                doc1.update("Status", "Rejected")
-//            }
-//        }
-//            .addOnFailureListener {
-//                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
-//            }
+            firebaseDB.collection("seller_orders").document("seller_orders").collection(sellerUid)
+                .document(orderId)
+        val doc3 = firebaseDB.collection("my_orders").document("my_orders").collection(buyerUid)
+            .document(orderId)
 
         doc2.get().addOnSuccessListener {
             if (it.exists()) {
@@ -902,7 +870,7 @@ class DBRepository(private val application: Application) {
         doc3.get().addOnSuccessListener {
             if (it.exists()) {
                 dbResponseLiveData.postValue(Response.Success())
-                doc3.update("Status", "Rejected")
+                doc3.update("status", "Rejected")
             }
         }
             .addOnFailureListener {
@@ -917,20 +885,20 @@ class DBRepository(private val application: Application) {
         city: String,
         postalNo: String,
         state: String,
-        landmark: String,
+        street: String,
         uid: String
     ) {
         val data = mapOf(
-            "Latitude" to lat,
-            "Longitude" to long,
-            "Locality" to locality,
-            "City" to city,
-            "Postal Code" to postalNo,
-            "State" to state,
-            "Landmark" to landmark
+            "latitude" to lat,
+            "longitude" to long,
+            "locality" to locality,
+            "city" to city,
+            "postal_code" to postalNo,
+            "state" to state,
+            "street" to street
         )
 
-        firebaseDB.collection("Addresses").document("Addresses").collection(uid).document("address")
+        firebaseDB.collection("addresses").document("addresses").collection(uid).document("address")
             .set(data).addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
             }
@@ -940,7 +908,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun getAddress(uid: String) {
-        firebaseDB.collection("Addresses").document("Addresses").collection(uid).document("address")
+        firebaseDB.collection("addresses").document("addresses").collection(uid).document("address")
             .get().addOnSuccessListener {
                 if (it.exists()) {
                     addressLivedata.postValue(it)
@@ -952,15 +920,15 @@ class DBRepository(private val application: Application) {
     fun payToAdmin(amount: String, senderUid: String) {
         val adminId = "Jufm91ImZUat1ZUrFpA8CY1HMlw1"
 
-        val doc1 = firebaseDB.collection("Users").document(senderUid)
-        val doc2 = firebaseDB.collection("Users").document(adminId)
+        val doc1 = firebaseDB.collection("users").document(senderUid)
+        val doc2 = firebaseDB.collection("users").document(adminId)
 
         doc1.get().addOnSuccessListener {
             if (it.exists()) {
                 val amountDouble = amount.toDouble()
-                val balance = it.getString("Balance")!!.toDouble()
+                val balance = it.getString("balance")!!.toDouble()
                 val finalBalance = balance - amountDouble
-                doc1.update("Balance", finalBalance.toInt().toString())
+                doc1.update("balance", finalBalance.toInt().toString())
                 dbResponseLiveData.postValue(Response.Success())
             }
         }
@@ -971,9 +939,9 @@ class DBRepository(private val application: Application) {
         doc2.get().addOnSuccessListener {
             if (it.exists()) {
                 val amountDouble = amount.toDouble()
-                val balance = it.getString("Balance")!!.toDouble()
+                val balance = it.getString("balance")!!.toDouble()
                 val finalBalance = balance + amountDouble
-                doc2.update("Balance", finalBalance.toInt().toString())
+                doc2.update("balance", finalBalance.toInt().toString())
                 dbResponseLiveData.postValue(Response.Success())
             }
         }
@@ -987,19 +955,6 @@ class DBRepository(private val application: Application) {
         return e.toString().substring(colonIndex + 2)
     }
 
-//    private fun generateUniqueId(): String {
-//        val characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-//        val random = Random()
-//        val idBuilder = StringBuilder()
-//
-//        repeat(8) {
-//            val randomIndex = random.nextInt(characters.length)
-//            idBuilder.append(characters[randomIndex])
-//        }
-//
-//        return idBuilder.toString()
-//    }
-
     @SuppressLint("SuspiciousIndentation")
     fun addReview(
         buyerUID: String,
@@ -1011,35 +966,35 @@ class DBRepository(private val application: Application) {
     ) {
         val timeInMillis = System.currentTimeMillis().toString()
         val data = mapOf(
-            "User UID" to buyerUID,
-            "Product ID" to productId,
+            "user_uid" to buyerUID,
+            "product_id" to productId,
             "rating" to rating.toString(),
-            "Feedback" to feedback,
-            "Time" to timeInMillis,
+            "feedback" to feedback,
+            "time" to timeInMillis,
         )
 
-        firebaseDB.collection("Feedbacks").document(productId).collection(productId)
+        firebaseDB.collection("feedbacks").document(productId).collection(productId)
             .document(timeInMillis).set(data)
             .addOnSuccessListener {
                 var category = ""
-                val doc1 = firebaseDB.collection("Seller Products").document("Seller Products")
+                val doc1 = firebaseDB.collection("seller_products").document("seller_products")
                     .collection(sellerUID).document(productId)
 
                 doc1.get().addOnSuccessListener { document ->
                     if (document.exists()) {
-                        category = document.getString("Category").toString()
-                        val raters = document.getString("Raters")!!.toInt()
-                        val avgRating = document.getString("Ratings")!!.toDouble()
+                        category = document.getString("category").toString()
+                        val raters = document.getString("raters")!!.toInt()
+                        val avgRating = document.getString("ratings")!!.toDouble()
                         val newRaters = raters + 1;
                         val newRating = ((raters * avgRating) + rating) / newRaters
-                        doc1.update("Raters", newRaters.toString())
-                        doc1.update("Ratings", newRating.toString().substring(0, 3))
-                        val doc2 = firebaseDB.collection("Products").document("Products")
+                        doc1.update("raters", newRaters.toString())
+                        doc1.update("ratings", newRating.toString().substring(0, 3))
+                        val doc2 = firebaseDB.collection("products").document("products")
                             .collection(category).document(productId)
                         doc2.get().addOnSuccessListener {
                             if (it.exists()) {
-                                doc2.update("Raters", newRaters.toString())
-                                doc2.update("Ratings", newRating.toString().substring(0, 3))
+                                doc2.update("raters", newRaters.toString())
+                                doc2.update("ratings", newRating.toString().substring(0, 3))
                             }
                         }
 
@@ -1051,47 +1006,48 @@ class DBRepository(private val application: Application) {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
 
-        val doc3 = firebaseDB.collection("My Orders").document("My Orders").collection(buyerUID)
-            .document("order_$orderId")
+        val doc3 = firebaseDB.collection("my_orders").document("my_orders").collection(buyerUID)
+            .document(orderId)
         doc3.get().addOnSuccessListener { document ->
             if (document.exists()) {
-                doc3.update("Product Rating", rating.toString())
+                doc3.update("product_rating", rating.toString())
             }
         }
 
-        val doc4 = firebaseDB.collection("Orders").document("order_$orderId")
+        val doc4 =
+            firebaseDB.collection("seller_orders").document("seller_orders").collection(sellerUID)
+                .document(orderId)
         doc4.get().addOnSuccessListener { document ->
             if (document.exists()) {
-                doc4.update("Product Rating", rating.toString())
+                doc4.update("product_rating", rating.toString())
             }
         }
-
     }
 
-    fun getVideoUrls() {
-        firebaseDB.collection("Product Tutorials").get()
-            .addOnSuccessListener { documents ->
-                val list = arrayListOf<DocumentSnapshot>()
-                for (document in documents) {
-                    list.add(document)
-                }
-                feedVideosLiveData.postValue(list)
-                dbResponseLiveData.postValue(Response.Success())
-            }
-            .addOnFailureListener {
-                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
-            }
-    }
+//    fun getVideoUrls() {
+//        firebaseDB.collection("product_tutorials").get()
+//            .addOnSuccessListener { documents ->
+//                val list = arrayListOf<DocumentSnapshot>()
+//                for (document in documents) {
+//                    list.add(document)
+//                }
+//                feedVideosLiveData.postValue(list)
+//                dbResponseLiveData.postValue(Response.Success())
+//            }
+//            .addOnFailureListener {
+//                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+//            }
+//    }
 
     @SuppressLint("SuspiciousIndentation")
     fun isConversationPresent(uid1: String, uid2: String) {
-        firebaseDB.collection("Conversations").document(uid1).collection("People").document(uid2)
+        firebaseDB.collection("conversations").document(uid1).collection("people").document(uid2)
             .get()
             .addOnSuccessListener {
                 if (it.exists()) {
                     isConversationLiveData.postValue(true)
                 } else {
-                    firebaseDB.collection("Conversations").document(uid2).collection("People")
+                    firebaseDB.collection("conversations").document(uid2).collection("people")
                         .document(uid1)
                         .get()
                         .addOnSuccessListener {
@@ -1114,25 +1070,25 @@ class DBRepository(private val application: Application) {
     @RequiresApi(Build.VERSION_CODES.O)
     fun createConversation(uid1: String, uid2: String, msg: String, time: String, cId: String) {
 
-        firebaseDB.collection("Users").document(uid2).get().addOnSuccessListener { doc1 ->
+        firebaseDB.collection("users").document(uid2).get().addOnSuccessListener { doc1 ->
             val data = mapOf(
-                "Name" to doc1.getString("Name"),
-                "Image Url" to doc1.getString("Image Url"),
-                "Uid" to doc1.getString("Uid"),
-                "Last Message" to ""
+                "name" to doc1.getString("name"),
+                "image_url" to doc1.getString("image_url"),
+                "uid" to doc1.getString("uid"),
+                "last_message" to ""
             )
-            firebaseDB.collection("Conversations").document(uid1).collection("People")
+            firebaseDB.collection("conversations").document(uid1).collection("people")
                 .document(uid2).set(data)
         }
 
-        firebaseDB.collection("Users").document(uid1).get().addOnSuccessListener { doc2 ->
+        firebaseDB.collection("users").document(uid1).get().addOnSuccessListener { doc2 ->
             val data = mapOf(
-                "Name" to doc2.getString("Name"),
-                "Image Url" to doc2.getString("Image Url"),
-                "Uid" to doc2.getString("Uid"),
-                "Last Message" to ""
+                "name" to doc2.getString("name"),
+                "image_url" to doc2.getString("image_url"),
+                "uid" to doc2.getString("uid"),
+                "last_message" to ""
             )
-            firebaseDB.collection("Conversations").document(uid2).collection("People")
+            firebaseDB.collection("conversations").document(uid2).collection("people")
                 .document(uid1).set(data)
         }
 
@@ -1147,30 +1103,30 @@ class DBRepository(private val application: Application) {
         val encryptMessage = aesCrypt.encrypt(msg, key)
 
         val data = mapOf(
-            "Message" to encryptMessage,
-            "Time" to time,
-            "Sender" to uid1,
-            "Receiver" to uid2,
-            "Status" to "Send"
+            "message" to encryptMessage,
+            "time" to time,
+            "sender_uid" to uid1,
+            "receiver_uid" to uid2,
+            "status" to "Send"
         )
 
-        firebaseDB.collection("Messages").document("Messages").collection(cId).document(time)
+        firebaseDB.collection("messages").document("messages").collection(cId).document(time)
             .set(data)
             .addOnSuccessListener {
                 dbResponseLiveData.postValue(Response.Success())
 
                 val doc1 =
-                    firebaseDB.collection("Conversations").document(uid1).collection("People")
+                    firebaseDB.collection("conversations").document(uid1).collection("people")
                         .document(uid2)
                 doc1.get().addOnSuccessListener {
-                    doc1.update("Last Message", encryptMessage)
+                    doc1.update("last_message", encryptMessage)
                 }
 
                 val doc2 =
-                    firebaseDB.collection("Conversations").document(uid2).collection("People")
+                    firebaseDB.collection("conversations").document(uid2).collection("people")
                         .document(uid1)
                 doc2.get().addOnSuccessListener {
-                    doc2.update("Last Message", encryptMessage)
+                    doc2.update("last_message", encryptMessage)
                 }
 
             }
@@ -1180,7 +1136,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchMessages(cId: String) {
-        firebaseDB.collection("Messages").document("Messages").collection(cId).get()
+        firebaseDB.collection("messages").document("messages").collection(cId).get()
             .addOnSuccessListener { documents ->
                 val list = arrayListOf<DocumentSnapshot>()
                 for (document in documents) {
@@ -1196,15 +1152,15 @@ class DBRepository(private val application: Application) {
 
     fun readMessage(cId: String, msgId: String) {
         val doc =
-            firebaseDB.collection("Messages").document("Messages").collection(cId).document(msgId)
+            firebaseDB.collection("messages").document("messages").collection(cId).document(msgId)
         doc.get().addOnSuccessListener {
-            doc.update("Status", "Read")
+            doc.update("status", "Read")
         }
     }
 
     fun getConversations(uid: String) {
 
-        firebaseDB.collection("Conversations").document(uid).collection("People").get()
+        firebaseDB.collection("conversations").document(uid).collection("people").get()
             .addOnSuccessListener { documents ->
                 val list = mutableListOf<DocumentSnapshot>()
                 for (document in documents) {
@@ -1219,22 +1175,23 @@ class DBRepository(private val application: Application) {
     }
 
     fun uploadVideoTutorial(video: Uri, description: String, productId: String) {
-        val timeInMillis = System.currentTimeMillis().toString()
+        val time = System.currentTimeMillis().toString()
 
         val ref =
-            firebaseStorage.reference.child("videos/$productId/${video.lastPathSegment}")
+            firebaseStorage.reference.child("products/$productId/videos/VID$time")
         ref.putFile(video)
             .addOnSuccessListener {
                 ref.downloadUrl
                     .addOnSuccessListener { uri ->
                         val data = mapOf(
-                            "Video Url" to uri.toString(),
-                            "Description" to description,
-                            "Product ID" to productId
+                            "video_url" to uri.toString(),
+                            "description" to description,
+                            "product_id" to productId,
+                            "video_id" to "VID$time"
                         )
 
-                        firebaseDB.collection("Video Tutorials").document("Video Tutorials")
-                            .collection(productId).document(timeInMillis).set(data)
+                        firebaseDB.collection("video_tutorials").document("video_tutorials")
+                            .collection(productId).document("VID$time").set(data)
                             .addOnSuccessListener {
                                 dbResponseLiveData.postValue(Response.Success())
                             }
@@ -1252,7 +1209,7 @@ class DBRepository(private val application: Application) {
     }
 
     fun getVideoTutorials(productId: String) {
-        firebaseDB.collection("Video Tutorials").document("Video Tutorials").collection(productId)
+        firebaseDB.collection("video_tutorials").document("video_tutorials").collection(productId)
             .get().addOnSuccessListener { documents ->
                 val list = mutableListOf<DocumentSnapshot>()
                 for (document in documents) {
@@ -1260,6 +1217,105 @@ class DBRepository(private val application: Application) {
                 }
                 videoTutorialsLivedata.postValue(list)
             }
+    }
+
+    fun updateProductDetails(
+        sellerUid: String,
+        productId: String,
+        category: String,
+        productName: String,
+        brandName: String,
+        productImage: Uri?,
+        productPrice: String,
+        stocks: String,
+        description: String,
+    ) {
+        val doc1 = firebaseDB.collection("products").document("products").collection(category)
+            .document(productId)
+        val doc2 = firebaseDB.collection("seller_products").document("seller_products").collection(sellerUid)
+            .document(productId)
+
+        if(productImage != null) {
+            val ref =
+                firebaseStorage.reference.child("products/$sellerUid/images/${productImage.lastPathSegment}")
+            ref.putFile(productImage)
+                .addOnSuccessListener {
+                    ref.downloadUrl.addOnSuccessListener { uri ->
+                        doc1.get().addOnSuccessListener {
+                            if (it.exists()) {
+                                doc1.update("product_name", productName)
+                                doc1.update("brand_name", brandName)
+                                doc1.update("product_price", productPrice)
+                                doc1.update("stocks", stocks)
+                                doc1.update("description", description)
+                                doc1.update("product_image_url", uri.toString())
+                                dbResponseLiveData.postValue(Response.Success())
+                            } else {
+                                dbResponseLiveData.postValue(Response.Failure("Product is not exist anymore"))
+                            }
+                        }
+                            .addOnFailureListener {
+                                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                            }
+
+                        doc2.get().addOnSuccessListener {
+                            if (it.exists()) {
+                                doc2.update("product_name", productName)
+                                doc2.update("brand_name", brandName)
+                                doc2.update("product_price", productPrice)
+                                doc2.update("stocks", stocks)
+                                doc2.update("description", description)
+                                doc2.update("product_image_url", uri.toString())
+                                dbResponseLiveData.postValue(Response.Success())
+                            } else {
+                                dbResponseLiveData.postValue(Response.Failure("Product is not exist anymore"))
+                            }
+                        }
+                            .addOnFailureListener {
+                                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                            }
+                    }
+                        .addOnFailureListener {
+                            dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                        }
+                }
+                .addOnFailureListener {
+                    dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                }
+        } else {
+            doc1.get().addOnSuccessListener {
+                if (it.exists()) {
+                    doc1.update("product_name", productName)
+                    doc1.update("brand_name", brandName)
+                    doc1.update("product_price", productPrice)
+                    doc1.update("stocks", stocks)
+                    doc1.update("description", description)
+                    dbResponseLiveData.postValue(Response.Success())
+                } else {
+                    dbResponseLiveData.postValue(Response.Failure("Product is not exist anymore"))
+                }
+            }
+                .addOnFailureListener {
+                    dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                }
+
+            doc2.get().addOnSuccessListener {
+                if (it.exists()) {
+                    doc2.update("product_name", productName)
+                    doc2.update("brand_name", brandName)
+                    doc2.update("product_price", productPrice)
+                    doc2.update("stocks", stocks)
+                    doc2.update("description", description)
+                    dbResponseLiveData.postValue(Response.Success())
+                } else {
+                    dbResponseLiveData.postValue(Response.Failure("Product is not exist anymore"))
+                }
+            }
+                .addOnFailureListener {
+                    dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                }
+        }
+
     }
 
 

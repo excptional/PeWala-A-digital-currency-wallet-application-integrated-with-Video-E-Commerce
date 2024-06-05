@@ -50,7 +50,7 @@ class Add : Fragment() {
     private lateinit var myUser: FirebaseUser
     private lateinit var walletBalance: String
     private lateinit var mainLayout: RelativeLayout
-    private var limit = 0.0
+//    private var limit = 0.0
     private lateinit var amount: String
     private lateinit var tId: String
     private lateinit var msg: String
@@ -223,12 +223,12 @@ class Add : Fragment() {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.exists()) {
-                        walletBalance = list.getString("Balance").toString()
-                        walletId.text = list.getString("Card Id").toString()
-                        dbViewModel.checkDailyAddAmountLimit(myUser)
-                        dbViewModel.dailyAddLimit.observe(viewLifecycleOwner) {
-                            limit = it
-                        }
+                        walletBalance = list.getString("balance").toString()
+                        walletId.text = list.getString("card_id").toString()
+//                        dbViewModel.checkDailyAddAmountLimit(myUser)
+//                        dbViewModel.dailyAddLimit.observe(viewLifecycleOwner) {
+//                            limit = it
+//                        }
                         mainLayout.visibility = View.VISIBLE
                         whiteView.visibility = View.GONE
                         loaderAdd.visibility = View.GONE

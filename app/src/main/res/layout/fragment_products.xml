@@ -67,7 +67,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:text="Fashion"
                 android:textAlignment="textStart"
-                android:textColor="@color/blue_2"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
 

@@ -105,13 +105,13 @@ class Wallet : Fragment() {
                 dbViewModel.fetchAccountDetails(user.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list1 ->
                     if (list1.exists()) {
-                        walletBalance.text = "₹${list1.getString("Balance")}"
+                        walletBalance.text = "₹${list1.getString("balance")}"
                         mainLayout.visibility = View.VISIBLE
                         whiteView.visibility = View.GONE
                         loaderWallet.visibility = View.GONE
                         refreshLayout.isRefreshing = false
-                        name = list1.getString("Name").toString()
-                        phone = list1.getString("Phone").toString()
+                        name = list1.getString("name").toString()
+                        phone = list1.getString("phone").toString()
                         dbViewModel.fetchRedeemRequest(user.uid)
                         dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list2 ->
                             if(list2.isNotEmpty()) fetchData(list2)
@@ -138,9 +138,9 @@ class Wallet : Fragment() {
                 val redeemData = RedeemItems(
                     name,
                     phone,
-                    i.getString("Status"),
-                    i.getString("Request send"),
-                    i.getString("Amount")
+                    i.getString("status"),
+                    i.getString("request_send_time"),
+                    i.getString("amount")
                 )
                 redeemItemsArray.add(redeemData)
             }

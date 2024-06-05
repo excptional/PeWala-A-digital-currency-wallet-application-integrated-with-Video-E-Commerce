@@ -1,66 +1,26 @@
 {
   "project_info": {
-    "project_number": "669120766318",
-    "firebase_url": "https://my-chat-app-98801-default-rtdb.firebaseio.com",
-    "project_id": "my-chat-app-98801",
-    "storage_bucket": "my-chat-app-98801.appspot.com"
+    "project_number": "930301141222",
+    "project_id": "pewala-a26d9",
+    "storage_bucket": "pewala-a26d9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:669120766318:android:0b84c0a782202f2407217f",
-        "android_client_info": {
-          "package_name": "com.example.mychatapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "669120766318-piuro59lh9kmnlud1advm4esekr2thg7.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDq99lmc6vOP4SN9UqsqfMDkXXDauvRXHA"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "669120766318-piuro59lh9kmnlud1advm4esekr2thg7.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:669120766318:android:822aaadf39bb2b4a07217f",
+        "mobilesdk_app_id": "1:930301141222:android:03517dad0c93afd2451b27",
         "android_client_info": {
           "package_name": "com.te.pewala"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "669120766318-piuro59lh9kmnlud1advm4esekr2thg7.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDq99lmc6vOP4SN9UqsqfMDkXXDauvRXHA"
+          "current_key": "AIzaSyANX1tBnXkyekFrrGV0Hj7x6NXl_7JKrDA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "669120766318-piuro59lh9kmnlud1advm4esekr2thg7.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

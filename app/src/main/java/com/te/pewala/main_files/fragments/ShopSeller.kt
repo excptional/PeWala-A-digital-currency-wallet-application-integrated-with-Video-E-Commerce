@@ -156,20 +156,20 @@ class ShopSeller : Fragment() {
             for (i in list) {
                 if (i.exists()) {
                     val product= SellerProductsItems(
-                        i.getString("Product Name"),
-                        i.getString("Brand Name"),
-                        i.getString("Product Image"),
-                        i.getString("Category"),
-                        i.getString("Product Price"),
-                        i.getString("Quantity"),
-                        i.getString("Description"),
-                        i.getString("Tags"),
-                        i.getString("Ratings"),
-                        i.getString("Raters"),
-                        i.getString("Seller Name"),
-                        i.getString("Seller Image"),
-                        i.getString("Seller UID"),
-                        i.getString("Product ID")
+                        i.getString("product_name"),
+                        i.getString("brand_name"),
+                        i.getString("product_image_url"),
+                        i.getString("category"),
+                        i.getString("product_price"),
+                        i.getString("stocks"),
+                        i.getString("description"),
+                        i.getString("tags"),
+                        i.getString("ratings"),
+                        i.getString("raters"),
+                        i.getString("seller_name"),
+                        i.getString("seller_image"),
+                        i.getString("seller_uid"),
+                        i.getString("product_id")
                     )
                     productsItemsArray.add(product)
                 }
@@ -191,20 +191,20 @@ class ShopSeller : Fragment() {
             for (i in list) {
                 if (i.exists()) {
                     val order = SellerReceivedOrdersItems(
-                        i.getString("Buyer Name"),
-                        i.getString("Buyer UID"),
-                        i.getString("Seller UID"),
-                        i.getString("Buyer Address"),
-                        i.getString("Order Time"),
-                        i.getString("Delivery Date"),
-                        i.getString("Status"),
-                        i.getString("Product Name"),
-                        i.getString("Brand Name"),
-                        i.getString("Product Image Url"),
-                        i.getString("Category"),
-                        i.getString("Payable Amount"),
-                        i.getString("Quantity"),
-                        i.getString("Order ID")
+                        i.getString("buyer_name"),
+                        i.getString("buyer_uid"),
+                        i.getString("seller_uid"),
+                        i.getString("buyer_address"),
+                        i.getString("order_time"),
+                        i.getString("delivery_date"),
+                        i.getString("status"),
+                        i.getString("product_name"),
+                        i.getString("brand_name"),
+                        i.getString("product_image_url"),
+                        i.getString("category"),
+                        i.getString("payable_amount"),
+                        i.getString("quantity"),
+                        i.getString("order_id")
                     )
                     ordersItemsArray.add(order)
                 }
@@ -220,21 +220,21 @@ class ShopSeller : Fragment() {
             conversationBox.visibility = View.VISIBLE
             conversationItemsArray = arrayListOf()
             val conversationData = ConversationItems(
-                list[0].getString("Name"),
-                list[0].getString("Image Url"),
-                list[0].getString("Last Message"),
+                list[0].getString("name"),
+                list[0].getString("image_url"),
+                list[0].getString("last_message"),
                 sellerUid,
-                list[0].getString("Uid")
+                list[0].getString("uid")
             )
             conversationItemsArray.add(conversationData)
 
             if (list.size > 1) {
                 val conversationData = ConversationItems(
-                    list[1].getString("Name"),
-                    list[1].getString("Image Url"),
-                    list[1].getString("Last Message"),
+                    list[1].getString("name"),
+                    list[1].getString("image_url"),
+                    list[1].getString("last_message"),
                     sellerUid,
-                    list[1].getString("Uid")
+                    list[1].getString("uid")
                 )
                 conversationItemsArray.add(conversationData)
             }

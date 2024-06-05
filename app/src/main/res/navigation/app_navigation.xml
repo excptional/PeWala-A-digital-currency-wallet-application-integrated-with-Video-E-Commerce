@@ -203,8 +203,13 @@
         tools:layout="@layout/fragment_upload_video_tutorials" />
 
     <fragment
-        android:id="@+id/nav_edit_product_details_seller"
-        android:name="com.te.pewala.main_files.fragments.EditProductDetailsSeller"
-        tools:layout="@layout/fragment_edit_product_details_seller" />
+        android:id="@+id/nav_product_dashboard"
+        android:name="com.te.pewala.main_files.fragments.ProductDashboard"
+        tools:layout="@layout/fragment_product_dashboard" />
+
+    <fragment
+        android:id="@+id/nav_update_product_details"
+        android:name="com.te.pewala.main_files.fragments.UpdateProductDetails"
+        tools:layout="@layout/fragment_update_product_details" />
 
 </navigation>

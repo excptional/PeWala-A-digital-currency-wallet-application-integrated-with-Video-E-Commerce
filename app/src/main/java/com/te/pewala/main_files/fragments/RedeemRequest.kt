@@ -77,9 +77,9 @@ class RedeemRequest : Fragment() {
                 val redeemData = RedeemItems(
                     name,
                     phone,
-                    i.getString("Status"),
-                    i.getString("Request send"),
-                    i.getString("Amount")
+                    i.getString("status"),
+                    i.getString("request_send_time"),
+                    i.getString("amount")
                 )
                 redeemItemsArray.add(redeemData)
             }
@@ -97,8 +97,8 @@ class RedeemRequest : Fragment() {
             if (user != null) {
                 dbViewModel.fetchAccountDetails(user.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) {
-                    name = it.getString("Name").toString()
-                    phone = it.getString("Phone").toString()
+                    name = it.getString("name").toString()
+                    phone = it.getString("phone").toString()
                     dbViewModel.fetchRedeemRequest(user.uid)
                     dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list ->
                         if(list.isNotEmpty()) fetchData(list)

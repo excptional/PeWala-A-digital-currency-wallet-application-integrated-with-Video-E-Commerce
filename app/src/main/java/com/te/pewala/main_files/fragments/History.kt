@@ -102,12 +102,12 @@ class History : Fragment() {
         for (i in list) {
             if (i.exists()) {
                 val transactionData = TransactionHistoryItems(
-                    i.getString("Amount"),
-                    i.getString("Operation"),
-                    i.getString("TId"),
-                    i.getString("Time"),
-                    i.getString("Operator Name"),
-                    i.getString("Operator Phone")
+                    i.getString("amount"),
+                    i.getString("operation"),
+                    i.getString("tid"),
+                    i.getString("time"),
+                    i.getString("operator_name"),
+                    i.getString("operator_phone")
                 )
                 transactionHistoryItems.add(transactionData)
 

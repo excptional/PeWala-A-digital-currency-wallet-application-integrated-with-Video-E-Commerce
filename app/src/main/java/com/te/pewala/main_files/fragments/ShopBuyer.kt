@@ -178,21 +178,21 @@ class ShopBuyer : Fragment() {
             conversationBox.visibility = View.VISIBLE
             conversationItemsArray = arrayListOf()
             val conversationData = ConversationItems(
-                list[0].getString("Name"),
-                list[0].getString("Image Url"),
-                list[0].getString("Last Message"),
+                list[0].getString("name"),
+                list[0].getString("image_url"),
+                list[0].getString("last_message"),
                 uid,
-                list[0].getString("Uid")
+                list[0].getString("uid")
             )
             conversationItemsArray.add(conversationData)
 
             if (list.size > 1) {
                 val conversationData = ConversationItems(
-                    list[1].getString("Name"),
-                    list[1].getString("Image Url"),
-                    list[1].getString("Last Message"),
+                    list[1].getString("name"),
+                    list[1].getString("image_url"),
+                    list[1].getString("last_message"),
                     uid,
-                    list[1].getString("Uid")
+                    list[1].getString("uid")
                 )
                 conversationItemsArray.add(conversationData)
             }

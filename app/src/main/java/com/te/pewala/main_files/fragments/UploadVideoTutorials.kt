@@ -73,7 +73,7 @@ class UploadVideoTutorials : Fragment() {
         brandName.text = requireArguments().getString("brandName")!!
         productId = requireArguments().getString("productId")!!
 
-        Glide.with(productImage).load(requireArguments().getString("productImageUrl")!!)
+        Glide.with(view).load(requireArguments().getString("productImageUrl")!!).into(productImage)
 
         uploadVideoFromLocal.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)

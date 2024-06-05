@@ -158,6 +158,7 @@
                 android:padding="@dimen/_10sdp"
                 android:scrollbars="horizontal"
                 android:singleLine="true"
+                android:maxLength="12"
                 android:textColor="@color/text_color2"
                 android:textColorHint="#D1D0D0"
                 android:textSize="@dimen/_11sdp" />
@@ -186,6 +187,7 @@
                 android:singleLine="true"
                 android:textColor="@color/text_color2"
                 android:textColorHint="#D1D0D0"
+                android:maxLength="10"
                 android:textSize="@dimen/_11sdp" />
 
             <TextView
@@ -234,7 +236,7 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             app:cardBackgroundColor="@color/t_2"
-            app:cardCornerRadius="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
             app:cardElevation="@dimen/_5sdp">
 
             <TextView

@@ -33,7 +33,7 @@ class Orders : Fragment() {
     private lateinit var backBtn: ImageView
     private lateinit var noOrders: TextView
     private lateinit var loader: LottieAnimationView
-    private lateinit var mainLayout: LinearLayout
+//    private lateinit var mainLayout: LinearLayout
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -51,7 +51,7 @@ class Orders : Fragment() {
         backBtn = view.findViewById(R.id.back_btn_my_orders)
         noOrders = view.findViewById(R.id.nothingFound_my_orders)
         loader = view.findViewById(R.id.loader_my_orders)
-        mainLayout = view.findViewById(R.id.main_layout_my_orders)
+//        mainLayout = view.findViewById(R.id.main_layout_my_orders)
 
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
@@ -66,7 +66,7 @@ class Orders : Fragment() {
         loadData()
 
         swipeRefreshLayout.setOnRefreshListener {
-            mainLayout.visibility = View.GONE
+            ordersRecyclerView.visibility = View.GONE
             loader.visibility = View.VISIBLE
             loadData()
         }
@@ -77,7 +77,7 @@ class Orders : Fragment() {
     private fun fetchMyOrders(list: MutableList<DocumentSnapshot>?) {
         ordersItemsArray = arrayListOf()
         if (list!!.size == 0) {
-            mainLayout.visibility = View.VISIBLE
+            ordersRecyclerView.visibility = View.VISIBLE
             loader.visibility = View.GONE
             noOrders.visibility = View.VISIBLE
             ordersRecyclerView.visibility = View.GONE
@@ -86,22 +86,22 @@ class Orders : Fragment() {
             for (i in list) {
                 if (i.exists()) {
                     val order = MyOrdersItems(
-                        i.getString("Buyer Name"),
-                        i.getString("Buyer UID"),
-                        i.getString("Seller UID"),
-                        i.getString("Buyer Address"),
-                        i.getString("Order Time"),
-                        i.getString("Delivery Date"),
-                        i.getString("Status"),
-                        i.getString("Product ID"),
-                        i.getString("Product Name"),
-                        i.getString("Brand Name"),
-                        i.getString("Product Image Url"),
-                        i.getString("Category"),
-                        i.getString("Payable Amount"),
-                        i.getString("Quantity"),
-                        i.getString("Order ID"),
-                        i.getString("Product Rating")
+                        i.getString("buyer_name"),
+                        i.getString("buyer_uid"),
+                        i.getString("seller_uid"),
+                        i.getString("buyer_address"),
+                        i.getString("order_time"),
+                        i.getString("delivery_date"),
+                        i.getString("status"),
+                        i.getString("product_id"),
+                        i.getString("product_name"),
+                        i.getString("brand_name"),
+                        i.getString("product_image_url"),
+                        i.getString("category"),
+                        i.getString("payable_amount"),
+                        i.getString("quantity"),
+                        i.getString("order_id"),
+                        i.getString("product_rating")
                     )
                     ordersItemsArray.add(order)
                 }
@@ -109,7 +109,6 @@ class Orders : Fragment() {
             ordersAdapter.updateMyOrders(ordersItemsArray)
             ordersRecyclerView.visibility = View.VISIBLE
             noOrders.visibility = View.GONE
-            mainLayout.visibility = View.VISIBLE
             loader.visibility = View.GONE
             swipeRefreshLayout.isRefreshing = false
         }

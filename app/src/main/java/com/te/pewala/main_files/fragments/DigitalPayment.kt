@@ -20,12 +20,14 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.R
+import com.te.pewala.db.AESCrypt
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.db.Response
@@ -54,7 +56,10 @@ class DigitalPayment : Fragment() {
     private lateinit var originalPIN: String
     private lateinit var tId: String
     private var receiverUid = "Jufm91ImZUat1ZUrFpA8CY1HMlw1"
+    private val aesCrypt = AESCrypt()
+    private val key = ByteArray(32)
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -186,8 +191,8 @@ class DigitalPayment : Fragment() {
         dbViewModel.fetchAccountDetails(senderUid)
         dbViewModel.accDetails.observe(viewLifecycleOwner) { doc ->
             dbViewModel.addOrder(
-                doc.getString("Name").toString(),
-                doc.getString("Phone").toString(),
+                doc.getString("name").toString(),
+                doc.getString("phone").toString(),
                 requireArguments().getString("address").toString(),
                 "Digital Payment",
                 senderUid,
@@ -268,15 +273,16 @@ class DigitalPayment : Fragment() {
         notificationManager.notify(0, notificationBuilder.build())
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) { it ->
+        authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
                 senderUid = it.uid
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list1 ->
                     if (list1.exists()) {
-                        if (list1.getString("Status")!!.isEmpty()) {
+                        if (list1.getString("pin")!!.isEmpty()) {
                             Toast.makeText(
                                 requireContext(),
                                 "Set your 4 digit PIN before use this feature",
@@ -284,12 +290,13 @@ class DigitalPayment : Fragment() {
                             ).show()
                             requireActivity().onBackPressed()
                         } else {
-                            senderName = list1.getString("Name").toString()
-                            senderPhone = list1.getString("Phone").toString()
-                            senderWalletId = list1.getString("Card Id").toString()
-                            senderImageUrl = list1.getString("Image Url").toString()
-                            balance = list1.getString("Balance").toString()
-                            originalPIN = list1.getString("PIN").toString()
+                            senderName = list1.getString("name").toString()
+                            senderPhone = list1.getString("phone").toString()
+                            senderWalletId = list1.getString("card_id").toString()
+                            senderImageUrl = list1.getString("image_url").toString()
+                            balance = list1.getString("balance").toString()
+                            originalPIN = list1.getString("pin")!!
+//                            originalPIN = aesCrypt.decrypt(list1.getString("pin").toString(), key).toString()
                             titleText.text = "Paying from $senderName \nFor ${
                                 requireArguments().getString("brandName").toString()
                             } ${requireArguments().getString("productName").toString()}"

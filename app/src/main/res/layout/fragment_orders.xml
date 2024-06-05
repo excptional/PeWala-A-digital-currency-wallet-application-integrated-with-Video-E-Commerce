@@ -16,38 +16,45 @@
             android:id="@+id/main_layout_my_orders"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:orientation="vertical" >
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <ImageButton
-                    android:id="@+id/back_btn_my_orders"
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:background="@null"
-                    android:contentDescription="@string/app_name"
-                    android:padding="@dimen/_4sdp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/back_black"
-                    tools:ignore="TouchTargetSizeCheck"/>
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_5sdp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_centerVertical="true"
                     android:text="My Orders"
                     android:textColor="@color/material_black"
-                    android:textSize="@dimen/_16sdp"
-                    android:textStyle="bold" />
+                    android:layout_toEndOf="@id/back_btn_my_orders"
+                    android:textSize="@dimen/_16sdp" />
 
-            </LinearLayout>
+                <ImageView
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pewala_icon1" />
+
+                <ImageView
+                    android:id="@+id/back_btn_my_orders"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:scaleType="centerCrop"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/back_black" />
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

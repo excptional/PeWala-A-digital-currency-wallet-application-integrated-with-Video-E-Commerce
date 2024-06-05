@@ -3,6 +3,8 @@ package com.te.pewala.db
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +20,9 @@ import java.io.FileOutputStream
 import java.security.SecureRandom
 
 class AuthRepository(private val application: Application) {
+
+    private val aesCrypt = AESCrypt()
+    private val key = ByteArray(32)
 
     private val userLiveData = MutableLiveData<FirebaseUser?>()
     val userData: LiveData<FirebaseUser?>
@@ -47,6 +52,7 @@ class AuthRepository(private val application: Application) {
             }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun signUp(
         name: String,
         phone: String,
@@ -54,59 +60,38 @@ class AuthRepository(private val application: Application) {
         password: String,
         userType: String
     ) {
-        val salt = BCrypt.gensalt(10, SecureRandom())
-        val hashedPassword = BCrypt.hashpw(password, salt)
-        val data1 = mapOf(
-            "Name" to name,
-            "Password" to hashedPassword,
-            "Phone" to phone,
-            "Card Id" to "$phone@digital",
-            "Aadhar" to aadharNo,
-            "Uid" to "",
-            "QR Code" to "",
-            "PIN" to "",
-            "Balance" to "0",
-            "User" to userType,
-            "Status" to "",
-            "PAN No" to "",
-            "GSTIN" to "",
-            "Trade License" to "",
-            "Image Url" to "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
-        )
-
-        val data2 = mapOf(
-            "Name" to name,
-            "Password" to hashedPassword,
-            "Phone" to phone,
-            "Card Id" to "$phone@digital",
-            "Aadhar" to aadharNo,
-            "Uid" to "",
-            "QR Code" to "",
-            "PIN" to "",
-            "Balance" to "0",
-            "User" to userType,
-            "Status" to "",
-            "PAN No" to "",
-            "GSTIN" to "",
-            "Trade License" to "",
-            "Image Url" to "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
-        )
+        key.fill(1)
+        val hashedPassword = aesCrypt.encrypt(password, key)
+        val hashedAadhar = aesCrypt.encrypt(aadharNo, key)
+        val data = mutableMapOf(
+            "name" to name,
+            "password" to hashedPassword,
+            "phone" to phone,
+            "card_id" to "$phone@smart",
+            "aadhar" to hashedAadhar,
+            "uid" to "",
+            "qr_code" to "",
+            "pin" to "",
+            "balance" to "0",
+            "user_type" to userType,
+            "status" to "",
+            "pan" to "",
+            "gstin" to "",
+            "trade_license" to "",
+            "image_url" to "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
+        ).apply {
+            if (userType == "Seller") {
+                put("status", "Not Verified")
+            }
+        }
 
         firebaseAuth.createUserWithEmailAndPassword("$phone@gmail.com", password)
             .addOnSuccessListener {
-                val doc = firebaseDB.collection("Users").document(firebaseAuth.currentUser!!.uid)
-                if (userType == "Buyer") {
-                    doc.set(data1)
-                    doc.get().addOnSuccessListener {
-                        doc.update("Uid", firebaseAuth.currentUser!!.uid)
-                        qrGenerator("$phone@digital")
-                    }
-                } else {
-                    doc.set(data2)
-                    doc.get().addOnSuccessListener {
-                        doc.update("Uid", firebaseAuth.currentUser!!.uid)
-                        qrGenerator("$phone@digital")
-                    }
+                val doc = firebaseDB.collection("users").document(firebaseAuth.currentUser!!.uid)
+                doc.set(data)
+                doc.get().addOnSuccessListener {
+                    doc.update("uid", firebaseAuth.currentUser!!.uid)
+                    qrGenerator("$phone@smart")
                 }
 
                 responseLiveData.postValue(Response.Success())
@@ -152,10 +137,10 @@ class AuthRepository(private val application: Application) {
                 ref.downloadUrl
                     .addOnSuccessListener { uri ->
                         val doc =
-                            firebaseDB.collection("Users").document(firebaseAuth.currentUser!!.uid)
+                            firebaseDB.collection("users").document(firebaseAuth.currentUser!!.uid)
                         doc.get().addOnSuccessListener {
                             if (it.exists()) {
-                                doc.update("QR Code", uri.toString())
+                                doc.update("qr_code", uri.toString())
                             }
                         }
                     }

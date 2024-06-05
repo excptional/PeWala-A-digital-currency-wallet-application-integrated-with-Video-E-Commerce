@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.Spinner
@@ -140,6 +141,14 @@ class Register : Fragment(), AdapterView.OnItemSelectedListener {
 
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        passwordEditText.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                registerBtn.isClickable = false
+                signUp(view)
+                true
+            } else false
         }
 
         return view

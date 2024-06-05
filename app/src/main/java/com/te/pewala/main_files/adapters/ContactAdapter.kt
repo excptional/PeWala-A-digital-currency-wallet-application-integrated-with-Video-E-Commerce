@@ -37,7 +37,7 @@ class ContactAdapter(
         Glide.with(context).load(currentItem.imgUrl).into(holder.icon)
         holder.contactBody.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("walletId", "${currentItem.phone}@digital")
+            bundle.putString("walletId", "${currentItem.phone}@smart")
             Navigation.findNavController(holder.itemView).navigate(R.id.nav_final_pay, bundle)
         }
     }

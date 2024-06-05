@@ -14,35 +14,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_5sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_5sdp">
 
-            <ImageButton
+            <ImageView
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/pewala_icon1" />
+
+            <ImageView
                 android:id="@+id/back_btn_otp"
-                android:layout_width="@dimen/_35sdp"
-                android:layout_height="@dimen/_35sdp"
-                android:padding="@dimen/_4sdp"
-                android:layout_marginEnd="@dimen/_5sdp"
-                android:background="@null"
-                android:contentDescription="@string/app_name"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/back_black"
-                tools:ignore="TouchTargetSizeCheck"/>
+                android:src="@drawable/back_black" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add To Wallet"
-                android:textColor="@color/material_black"
-                android:textSize="@dimen/_16sdp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Enter the OTP sent to "
-                android:textColor="@color/material_black"
+                android:textColor="@color/text_color2"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
 
@@ -115,8 +109,8 @@
                     android:maxLength="1"
                     android:padding="@dimen/_5sdp"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/material_black"
                     android:textSize="@dimen/_20sdp"
                     android:textStyle="bold" />
 
@@ -141,8 +135,8 @@
                     android:maxLength="1"
                     android:padding="@dimen/_5sdp"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/material_black"
                     android:textSize="@dimen/_20sdp"
                     android:textStyle="bold" />
 
@@ -167,8 +161,8 @@
                     android:maxLength="1"
                     android:padding="@dimen/_5sdp"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/material_black"
                     android:textSize="@dimen/_20sdp"
                     android:textStyle="bold" />
 
@@ -192,8 +186,8 @@
                     android:maxLength="1"
                     android:padding="@dimen/_5sdp"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/material_black"
                     android:textSize="@dimen/_20sdp"
                     android:textStyle="bold" />
 
@@ -212,8 +206,8 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            app:cardBackgroundColor="@color/material_black"
-            app:cardCornerRadius="@dimen/_20sdp">
+            app:cardBackgroundColor="@color/t_2"
+            app:cardCornerRadius="@dimen/_5sdp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -239,7 +233,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/material_black"
-                android:text="60"
+                android:text=" Resend within 00.59 seconds"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 

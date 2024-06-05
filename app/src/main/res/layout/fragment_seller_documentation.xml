@@ -11,36 +11,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/top_layout_seller_doc"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_5sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/back_btn_seller_doc"
-                android:layout_width="@dimen/_35sdp"
-                android:layout_height="@dimen/_35sdp"
-                android:padding="@dimen/_4sdp"
-                android:layout_marginEnd="@dimen/_5sdp"
-                android:background="@null"
-                android:contentDescription="@string/app_name"
-                android:scaleType="centerCrop"
-                android:src="@drawable/back_black"
-                tools:ignore="TouchTargetSizeCheck" />
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Seller documentation"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_toEndOf="@id/back_btn_seller_doc"
+                android:fontFamily="@font/roboto_medium"
+                android:text=""
                 android:textColor="@color/material_black"
-                android:textSize="@dimen/_16sdp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/_16sdp" />
 
-        </LinearLayout>
+            <ImageView
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/pewala_icon1" />
+
+            <ImageView
+                android:id="@+id/back_btn_seller_doc"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/back_black" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,74 +57,48 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/panNo_layout_seller_doc"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_gravity="center"
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/panNo_seller_doc"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
-                android:hint="Enter your PAN No"
-                app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
-                app:boxCornerRadiusBottomStart="@dimen/_10sdp"
-                app:boxCornerRadiusTopEnd="@dimen/_10sdp"
-                app:boxCornerRadiusTopStart="@dimen/_10sdp"
-                app:boxStrokeColor="#1E88E5"
-                app:boxStrokeWidth="@dimen/_2sdp"
-                app:hintTextColor="#1E88E5"
-                app:startIconDrawable="@drawable/pan_card"
-                app:startIconScaleType="centerInside">
+                android:background="@drawable/box_background"
+                android:hint="Enter PAN No"
+                android:importantForAutofill="no"
+                android:maxLength="10"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:textColor="@color/text_color2"
+                android:textColorHint="@color/text_color1"
+                android:textSize="@dimen/_14sdp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/panNo_seller_doc"
-                    android:layout_width="@dimen/_260sdp"
-                    android:layout_height="match_parent"
-                    android:inputType="textCapCharacters"
-                    android:maxLength="10"
-                    android:textColor="#1E88E5"
-                    android:textSize="@dimen/_14sdp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/gst_layout_seller_doc"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_gravity="center"
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/gst_seller_doc"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
-                android:layout_marginBottom="@dimen/_20sdp"
-                android:hint="Enter your GSTIN"
-                app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
-                app:boxCornerRadiusBottomStart="@dimen/_10sdp"
-                app:boxCornerRadiusTopEnd="@dimen/_10sdp"
-                app:boxCornerRadiusTopStart="@dimen/_10sdp"
-                app:boxStrokeColor="#1E88E5"
-                app:boxStrokeWidth="@dimen/_2sdp"
-                app:hintTextColor="#1E88E5"
-                app:startIconDrawable="@drawable/file_icon"
-                app:startIconScaleType="centerInside">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/gst_seller_doc"
-                    android:layout_width="@dimen/_260sdp"
-                    android:layout_height="match_parent"
-                    android:inputType="textCapCharacters"
-                    android:maxLength="15"
-                    android:textColor="#1E88E5"
-                    android:textSize="@dimen/_14sdp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/box_background"
+                android:hint="Enter GST No"
+                android:importantForAutofill="no"
+                android:maxLength="15"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:textColor="@color/text_color2"
+                android:textColorHint="@color/text_color1"
+                android:textSize="@dimen/_14sdp" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/before_upload_seller_doc"
-                android:layout_width="@dimen/_260sdp"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/_150sdp"
-                android:layout_margin="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -161,8 +143,8 @@
             android:layout_marginBottom="@dimen/_15sdp"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            app:cardBackgroundColor="@color/material_black"
-            app:cardCornerRadius="@dimen/_10sdp"
+            app:cardBackgroundColor="@color/t_2"
+            app:cardCornerRadius="@dimen/_5sdp"
             app:cardElevation="@dimen/_5sdp">
 
             <TextView

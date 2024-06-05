@@ -118,7 +118,7 @@ class Home : Fragment() {
             requireFragmentManager().popBackStack()
             if (userType == "Seller") {
                 when (userStatus) {
-                    "Not verified" -> Navigation.findNavController(view)
+                    "Not Verified" -> Navigation.findNavController(view)
                         .navigate(R.id.nav_seller_doc, null, navBuilder.build())
 
                     "Checking" ->
@@ -169,10 +169,10 @@ class Home : Fragment() {
         for (i in list) {
             if (i.exists()) {
                 val peopleData = PeopleItems(
-                    i.getString("Name"),
-                    i.getString("Phone No"),
-                    i.getString("Image Url"),
-                    i.getString("Uid")
+                    i.getString("name"),
+                    i.getString("phone"),
+                    i.getString("image_url"),
+                    i.getString("uid")
                 )
                 peopleItemsArray.add(peopleData)
                 peopleText.visibility = View.VISIBLE
@@ -198,8 +198,8 @@ class Home : Fragment() {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.exists()) {
-                        userType = list.getString("User").toString()
-                        userStatus = list.getString("Status").toString()
+                        userType = list.getString("user_type").toString()
+                        userStatus = list.getString("status").toString()
                         mainLayout.visibility = View.VISIBLE
                         loader.visibility = View.GONE
                     }

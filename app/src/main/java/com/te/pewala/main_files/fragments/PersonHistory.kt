@@ -99,12 +99,12 @@ class PersonHistory : Fragment() {
         for (i in list) {
             if (i.exists()) {
                 val transactionData = TransactionHistoryItems(
-                    i.getString("Amount"),
-                    i.getString("Operation"),
-                    i.getString("TId"),
-                    i.getString("Time"),
-                    i.getString("Operator Name"),
-                    i.getString("Operator Phone")
+                    i.getString("amount"),
+                    i.getString("operation"),
+                    i.getString("tid"),
+                    i.getString("time"),
+                    i.getString("operator_name"),
+                    i.getString("operator_phone")
                 )
                 transactionHistoryItems.add(transactionData)
             }
@@ -121,11 +121,11 @@ class PersonHistory : Fragment() {
             if (user != null) {
                 dbViewModel.fetchAccountDetails(payerUid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) {
-                    name.text = it.getString("Name")
-                    payerPhone = it.getString("Phone").toString()
-                    phone.text = "Ph : ${it.getString("Phone")}"
-                    walletId.text = "Wallet Id : ${it.getString("Card Id")}"
-                    Glide.with(requireView()).load(it.getString("Image Url")).into(profileImage)
+                    name.text = it.getString("name")
+                    payerPhone = it.getString("phone").toString()
+                    phone.text = "Ph : ${it.getString("phone")}"
+                    walletId.text = "Wallet Id : ${it.getString("card_id")}"
+                    Glide.with(requireView()).load(it.getString("image_url")).into(profileImage)
                     dbViewModel.fetchTransactionDetails(user.uid)
                     dbViewModel.transactionDetails.observe(viewLifecycleOwner) { list ->
                         if (list.isNotEmpty()) {

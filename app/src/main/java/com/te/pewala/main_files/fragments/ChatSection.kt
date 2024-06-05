@@ -57,7 +57,7 @@ class ChatSection : Fragment() {
     private lateinit var userType: String
     private lateinit var mainLayout: RelativeLayout
     private lateinit var chatShimmer: ShimmerFrameLayout
-    val aesCrypt = AESCrypt()
+    private val aesCrypt = AESCrypt()
     val key = ByteArray(32)
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -194,10 +194,10 @@ class ChatSection : Fragment() {
         for (i in list) {
             if (i.exists()) {
                 val msg = MessageItems(
-                    i.getString("Message"),
-                    i.getString("Time"),
-                    i.getString("Sender").equals(uid),
-                    i.getString("Status"),
+                    i.getString("message"),
+                    i.getString("time"),
+                    i.getString("sender_uid").equals(uid),
+                    i.getString("status"),
                     cId
                 )
                 chatItemsArray.add(msg)
@@ -218,7 +218,7 @@ class ChatSection : Fragment() {
                 uid = user.uid
                 dbViewModel!!.fetchAccountDetails(user.uid)
                 dbViewModel!!.accDetails.observe(viewLifecycleOwner) { accDetail ->
-                    userType = accDetail.getString("User")!!
+                    userType = accDetail.getString("user_type")!!
                     if (userType == "Buyer") {
                         cId = "$uid:$receiverUid"
                     } else {
@@ -234,7 +234,8 @@ class ChatSection : Fragment() {
                                 "There are no chats found",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            chatRecyclerView.visibility = View.GONE
+                            mainLayout.visibility = View.VISIBLE
+                            chatShimmer.visibility = View.GONE
                         }
                     }
                 }

@@ -130,7 +130,6 @@ class Account : Fragment() {
 
         uploadImage.setOnClickListener {
             cropActivityResultLauncher.launch(null)
-
         }
 
         val navBuilder = NavOptions.Builder()
@@ -215,18 +214,18 @@ class Account : Fragment() {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.exists()) {
-                        if (list.getString("Status") == "") {
+                        if (list.getString("pin").isNullOrEmpty()) {
                             verifyIcon.visibility = View.GONE
                             pinText.text = "PIN : _ _ _ _ (Not set)"
                         } else {
                             pinText.text = "PIN : * * * *"
                             verifyIcon.visibility = View.VISIBLE
                         }
-                        nameAccount.text = list.getString("Name")
-                        phoneAccount.text = "Phone : +91 ${list.getString("Phone")}"
-                        cardIdAccount.text = "Wallet id : ${list.getString("Card Id")}"
-                        Glide.with(view).load(list.getString("Image Url")).into(profileImg)
-                        imgUrl = list.getString("Image Url")!!
+                        nameAccount.text = list.getString("name")
+                        phoneAccount.text = "Phone : +91 ${list.getString("phone")}"
+                        cardIdAccount.text = "Wallet id : ${list.getString("card_id")}"
+                        Glide.with(view).load(list.getString("image_url")).into(profileImg)
+                        imgUrl = list.getString("image_url")!!
                         mainLayout.visibility = View.VISIBLE
                         whiteView.visibility = View.GONE
                         loaderAccount.visibility = View.GONE

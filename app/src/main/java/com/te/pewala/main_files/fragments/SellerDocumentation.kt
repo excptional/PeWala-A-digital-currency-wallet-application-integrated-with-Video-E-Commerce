@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,7 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -31,11 +34,9 @@ class SellerDocumentation : Fragment() {
     private val validGSTINPattern by lazy { "^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Za-z]{1}[Z]{1}[0-9A-Za-z]{1}$" }
     private val REQUEST_PICK_DOCUMENT = 1
     private val REQUEST_PERMISSION = 2
-    private lateinit var panET: TextInputEditText
-    private lateinit var gstET: TextInputEditText
-    private lateinit var panLayout: TextInputLayout
-    private lateinit var gstLayout: TextInputLayout
-    private lateinit var backBtn: ImageButton
+    private lateinit var panET: AppCompatEditText
+    private lateinit var gstET: AppCompatEditText
+    private lateinit var backBtn: ImageView
     private lateinit var beforeUploadDoc: CardView
     private lateinit var afterUploadDoc: CardView
     private lateinit var submitBtn: CardView
@@ -53,13 +54,13 @@ class SellerDocumentation : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_seller_documentation, container, false)
 
+        requireActivity().window.statusBarColor = Color.WHITE
+
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
         panET = view.findViewById(R.id.panNo_seller_doc)
         gstET = view.findViewById(R.id.gst_seller_doc)
-        panLayout = view.findViewById(R.id.panNo_layout_seller_doc)
-        gstLayout = view.findViewById(R.id.gst_layout_seller_doc)
         beforeUploadDoc = view.findViewById(R.id.before_upload_seller_doc)
         afterUploadDoc = view.findViewById(R.id.after_upload_seller_doc)
         backBtn = view.findViewById(R.id.back_btn_seller_doc)
@@ -74,11 +75,13 @@ class SellerDocumentation : Fragment() {
         }
 
         beforeUploadDoc.setOnClickListener {
-            requestStoragePermission()
+//            requestStoragePermission()
+            openDocumentPicker()
         }
 
         afterUploadDoc.setOnClickListener {
-            requestStoragePermission()
+//            requestStoragePermission()
+            openDocumentPicker()
         }
 
         submitBtn.setOnClickListener {

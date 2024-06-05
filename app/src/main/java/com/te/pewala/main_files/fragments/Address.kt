@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
@@ -46,7 +47,7 @@ class Address : Fragment(), OnMapReadyCallback {
     private lateinit var area: TextInputEditText
     private lateinit var city: TextInputEditText
     private lateinit var postalCode: TextInputEditText
-    private lateinit var landmark: TextInputEditText
+    private lateinit var street: TextInputEditText
     private lateinit var state: TextInputEditText
     private lateinit var useCurrentLocationBtn: CardView
     private lateinit var saveBtn: CardView
@@ -63,7 +64,7 @@ class Address : Fragment(), OnMapReadyCallback {
     private lateinit var cityStr: String
     private lateinit var postalCodeStr: String
     private lateinit var stateStr: String
-    private lateinit var landmarkStr: String
+    private lateinit var streetStr: String
     private lateinit var uid: String
     private lateinit var mapView:MapView
     private lateinit var googleMap: GoogleMap
@@ -84,7 +85,7 @@ class Address : Fragment(), OnMapReadyCallback {
         area = view.findViewById(R.id.areaName_address)
         city = view.findViewById(R.id.cityName_address)
         postalCode = view.findViewById(R.id.postal_address)
-        landmark = view.findViewById(R.id.landmark_address)
+        street = view.findViewById(R.id.street_address)
         state = view.findViewById(R.id.state_address)
         useCurrentLocationBtn = view.findViewById(R.id.use_current_location_btn_address)
         saveBtn = view.findViewById(R.id.save_btn_address)
@@ -96,8 +97,13 @@ class Address : Fragment(), OnMapReadyCallback {
         mapView = view.findViewById(R.id.map_address)
 
         disableMapScrolling(mapView)
-        latitude = requireArguments().getString("lat")!!.toDouble()
-        longitude = requireArguments().getString("long")!!.toDouble()
+        try{
+            latitude = requireArguments().getString("lat")!!.toDouble()
+            longitude = requireArguments().getString("long")!!.toDouble()
+        } catch (e: Exception) {
+            latitude = 28.6139
+            longitude = 77.2090
+        }
 
         mapView.onCreate(savedInstanceState)
         mapView.onResume()
@@ -130,6 +136,8 @@ class Address : Fragment(), OnMapReadyCallback {
             if (checkLocationPermission()) {
                 startLocationUpdates()
             } else {
+                whiteView.visibility = View.GONE
+                loader.visibility = View.GONE
                 requestLocationPermission()
             }
 
@@ -184,13 +192,13 @@ class Address : Fragment(), OnMapReadyCallback {
             }
         }
 
-        landmark.setOnFocusChangeListener { _, hasFocus ->
+        street.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                if (landmark.text!!.isEmpty()) {
-                    landmark.hint = "---"
+                if (street.text!!.isEmpty()) {
+                    street.hint = "---"
                 }
             } else {
-                landmark.hint = null
+                street.hint = null
             }
         }
 
@@ -204,7 +212,7 @@ class Address : Fragment(), OnMapReadyCallback {
         cityStr = city.text.toString()
         postalCodeStr = postalCode.text.toString()
         stateStr = state.text.toString()
-        landmarkStr = landmark.text.toString()
+        streetStr = street.text.toString()
 
         var isAllRight = true
 
@@ -234,7 +242,7 @@ class Address : Fragment(), OnMapReadyCallback {
             loader.visibility = View.GONE
         } else {
 
-            dbViewModel.saveAddress(latitude.toString(), longitude.toString(), localityStr, cityStr, postalCodeStr, stateStr, landmarkStr, uid)
+            dbViewModel.saveAddress(latitude.toString(), longitude.toString(), localityStr, cityStr, postalCodeStr, stateStr, streetStr, uid)
             dbViewModel.dbResponse.observe(viewLifecycleOwner) {
                 when (it) {
                     is Response.Success -> {
@@ -264,7 +272,7 @@ class Address : Fragment(), OnMapReadyCallback {
         }
     }
 
-//    override fun onStart() {
+    //    override fun onStart() {
 //        super.onStart()
 //        if (checkLocationPermission()) {
 //            startLocationUpdates()

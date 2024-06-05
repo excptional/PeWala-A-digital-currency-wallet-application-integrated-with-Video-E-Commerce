@@ -89,10 +89,10 @@ class ProductsFeed : Fragment() {
                     val data = FeedItems(
                         sellerName,
                         sellerImageUrl,
-                        document.getString("Video Url"),
+                        document.getString("video_url"),
                         productName,
                         brandName,
-                        document.getString("Description"),
+                        document.getString("description"),
                         productId,
                         sellerUid
                     )
@@ -112,8 +112,8 @@ class ProductsFeed : Fragment() {
         dbViewModel!!.fetchAccountDetails(sellerUid)
         dbViewModel!!.accDetails.observe(viewLifecycleOwner) { doc ->
             if (doc.exists()) {
-                sellerName = doc.getString("Name").toString()
-                sellerImageUrl = doc.getString("Image Url").toString()
+                sellerName = doc.getString("name").toString()
+                sellerImageUrl = doc.getString("image_url").toString()
                 dbViewModel!!.getVideoTutorials(productId)
                 dbViewModel!!.videoTutorialsData.observe(viewLifecycleOwner) {
                     fetchVideos(it)

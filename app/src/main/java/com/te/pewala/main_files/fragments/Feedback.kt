@@ -42,6 +42,7 @@ class Feedback : Fragment() {
     private lateinit var orderId: String
     private lateinit var whiteView: View
     private lateinit var loader: LottieAnimationView
+    private lateinit var backBtn: ImageView
 
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("MissingInflatedId")
@@ -63,6 +64,7 @@ class Feedback : Fragment() {
         ratingText = view.findViewById(R.id.rating_text_feedback)
         whiteView = view.findViewById(R.id.whiteView_feedback)
         loader = view.findViewById(R.id.loader_feedback)
+        backBtn = view.findViewById(R.id.back_btn_feedback)
 
         buyerUid = requireArguments().getString("buyerUid").toString()
         sellerUid = requireArguments().getString("sellerUid").toString()
@@ -91,6 +93,10 @@ class Feedback : Fragment() {
             whiteView.visibility = View.VISIBLE
             loader.visibility = View.VISIBLE
             submit()
+        }
+
+        backBtn.setOnClickListener {
+            requireActivity().onBackPressed()
         }
 
         return view

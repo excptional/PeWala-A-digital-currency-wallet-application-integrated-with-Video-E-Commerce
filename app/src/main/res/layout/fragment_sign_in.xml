@@ -105,6 +105,7 @@
                 android:scrollbars="horizontal"
                 android:singleLine="true"
                 android:textColor="@color/black"
+                android:maxLength="10"
                 android:textColorHint="#D1D0D0"
                 android:textSize="@dimen/_11sdp" />
 
@@ -133,7 +134,7 @@
                     android:background="@color/white"
                     android:fontFamily="@font/roboto_medium"
                     android:hint="Enter your password"
-                    android:imeOptions="actionDone"
+                    android:imeOptions=""
                     android:inputType="textPassword"
                     android:padding="@dimen/_10sdp"
                     android:scrollbars="horizontal"
@@ -154,7 +155,7 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             app:cardBackgroundColor="@color/t_2"
-            app:cardCornerRadius="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
             app:cardElevation="@dimen/_5sdp">
 
             <TextView

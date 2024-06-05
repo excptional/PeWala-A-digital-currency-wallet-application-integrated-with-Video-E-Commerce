@@ -85,6 +85,8 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_final_order_place, container, false)
 
+        requireActivity().window.statusBarColor = Color.parseColor("#F7F9FD")
+
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
@@ -112,6 +114,8 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
         whiteView.visibility = View.VISIBLE
         loader.visibility = View.VISIBLE
 
+        load(view)
+
         price = Integer.parseInt(requireArguments().getString("productPrice").toString())
         productId = requireArguments().getString("productId").toString()
         productName.text = requireArguments().getString("productName")
@@ -120,13 +124,10 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
         description.text = requireArguments().getString("description")
         Glide.with(view).load(requireArguments().getString("productImageUrl")).into(productImage)
 
-        load(view)
-
         disableMapScrolling(mapView)
         mapView.onCreate(savedInstanceState)
 
 //        onMapReady(googleMap)
-
 
         quantity.text = "1"
 
@@ -232,18 +233,18 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
                         is Response.Success -> {
                             dbViewModel.addressData.observe(viewLifecycleOwner) { doc ->
                                 if (doc.exists()) {
-                                    lat = doc.getString("Latitude")!!.toDouble()
-                                    long = doc.getString("Longitude")!!.toDouble()
+                                    lat = doc.getString("latitude")!!.toDouble()
+                                    long = doc.getString("longitude")!!.toDouble()
                                     mapView.onResume()
                                     mapView.getMapAsync(this)
-                                    locality.text = doc.getString("Locality")
+                                    locality.text = doc.getString("locality")
                                     city_postal.text =
-                                        doc.getString("City") + ", " + doc.getString("Postal Code")
-                                    state.text = doc.getString("State")
+                                        doc.getString("city") + ", " + doc.getString("postal_code")
+                                    state.text = doc.getString("state")
                                     addressStr =
-                                        "${doc.getString("Locality")}, ${doc.getString("Landmark")}, " +
-                                                "${doc.getString("City")}, ${doc.getString("Postal Code")}, " +
-                                                "${doc.getString("State")}"
+                                        "${doc.getString("locality")}, ${doc.getString("street")}, " +
+                                                "${doc.getString("city")}, ${doc.getString("postal_code")}, " +
+                                                "${doc.getString("state")}"
                                     whiteView.visibility = View.GONE
                                     loader.visibility = View.GONE
                                     address.visibility = View.VISIBLE
@@ -261,7 +262,7 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
                 }
                 dbViewModel.fetchAccountDetails(uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) {
-                    balanceStr = it.getString("Balance").toString()
+                    balanceStr = it.getString("balance").toString()
                 }
             }
         }
@@ -360,8 +361,8 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
         dbViewModel.fetchAccountDetails(uid)
         dbViewModel.accDetails.observe(viewLifecycleOwner) { doc ->
             dbViewModel.addOrder(
-                doc.getString("Name").toString(),
-                doc.getString("Phone").toString(),
+                doc.getString("name").toString(),
+                doc.getString("phone").toString(),
                 addressStr,
                 "COD",
                 uid,

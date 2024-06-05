@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -89,6 +90,14 @@ class SignIn : Fragment() {
 
         backBtn.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        passwordEditText.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                signInBtn.isClickable = false
+                signIn(view)
+                true
+            } else false
         }
 
         return view

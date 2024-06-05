@@ -116,7 +116,7 @@ class Send : Fragment() {
                 ).show()
             } else {
                 val bundle = Bundle()
-                bundle.putString("walletId", "$phone@digital")
+                bundle.putString("walletId", "$phone@smart")
                 whiteView.visibility = View.GONE
                 loaderSend.visibility = View.GONE
                 Navigation.findNavController(view).navigate(R.id.nav_final_pay, bundle)
@@ -140,12 +140,12 @@ class Send : Fragment() {
         contactLayout.visibility = View.GONE
         contactItemsArray = arrayListOf()
         for (i in list) {
-            if (i.exists() and i.getString("Phone No")!!.contains(s)) {
+            if (i.exists() and i.getString("phone")!!.contains(s)) {
                 contactLayout.visibility = View.VISIBLE
                 val contactData = ContactItems(
-                    i.getString("Name"),
-                    i.getString("Phone No"),
-                    i.getString("Image Url")
+                    i.getString("name"),
+                    i.getString("phone"),
+                    i.getString("image_url")
                 )
                 contactItemsArray.add(contactData)
             }
@@ -160,7 +160,7 @@ class Send : Fragment() {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.exists()) {
-                        phoneNum = list.getString("Phone").toString()
+                        phoneNum = list.getString("phone").toString()
                     }
                 }
                 dbViewModel.fetchContacts(it.uid)

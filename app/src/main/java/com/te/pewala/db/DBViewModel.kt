@@ -105,9 +105,9 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         dbRepository.replaceImage(imageUrl, newImageStream)
     }
 
-    fun checkDailyAddAmountLimit(user: FirebaseUser) {
-        dbRepository.checkDailyAddAmountLimit(user)
-    }
+//    fun checkDailyAddAmountLimit(user: FirebaseUser) {
+//        dbRepository.checkDailyAddAmountLimit(user)
+//    }
 
     fun addMoney(amount: String, note: String, tId: String, uid: String) {
         dbRepository.addMoney(amount, note, tId, uid)
@@ -117,6 +117,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         dbRepository.getPayerDetails(id)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun changePIN(uid: String, PIN: String) {
         dbRepository.changePIN(uid, PIN)
     }
@@ -175,10 +176,10 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         brandName: String,
         productImage: Uri,
         productPrice: String,
-        quantity: String,
+        stocks: String,
         unit: String,
         description: String,
-        productType: String,
+        category: String,
         keywords: String
     ) {
         dbRepository.addProduct(
@@ -189,10 +190,10 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
             brandName,
             productImage,
             productPrice,
-            quantity,
+            stocks,
             unit,
             description,
-            productType,
+            category,
             keywords
         )
     }
@@ -233,6 +234,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun uploadSellerDoc(pan: String, gstin: String, uri: Uri, uid: String) {
         dbRepository.uploadSellerDoc(pan, gstin, uri, uid)
     }
@@ -304,10 +306,10 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         city: String,
         postalNo: String,
         state: String,
-        landmark: String,
+        street: String,
         uid: String
     ) {
-        dbRepository.saveAddress(lat ,long, locality, city, postalNo, state, landmark, uid)
+        dbRepository.saveAddress(lat ,long, locality, city, postalNo, state, street, uid)
     }
 
     fun getAddress(uid: String) {
@@ -352,10 +354,6 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getConversations(uid: String) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val peopleList = dbRepository.getConversations(uid)
-//            _conversationList.postValue(peopleList)
-//        }
         dbRepository.getConversations(uid)
     }
 
@@ -367,11 +365,18 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         dbRepository.getVideoTutorials(productId)
     }
 
-//    fun addAccount(
-//        rfID: String,
-//        password: String
-//    ) {
-//        dbRepository.addAccount(rfID, password)
-//    }
+    fun updateProductDetails(
+        sellerUid: String,
+        productId: String,
+        category: String,
+        productName: String,
+        brandName: String,
+        productImage: Uri?,
+        productPrice: String,
+        stocks: String,
+        description: String,
+    ) {
+        dbRepository.updateProductDetails(sellerUid, productId, category, productName, brandName, productImage, productPrice, stocks, description)
+    }
 
 }

@@ -330,20 +330,20 @@ class Wishlist : Fragment() {
             for (i in list) {
                 if (i.exists()) {
                     val acc = ProductsItems(
-                        i.getString("Product Name"),
-                        i.getString("Brand Name"),
-                        i.getString("Product Image"),
-                        i.getString("Category"),
-                        i.getString("Product Price"),
-                        i.getString("Quantity"),
-                        i.getString("Description"),
-                        i.getString("Tags"),
-                        i.getString("Ratings"),
-                        i.getString("Raters"),
-                        i.getString("Seller Name"),
-                        i.getString("Seller Image"),
-                        i.getString("Seller UID"),
-                        i.getString("Product ID")
+                        i.getString("product_name"),
+                        i.getString("brand_name"),
+                        i.getString("product_image_url"),
+                        i.getString("category"),
+                        i.getString("product_price"),
+                        i.getString("stocks"),
+                        i.getString("description"),
+                        i.getString("tags"),
+                        i.getString("ratings"),
+                        i.getString("raters"),
+                        i.getString("seller_name"),
+                        i.getString("seller_image"),
+                        i.getString("seller_uid"),
+                        i.getString("product_id")
                     )
                     productsItemsArray.add(acc)
                 }
@@ -366,22 +366,22 @@ class Wishlist : Fragment() {
             productsRecyclerView.visibility = View.GONE
         } else {
             for (i in list) {
-                if (i.exists() and i.getString("Tags")!!.toLowerCase().contains(s.toLowerCase())) {
+                if (i.exists() and i.getString("tags")!!.toLowerCase().contains(s.toLowerCase())) {
                     val acc = ProductsItems(
-                        i.getString("Product Name"),
-                        i.getString("Brand Name"),
-                        i.getString("Product Image"),
-                        i.getString("Category"),
-                        i.getString("Product Price"),
-                        i.getString("Quantity"),
-                        i.getString("Description"),
-                        i.getString("Tags"),
-                        i.getString("Ratings"),
-                        i.getString("Raters"),
-                        i.getString("Seller Name"),
-                        i.getString("Seller Image"),
-                        i.getString("Seller UID"),
-                        i.getString("Product ID")
+                        i.getString("product_name"),
+                        i.getString("brand_name"),
+                        i.getString("product_image_url"),
+                        i.getString("category"),
+                        i.getString("product_price"),
+                        i.getString("stocks"),
+                        i.getString("description"),
+                        i.getString("tags"),
+                        i.getString("ratings"),
+                        i.getString("raters"),
+                        i.getString("seller_name"),
+                        i.getString("seller_image"),
+                        i.getString("seller_uid"),
+                        i.getString("product_id")
                     )
                     productsItemsArray.add(acc)
                 }

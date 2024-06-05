@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +33,7 @@ class Cart : Fragment() {
     private lateinit var notFoundText: TextView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var mainLayout: LinearLayout
-    private lateinit var backBtn: ImageButton
+    private lateinit var backBtn: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,18 +89,18 @@ class Cart : Fragment() {
             for (i in list) {
                 if (i.exists()) {
                     val acc = CartItems(
-                        i.getString("Product Name"),
-                        i.getString("Brand Name"),
-                        i.getString("Product Image"),
-                        i.getString("Category"),
-                        i.getString("Product Price"),
-                        i.getString("Quantity"),
-                        i.getString("Description"),
-                        i.getString("Seller Name"),
-                        i.getString("Seller Image"),
-                        i.getString("Seller UID"),
-                        i.getString("Ratings"),
-                        i.getString("Product ID")
+                        i.getString("product_name"),
+                        i.getString("brand_name"),
+                        i.getString("product_image_url"),
+                        i.getString("category"),
+                        i.getString("product_price"),
+                        i.getString("quantity"),
+                        i.getString("description"),
+                        i.getString("seller_name"),
+                        i.getString("seller_image_url"),
+                        i.getString("seller_uid"),
+                        i.getString("ratings"),
+                        i.getString("product_id")
                     )
                     cartItemsArray.add(acc)
                 }

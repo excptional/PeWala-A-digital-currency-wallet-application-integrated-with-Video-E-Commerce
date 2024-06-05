@@ -18,132 +18,104 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/back_btn_PIN"
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:padding="@dimen/_4sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:background="@null"
-                    android:contentDescription="@string/app_name"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/back_black"
-                    tools:ignore="TouchTargetSizeCheck"/>
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_toEndOf="@id/back_btn_PIN"
+                    android:fontFamily="@font/roboto_medium"
                     android:text="Manage PIN"
                     android:textColor="@color/material_black"
-                    android:textSize="@dimen/_16sdp"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/_16sdp" />
 
-            </LinearLayout>
+                <ImageView
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pewala_icon1" />
+
+                <ImageView
+                    android:id="@+id/back_btn_PIN"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/back_black" />
+
+            </RelativeLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/current_PIN_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_gravity="center"
+                android:layout_height="@dimen/_40sdp"
+                app:boxBackgroundMode="none"
+                app:hintEnabled="false"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
-                android:hint="Enter PIN"
-                app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
-                app:boxCornerRadiusBottomStart="@dimen/_10sdp"
-                app:boxCornerRadiusTopEnd="@dimen/_10sdp"
-                app:boxCornerRadiusTopStart="@dimen/_10sdp"
-                app:boxStrokeColor="#1E88E5"
-                app:boxStrokeWidth="@dimen/_2sdp"
-                app:hintTextColor="#1E88E5"
-                app:passwordToggleEnabled="true"
-                app:startIconDrawable="@drawable/pin_icon"
-                app:startIconScaleType="centerInside">
+                app:passwordToggleEnabled="true">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/current_PIN"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/box_background"
+                    android:hint="Enter PIN"
+                    android:paddingTop="@dimen/_10sdp"
+                    android:importantForAutofill="no"
                     android:inputType="numberPassword"
                     android:maxLength="4"
-                    android:textColor="#1E88E5"
-                    android:importantForAutofill="no"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textColor="@color/text_color1"
+                    android:textColorHint="@color/text_color2"
+                    android:textSize="@dimen/_14sdp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/new_PIN_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/new_PIN"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_gravity="center"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
-                android:hint="Enter new PIN"
-                app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
-                app:boxCornerRadiusBottomStart="@dimen/_10sdp"
-                app:boxCornerRadiusTopEnd="@dimen/_10sdp"
-                app:boxCornerRadiusTopStart="@dimen/_10sdp"
-                app:boxStrokeColor="#1E88E5"
-                app:boxStrokeWidth="@dimen/_2sdp"
-                app:hintTextColor="#1E88E5"
-                app:startIconDrawable="@drawable/pin_icon"
-                app:startIconScaleType="centerInside">
+                android:background="@drawable/box_background"
+                android:hint="Enter New PIN"
+                android:importantForAutofill="no"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:paddingStart="@dimen/_10sdp"
+                android:textColor="@color/text_color2"
+                android:textColorHint="@color/text_color1"
+                android:textSize="@dimen/_14sdp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/new_PIN"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="numberPassword"
-                    android:maxLength="4"
-                    android:textColor="#1E88E5"
-                    android:importantForAutofill="no"
-                    android:textSize="@dimen/_16sdp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/confirm_new_PIN_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/confirm_new_PIN"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_gravity="center"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
-                android:hint="Confirm new PIN"
-                app:boxCornerRadiusBottomEnd="@dimen/_10sdp"
-                app:boxCornerRadiusBottomStart="@dimen/_10sdp"
-                app:boxCornerRadiusTopEnd="@dimen/_10sdp"
-                app:boxCornerRadiusTopStart="@dimen/_10sdp"
-                app:boxStrokeColor="#1E88E5"
-                app:boxStrokeWidth="@dimen/_2sdp"
-                app:hintTextColor="#1E88E5"
-                app:startIconDrawable="@drawable/pin_icon"
-                app:startIconScaleType="centerInside">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/confirm_new_PIN"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="numberPassword"
-                    android:maxLength="4"
-                    android:textColor="#1E88E5"
-                    android:importantForAutofill="no"
-                    android:textSize="@dimen/_16sdp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:background="@drawable/box_background"
+                android:hint="Confirm New PIN"
+                android:importantForAutofill="no"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:paddingStart="@dimen/_10sdp"
+                android:textColor="@color/text_color2"
+                android:textColorHint="@color/text_color1"
+                android:textSize="@dimen/_14sdp" />
 
         </LinearLayout>
 
@@ -155,12 +127,12 @@
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_15sdp"
-            android:foreground="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            app:cardBackgroundColor="@color/material_black"
-            app:cardCornerRadius="@dimen/_10sdp"
+            app:cardBackgroundColor="@color/t_2"
+            app:cardCornerRadius="@dimen/_5sdp"
             app:cardElevation="@dimen/_5sdp">
 
             <TextView

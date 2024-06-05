@@ -30,6 +30,7 @@ import com.te.pewala.db.Response
 import com.te.pewala.main_files.adapters.VideoTutorialsAdapter
 import com.te.pewala.main_files.items.VideoTutorialsItems
 import de.hdodenhof.circleimageview.CircleImageView
+import org.bouncycastle.util.Integers
 import kotlin.properties.Delegates
 
 class OrderPlace : Fragment() {
@@ -130,17 +131,17 @@ class OrderPlace : Fragment() {
         )
         dbViewModel.productDetails.observe(viewLifecycleOwner) { list1 ->
             if (list1 != null) {
-                productImageUrl = list1.getString("Product Image").toString()
-                productNameStr = list1.getString("Product Name").toString()
-                productPriceStr = list1.getString("Product Price").toString()
-                brandNameStr = list1.getString("Brand Name").toString()
+                productImageUrl = list1.getString("product_image_url").toString()
+                productNameStr = list1.getString("product_name").toString()
+                productPriceStr = list1.getString("product_price").toString()
+                brandNameStr = list1.getString("brand_name").toString()
 //                stocksStr = list1.getString("Stocks").toString()
-                descriptionStr = list1.getString("Description").toString()
-                ratings = list1.getString("Ratings").toString()
-                sellerNameStr = list1.getString("Seller Name").toString()
-                sellerImageUrl = list1.getString("Seller Image").toString()
+                descriptionStr = list1.getString("description").toString()
+                ratings = list1.getString("ratings").toString()
+                sellerNameStr = list1.getString("seller_name").toString()
+                sellerImageUrl = list1.getString("seller_image_url").toString()
 //                productId = list1.getString("Product ID").toString()
-                category = list1.getString("Category").toString()
+                category = list1.getString("category").toString()
 //                sellerUid = list1.getString("Seller UID").toString()
 
                 productName.text = productNameStr
@@ -148,7 +149,7 @@ class OrderPlace : Fragment() {
                 productPrice.text = "$productPriceStr INR"
                 brandName.text = brandNameStr
 //                stocks.text = "Stocks : $stocksStr"
-                ratingBar.rating = ratings.toFloat()
+                ratingBar.rating = Integer.parseInt(ratings).toFloat()
                 ratingText.text = ratings
                 description.text = descriptionStr
                 sellerName.text = sellerNameStr
@@ -338,7 +339,7 @@ class OrderPlace : Fragment() {
         for (doc in list) {
             if (doc.exists()) {
                 val videoData = VideoTutorialsItems(
-                    doc.getString("Video Url"),
+                    doc.getString("video_url"),
                     productNameStr,
                     brandNameStr,
                     productId,

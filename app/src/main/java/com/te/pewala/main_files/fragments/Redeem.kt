@@ -177,10 +177,10 @@ class Redeem : Fragment() {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.exists()) {
-                        originalPIN = list.getString("PIN").toString()
-                        walletBalance = list.getString("Balance").toString()
-                        walletId.text = list.getString("Card Id").toString()
-                        dbViewModel.checkDailyAddAmountLimit(myUser)
+                        originalPIN = list.getString("pin").toString()
+                        walletBalance = list.getString("balance").toString()
+                        walletId.text = list.getString("card_id").toString()
+//                        dbViewModel.checkDailyAddAmountLimit(myUser)
                         mainLayout.visibility = View.VISIBLE
                         whiteView.visibility = View.GONE
                         loaderRedeem.visibility = View.GONE

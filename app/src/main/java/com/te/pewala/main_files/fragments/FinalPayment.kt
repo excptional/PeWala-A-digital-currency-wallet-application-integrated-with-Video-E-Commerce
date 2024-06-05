@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -24,6 +26,7 @@ import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.db.Response
 import com.google.android.material.textfield.TextInputEditText
+import com.te.pewala.db.AESCrypt
 import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,7 +61,10 @@ class FinalPayment : Fragment() {
     private lateinit var backBtn: ImageButton
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
+    private val aesCrypt = AESCrypt()
+    private val key = ByteArray(32)
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,6 +112,7 @@ class FinalPayment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     private fun loadData() {
         authViewModel.userdata.observe(viewLifecycleOwner) { it ->
@@ -114,7 +121,7 @@ class FinalPayment : Fragment() {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list1 ->
                     if (list1.exists()) {
-                        if (list1.getString("Status")!!.isEmpty()) {
+                        if (list1.getString("pin")!!.isEmpty()) {
                             Toast.makeText(
                                 requireContext(),
                                 "Set your 4 digit PIN before use this feature",
@@ -122,12 +129,13 @@ class FinalPayment : Fragment() {
                             ).show()
                             requireActivity().onBackPressed()
                         } else {
-                            senderName = list1.getString("Name").toString()
-                            senderPhone = list1.getString("Phone").toString()
-                            senderWalletId = list1.getString("Card Id").toString()
-                            senderImageUrl = list1.getString("Image Url").toString()
-                            balance = list1.getString("Balance").toString()
-                            originalPIN = list1.getString("PIN").toString()
+                            senderName = list1.getString("name").toString()
+                            senderPhone = list1.getString("phone").toString()
+                            senderWalletId = list1.getString("card_id").toString()
+                            senderImageUrl = list1.getString("image-url").toString()
+                            balance = list1.getString("balance").toString()
+                            originalPIN = list1.getString("pin")!!
+//                            originalPIN = aesCrypt.decrypt(list1.getString("pin").toString(), key).toString()
                             dbViewModel.getPayerDetails(
                                 requireArguments().getString("walletId").toString()
                             )
@@ -145,7 +153,7 @@ class FinalPayment : Fragment() {
                                 } else {
                                     receiverName = list2[0]
                                     receiverPhone = list2[1]
-                                    receiverWalletId = "$receiverPhone@digital"
+                                    receiverWalletId = "$receiverPhone@smart"
                                     name.text = "Paying ${list2[0]}"
                                     phone.text = "Phone : +91 ${list2[1]}"
                                     Glide.with(this).load(list2[2]).into(profileImg)
@@ -248,7 +256,7 @@ class FinalPayment : Fragment() {
                                 receiverImageUrl,
                                 timeInMillis
                             )
-//                            Navigation.findNavController(requireView()).popBackStack()
+                            Navigation.findNavController(requireView()).popBackStack()
                             Navigation.findNavController(requireView()).popBackStack()
                             Navigation.findNavController(requireView())
                                 .navigate(R.id.nav_success, bundle)

@@ -51,7 +51,7 @@ class SellerProductsAdapter(
         bundle.putString("sellerUid", currentItem.sellerUID)
 
         holder.itemLayout.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.nav_edit_product_details_seller, bundle)
+            Navigation.findNavController(it).navigate(R.id.nav_product_dashboard, bundle)
         }
 
     }

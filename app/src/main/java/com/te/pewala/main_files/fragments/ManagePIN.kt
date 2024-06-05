@@ -2,25 +2,29 @@ package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.*
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.R
+import com.te.pewala.db.AESCrypt
 import com.te.pewala.db.ApiClient
 import com.te.pewala.db.ApiInterface
 import com.te.pewala.db.MessageResponse
@@ -34,9 +38,9 @@ class ManagePIN : Fragment() {
     private lateinit var phone: String
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
-    private lateinit var currentPINEditText: TextInputEditText
-    private lateinit var newPINEditText: TextInputEditText
-    private lateinit var confirmPINEditText: TextInputEditText
+    private lateinit var currentPINEditText: AppCompatEditText
+    private lateinit var newPINEditText: AppCompatEditText
+    private lateinit var confirmPINEditText: AppCompatEditText
     private lateinit var currentPINLayout: TextInputLayout
     private lateinit var mainLayout: RelativeLayout
     private lateinit var whiteView: View
@@ -47,9 +51,13 @@ class ManagePIN : Fragment() {
     private var prevPIN  = ""
     private lateinit var toastText: String
     private lateinit var temp: String
-    private lateinit var backBtn: ImageButton
-    private val apiKey = "09e68d45-c8eb-11ed-81b6-0200cd936042"
+    private lateinit var backBtn: ImageView
+//    private val apiKey = "09e68d45-c8eb-11ed-81b6-0200cd936042"
+    private val apiKey = "2898c4b2-22b2-11ef-8b60-0200cd936042"
+    private val aesCrypt = AESCrypt()
+    val key = ByteArray(32)
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -147,7 +155,7 @@ class ManagePIN : Fragment() {
         call!!.enqueue(object : Callback<MessageResponse?> {
 
             override fun onFailure(call: Call<MessageResponse?>, t: Throwable) {
-                Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), t.message, Toast.LENGTH_LONG).show()
             }
 
             override fun onResponse(
@@ -168,6 +176,7 @@ class ManagePIN : Fragment() {
         })
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     private fun loadData() {
         authViewModel.userdata.observe(viewLifecycleOwner) {
@@ -176,13 +185,14 @@ class ManagePIN : Fragment() {
                 dbViewModel.fetchAccountDetails(it.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.exists()) {
-                        phone = list.getString("Phone").toString()
-                        if (list.getString("Status") == "") {
+                        phone = list.getString("phone").toString()
+                        if (list.getString("pin").isNullOrEmpty()) {
                             currentPINLayout.visibility = View.GONE
                             temp = "New PIN generated successfully"
                         } else {
                             currentPINLayout.visibility = View.VISIBLE
-                            prevPIN = list.getString("PIN").toString()
+                            prevPIN = list.getString("pin")!!
+//                            prevPIN = aesCrypt.decrypt(list.getString("pin").toString(), key).toString()
                             temp = "PIN changed successfully"
                         }
                         mainLayout.visibility = View.VISIBLE

@@ -243,7 +243,10 @@
                     android:hint="Write a description or other details "
                     android:padding="@dimen/_5sdp"
                     android:maxLength="350"
-                    android:scrollbarAlwaysDrawHorizontalTrack="true"
+                    android:inputType="textLongMessage|textMultiLine"
+                    android:scrollbars="vertical"
+                    android:overScrollMode="always"
+                    android:gravity="top|start"
                     android:textColor="@color/material_black"
                     android:textColorHint="@color/material_black"
                     android:textSize="@dimen/_12sdp" />

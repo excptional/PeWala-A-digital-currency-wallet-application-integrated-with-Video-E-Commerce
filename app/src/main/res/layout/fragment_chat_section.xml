@@ -42,7 +42,7 @@
                     android:fontFamily="@font/roboto_bold"
                     android:text="Bikash Dutta"
                     android:textColor="@color/material_black"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_14sdp" />
 
                 <ImageButton
                     android:id="@+id/back_btn_chat"

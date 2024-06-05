@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import com.te.pewala.R
 
 class Waiting : Fragment() {
 
-    private lateinit var backBtn: ImageButton
+    private lateinit var backBtn: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
