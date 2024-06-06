@@ -19,14 +19,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Are you confirm to remove \nthis item from your cart ?"
+            android:text="Provide your delivery address\n before place the order."
             android:layout_marginBottom="@dimen/_5sdp"
             android:textAlignment="center"
             android:textColor="@color/material_black"
             android:textSize="@dimen/_15sdp"
             android:fontFamily="@font/roboto_medium"/>
 
-        
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
             android:orientation="horizontal" >
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/no_btn_dialog_cart"
+                android:id="@+id/cancel_btn_dialog_address"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_35sdp"
                 app:cardBackgroundColor="@color/t_3"
@@ -46,7 +46,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No"
+                    android:text="Cancel"
                     android:textSize="@dimen/_15sdp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
@@ -55,7 +55,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/yes_btn_dialog_cart"
+                android:id="@+id/go_btn_dialog_address"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_35sdp"
                 app:cardBackgroundColor="@color/t_2"
@@ -65,7 +65,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes"
+                    android:text="Go"
                     android:textSize="@dimen/_15sdp"
                     android:textColor="@color/white"
                     android:textStyle="bold"

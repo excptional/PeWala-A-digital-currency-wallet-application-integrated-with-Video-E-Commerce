@@ -2,6 +2,7 @@ package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -83,9 +84,11 @@ class OrderPlace : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_order_place, container, false)
 
+        requireActivity().window.statusBarColor = Color.WHITE
+
         backBtn = view.findViewById(R.id.back_btn_order)
         addToWishlistBtn = view.findViewById(R.id.add_to_whishlist_order)
-        shareBtn = view.findViewById(R.id.share_order)
+//        shareBtn = view.findViewById(R.id.share_order)
         productNameTitle = view.findViewById(R.id.title_productName_order)
         productName = view.findViewById(R.id.productName_order)
         brandName = view.findViewById(R.id.brandName_order)

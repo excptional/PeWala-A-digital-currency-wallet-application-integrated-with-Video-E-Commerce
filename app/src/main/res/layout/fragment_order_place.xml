@@ -79,31 +79,20 @@
                             android:padding="@dimen/_4sdp"
                             android:scaleType="centerCrop"
                             android:src="@drawable/whishlist_icon"
-                            tools:ignore="TouchTargetSizeCheck" />
-
-                        <ImageButton
-                            android:id="@+id/share_order"
-                            android:layout_width="@dimen/_35sdp"
-                            android:layout_height="@dimen/_35sdp"
-                            android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/_5sdp"
-                            android:layout_marginEnd="@dimen/_5sdp"
-                            android:background="@null"
-                            android:contentDescription="@string/app_name"
-                            android:padding="@dimen/_4sdp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/share"
+                            android:layout_marginEnd="@dimen/_15sdp"
                             tools:ignore="TouchTargetSizeCheck" />
 
                     </LinearLayout>
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="@dimen/_300sdp"
-                        android:layout_height="@dimen/_350sdp"
+                        android:layout_width="@dimen/_282sdp"
+                        android:layout_height="@dimen/_322sdp"
                         android:layout_gravity="center"
                         app:cardCornerRadius="@dimen/_10sdp"
-                        app:cardElevation="@dimen/_5sdp"
-                        app:cardUseCompatPadding="true">
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@android:color/transparent">
 
                         <ImageView
                             android:id="@+id/productImage_order"
@@ -111,7 +100,8 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/shirt_demo" />
+                            android:src="@drawable/shirt_demo"
+                            />
 
                     </androidx.cardview.widget.CardView>
 

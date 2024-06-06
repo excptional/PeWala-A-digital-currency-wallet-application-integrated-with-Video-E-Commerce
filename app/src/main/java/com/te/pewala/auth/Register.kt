@@ -1,6 +1,7 @@
 package com.te.pewala.auth
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -23,6 +24,7 @@ import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.Response
 import com.google.android.material.textfield.TextInputLayout
 import com.te.pewala.R
+import com.te.pewala.main_files.MainActivity
 
 class Register : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -198,7 +200,8 @@ class Register : Fragment(), AdapterView.OnItemSelectedListener {
             authViewModel.response.observe(viewLifecycleOwner) {
                 when(it) {
                     is Response.Success -> {
-                        Navigation.findNavController(view).navigate(R.id.nav_sign_in)
+                        startActivity(Intent(requireContext(), MainActivity::class.java))
+                        requireActivity().finish()
                         whiteView.visibility = View.GONE
                         signUpLoader.visibility = View.GONE
                     }

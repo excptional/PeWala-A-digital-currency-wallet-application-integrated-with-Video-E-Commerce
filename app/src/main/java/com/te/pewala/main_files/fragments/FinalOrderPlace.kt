@@ -57,7 +57,8 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
     private lateinit var updatedProductPrice: TextView
     private lateinit var totalPrice: TextView
     private lateinit var finalAmount: TextView
-    private lateinit var address: LinearLayout
+    private lateinit var editAddress: LinearLayout
+    private lateinit var addressBox: LinearLayout
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
     private lateinit var whiteView: View
@@ -67,9 +68,9 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
     //    private var availableStocks by Delegates.notNull<Int>()
     private var count = 1
     private lateinit var uid: String
-    private lateinit var addressStr: String
+    private var addressStr: String? = null
     private lateinit var locality: TextView
-    private lateinit var city_postal: TextView
+    private lateinit var cityPostal: TextView
     private lateinit var state: TextView
     private lateinit var balanceStr: String
     private var finalAmountInt = 0
@@ -102,17 +103,18 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
         minusBtn = view.findViewById(R.id.minus_order_summary)
         finalAmount = view.findViewById(R.id.final_amount_order_summary)
         placeOrder = view.findViewById(R.id.placeOrder_btn_order_summary)
-        address = view.findViewById(R.id.address_order_summary)
+        addressBox = view.findViewById(R.id.address_box_order_summary)
+        editAddress = view.findViewById(R.id.edit_address_order_summary)
         whiteView = view.findViewById(R.id.whiteView_order_summary)
         loader = view.findViewById(R.id.loader_order_summary)
         locality = view.findViewById(R.id.area_order_summary)
-        city_postal = view.findViewById(R.id.city_postal_order_summary)
+        cityPostal = view.findViewById(R.id.city_postal_order_summary)
         state = view.findViewById(R.id.state_order_summary)
         mapView = view.findViewById(R.id.map_order_summary)
 
-        address.visibility = View.GONE
-        whiteView.visibility = View.VISIBLE
-        loader.visibility = View.VISIBLE
+        addressBox.visibility = View.GONE
+//        whiteView.visibility = View.VISIBLE
+//        loader.visibility = View.VISIBLE
 
         load(view)
 
@@ -182,7 +184,7 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
             }
         }
 
-        address.setOnClickListener {
+        editAddress.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("lat", lat.toString())
             bundle.putString("long", long.toString())
@@ -190,10 +192,12 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
         }
 
         placeOrder.setOnClickListener {
-//            whiteView.visibility = View.VISIBLE
-//            loader.visibility = View.VISIBLE
-            showPaymentOptions(view)
+            if(addressStr.isNullOrEmpty()) {
+                showDialogAddress()
+            } else {
+                showPaymentOptions(view)
 //            order()
+            }
         }
         return view
     }
@@ -238,7 +242,7 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
                                     mapView.onResume()
                                     mapView.getMapAsync(this)
                                     locality.text = doc.getString("locality")
-                                    city_postal.text =
+                                    cityPostal.text =
                                         doc.getString("city") + ", " + doc.getString("postal_code")
                                     state.text = doc.getString("state")
                                     addressStr =
@@ -247,7 +251,7 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
                                                 "${doc.getString("state")}"
                                     whiteView.visibility = View.GONE
                                     loader.visibility = View.GONE
-                                    address.visibility = View.VISIBLE
+                                    addressBox.visibility = View.VISIBLE
                                 }
                             }
                         }
@@ -255,8 +259,6 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
                         is Response.Failure -> {
                             whiteView.visibility = View.GONE
                             loader.visibility = View.GONE
-//                            Navigation.findNavController(view).popBackStack()
-                            Navigation.findNavController(view).navigate(R.id.nav_address)
                         }
                     }
                 }
@@ -266,6 +268,30 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    private fun showDialogAddress() {
+        val dialog = Dialog(requireContext())
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(true)
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setContentView(R.layout.dialog_save_address)
+        dialog.window?.attributes?.windowAnimations = R.anim.pop
+
+        val goBtn: CardView = dialog.findViewById(R.id.go_btn_dialog_address)
+        val cancelBtn: CardView = dialog.findViewById(R.id.cancel_btn_dialog_address)
+
+        goBtn.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(R.id.nav_address)
+            dialog.hide()
+        }
+
+        cancelBtn.setOnClickListener {
+            dialog.hide()
+        }
+
+        dialog.show()
     }
 
     @SuppressLint("SetTextI18n", "ResourceAsColor")
@@ -363,7 +389,7 @@ class FinalOrderPlace : Fragment(), OnMapReadyCallback {
             dbViewModel.addOrder(
                 doc.getString("name").toString(),
                 doc.getString("phone").toString(),
-                addressStr,
+                addressStr!!,
                 "COD",
                 uid,
                 requireArguments().getString("brandName").toString(),

@@ -35,10 +35,11 @@ import com.te.pewala.main_files.MainActivity
 
 class DigitalPayment : Fragment() {
 
+    private val receiverImageUrl = "https://firebasestorage.googleapis.com/v0/b/pewala-a26d9.appspot.com/o/profile_images%2Ffv0ooafai0UGRWIK3EOesgQcUtq2%2Fcropped4716528955880745731.jpg?alt=media&token=63990896-4f8a-471e-a485-ea1e5b4361cc"
     private lateinit var senderName: String
     private lateinit var senderPhone: String
-    private var receiverName: String = "Admin"
-    private var receiverPhone: String = "8000264639"
+    private var receiverName: String = "PeWala"
+    private var receiverPhone: String = "8621028795"
     private lateinit var senderWalletId: String
     private lateinit var senderImageUrl: String
     private lateinit var balance: String
@@ -55,7 +56,7 @@ class DigitalPayment : Fragment() {
     private lateinit var amountStr: String
     private lateinit var originalPIN: String
     private lateinit var tId: String
-    private var receiverUid = "Jufm91ImZUat1ZUrFpA8CY1HMlw1"
+    private var receiverUid = "fv0ooafai0UGRWIK3EOesgQcUtq2"
     private val aesCrypt = AESCrypt()
     private val key = ByteArray(32)
 
@@ -160,7 +161,7 @@ class DigitalPayment : Fragment() {
                                 senderImageUrl,
                                 receiverName,
                                 receiverPhone,
-                                "",
+                                receiverImageUrl,
                                 time
                             )
                             Navigation.findNavController(requireView()).popBackStack()
