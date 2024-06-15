@@ -46,15 +46,15 @@
         android:name="com.te.pewala.main_files.fragments.History"
         tools:layout="@layout/fragment_history" />
 
-    <fragment
-        android:id="@+id/nav_shop_buyer"
-        android:name="com.te.pewala.main_files.fragments.ShopBuyer"
-        tools:layout="@layout/fragment_shop_buyer" />
+<!--    <fragment-->
+<!--        android:id="@+id/nav_shop_buyer"-->
+<!--        android:name="com.te.pewala.main_files.fragments.ShopBuyer"-->
+<!--        tools:layout="@layout/fragment_shop_buyer" />-->
 
-    <fragment
-        android:id="@+id/nav_shop_seller"
-        android:name="com.te.pewala.main_files.fragments.ShopSeller"
-        tools:layout="@layout/fragment_shop_seller" />
+<!--    <fragment-->
+<!--        android:id="@+id/nav_shop_seller"-->
+<!--        android:name="com.te.pewala.main_files.fragments.ShopSeller"-->
+<!--        tools:layout="@layout/fragment_shop_seller" />-->
 
     <fragment
         android:id="@+id/nav_history_"
@@ -211,5 +211,10 @@
         android:id="@+id/nav_update_product_details"
         android:name="com.te.pewala.main_files.fragments.UpdateProductDetails"
         tools:layout="@layout/fragment_update_product_details" />
+
+    <fragment
+        android:id="@+id/nav_chat_list"
+        android:name="com.te.pewala.main_files.fragments.ChatList"
+        tools:layout="@layout/fragment_chat_list" />
 
 </navigation>

@@ -139,19 +139,24 @@ class Send : Fragment() {
     private fun fetchData(list: MutableList<DocumentSnapshot>, s: CharSequence) {
         contactLayout.visibility = View.GONE
         contactItemsArray = arrayListOf()
-        for (i in list) {
-            if (i.exists() and i.getString("phone")!!.contains(s)) {
-                contactLayout.visibility = View.VISIBLE
-                val contactData = ContactItems(
-                    i.getString("name"),
-                    i.getString("phone"),
-                    i.getString("image_url")
-                )
-                contactItemsArray.add(contactData)
+        if(list.isEmpty()) {
+            contactLayout.visibility = View.GONE
+        } else {
+            contactLayout.visibility = View.VISIBLE
+            for (i in list) {
+                if (i.exists() and i.getString("phone")!!.contains(s)) {
+                    contactLayout.visibility = View.VISIBLE
+                    val contactData = ContactItems(
+                        i.getString("name"),
+                        i.getString("phone"),
+                        i.getString("image_url")
+                    )
+                    contactItemsArray.add(contactData)
+                }
             }
+            contactLayout.visibility = View.VISIBLE
+            contactAdapter.updateContact(contactItemsArray)
         }
-        contactLayout.visibility = View.VISIBLE
-        contactAdapter.updateContact(contactItemsArray)
     }
 
     private fun loadData() {

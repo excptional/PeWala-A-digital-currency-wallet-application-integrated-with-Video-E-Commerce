@@ -59,7 +59,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:ignore="RtlSymmetry"
-                android:visibility="gone"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
                 tools:listitem="@layout/item_product" />
 
         </LinearLayout>

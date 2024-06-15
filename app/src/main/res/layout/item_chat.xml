@@ -8,11 +8,6 @@
     android:id="@+id/body_chat_item"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
-        android:background="@color/background"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50sdp"
@@ -59,5 +54,10 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:background="@color/app_background"/>
 
 </LinearLayout>

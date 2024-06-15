@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -16,8 +17,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
+import com.google.android.gms.vision.text.Line
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
@@ -26,6 +29,13 @@ import com.te.pewala.main_files.items.PeopleItems
 import com.te.pewala.main_files.slider_files.SliderAdapter
 import com.google.firebase.firestore.DocumentSnapshot
 import com.smarteist.autoimageslider.SliderView
+import com.te.pewala.db.AESCrypt
+import com.te.pewala.main_files.adapters.ConversationAdapter
+import com.te.pewala.main_files.adapters.SellerProductsAdapter
+import com.te.pewala.main_files.adapters.SellerReceivedOrdersAdapter
+import com.te.pewala.main_files.items.ConversationItems
+import com.te.pewala.main_files.items.SellerProductsItems
+import com.te.pewala.main_files.items.SellerReceivedOrdersItems
 
 class Home : Fragment() {
 
@@ -40,15 +50,49 @@ class Home : Fragment() {
     private lateinit var peopleAdapter: PeopleAdapter
     private var peopleItemsArray = arrayListOf<PeopleItems>()
     private lateinit var recyclerview: RecyclerView
-    private lateinit var authViewModel: AuthViewModel
-    private lateinit var dbViewModel: DBViewModel
     private lateinit var peopleText: TextView
     private lateinit var peopleLayout: CardView
-    private lateinit var shop: CardView
+
+    //    private lateinit var shop: CardView
     private lateinit var userType: String
     private lateinit var userStatus: String
     private lateinit var mainLayout: ScrollView
     private lateinit var loader: LottieAnimationView
+
+    private lateinit var addProduct: CardView
+    private lateinit var ordersAdapter: SellerReceivedOrdersAdapter
+    private var ordersItemsArray = arrayListOf<SellerReceivedOrdersItems>()
+    private lateinit var ordersRecyclerView: RecyclerView
+    private lateinit var productsAdapter: SellerProductsAdapter
+    private var productsItemsArray = arrayListOf<SellerProductsItems>()
+    private lateinit var productsRecyclerView: RecyclerView
+    private lateinit var productsLayout: LinearLayout
+    private lateinit var ordersBox: CardView
+    private lateinit var shopSeller: LinearLayout
+
+    private lateinit var orders: CardView
+    private lateinit var wishlist: CardView
+    private lateinit var cart: CardView
+    private lateinit var groceries: LinearLayout
+    private lateinit var fashion: LinearLayout
+    private lateinit var electronics: LinearLayout
+    private lateinit var appliances: LinearLayout
+    private lateinit var sports: LinearLayout
+    private lateinit var furniture: LinearLayout
+    private lateinit var books: LinearLayout
+    private lateinit var personalcare: LinearLayout
+    private lateinit var medicines: LinearLayout
+    private lateinit var conversationRecyclerView: RecyclerView
+    private lateinit var conversationBox: CardView
+    private lateinit var conversationAdapter: ConversationAdapter
+    private var conversationItemsArray = arrayListOf<ConversationItems>()
+    private lateinit var shopBuyer: LinearLayout
+    private lateinit var viewMoreChats: LinearLayout
+    private lateinit var authViewModel: AuthViewModel
+    private lateinit var dbViewModel: DBViewModel
+    private lateinit var uid: String
+    val aesCrypt = AESCrypt()
+    val key = ByteArray(32)
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -70,11 +114,35 @@ class Home : Fragment() {
         recyclerview = view.findViewById(R.id.people_recyclerview_home)
         peopleLayout = view.findViewById(R.id.peopleLayout_home)
         peopleText = view.findViewById(R.id.people_text_home)
-        shop = view.findViewById(R.id.shop_home)
+//        shop = view.findViewById(R.id.shop_home)
         mainLayout = view.findViewById(R.id.mainLayout_home)
         loader = view.findViewById(R.id.progressbar_home)
 
+        productsRecyclerView = view.findViewById(R.id.seller_products_recyclerView_seller_home)
+        ordersRecyclerView = view.findViewById(R.id.pending_orders_recyclerView_seller_home)
+        productsLayout = view.findViewById(R.id.products_layout_seller_home)
+        ordersBox = view.findViewById(R.id.orders_box_home)
+        addProduct = view.findViewById(R.id.addProduct_seller_home)
+        shopSeller = view.findViewById(R.id.shop_layout_seller_home)
+
+        orders = view.findViewById(R.id.orders_buyer_home)
+        cart = view.findViewById(R.id.cart_buyer_home)
+        wishlist = view.findViewById(R.id.wishlist_buyer_home)
+        groceries = view.findViewById(R.id.groceries)
+        fashion = view.findViewById(R.id.fashion)
+        electronics = view.findViewById(R.id.electronics)
+        appliances = view.findViewById(R.id.appliances)
+        sports = view.findViewById(R.id.sports)
+        furniture = view.findViewById(R.id.furniture)
+        books = view.findViewById(R.id.books)
+        personalcare = view.findViewById(R.id.personal_care)
+        medicines = view.findViewById(R.id.medicines)
+        conversationBox = view.findViewById(R.id.chat_box_home)
+        conversationRecyclerView = view.findViewById(R.id.chat_recyclerview_home)
+        shopBuyer = view.findViewById(R.id.shop_layout_buyer_home)
+        viewMoreChats = view.findViewById(R.id.view_more_chats_home)
         loadData()
+
 
 //        dbViewModel.addAccount("5100D0C7B6F0", "123456")
 //        dbViewModel.addAccount("5100C8940409", "123456")
@@ -84,9 +152,28 @@ class Home : Fragment() {
 
         peopleAdapter = PeopleAdapter(requireContext(), peopleItemsArray)
         recyclerview.layoutManager = GridLayoutManager(view.context, 3)
-//        recyclerview.setHasFixedSize(true)
         recyclerview.setItemViewCacheSize(20)
         recyclerview.adapter = peopleAdapter
+
+        productsAdapter = SellerProductsAdapter(productsItemsArray)
+        productsRecyclerView.layoutManager =
+            LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
+        productsRecyclerView.setItemViewCacheSize(20)
+        productsRecyclerView.adapter = productsAdapter
+
+        ordersAdapter = SellerReceivedOrdersAdapter(ordersItemsArray)
+        ordersRecyclerView.layoutManager =
+            LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
+        ordersRecyclerView.setItemViewCacheSize(20)
+        ordersRecyclerView.adapter = ordersAdapter
+
+        key.fill(1)
+        conversationAdapter =
+            ConversationAdapter(requireContext(), conversationItemsArray, key)
+        conversationRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        conversationRecyclerView.setHasFixedSize(true)
+        conversationRecyclerView.setItemViewCacheSize(20)
+        conversationRecyclerView.adapter = conversationAdapter
 
         sliderView = view.findViewById(R.id.slider)
 
@@ -111,28 +198,28 @@ class Home : Fragment() {
         navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)
             .setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out)
 
-        shop.setOnClickListener {
-//            Toast.makeText(requireContext(), "This feature is not implemented yet", Toast.LENGTH_SHORT).show()
-            val bundle = Bundle()
-            bundle.putString("userType", userType)
-            requireFragmentManager().popBackStack()
-            if (userType == "Seller") {
-                when (userStatus) {
-                    "Not Verified" -> Navigation.findNavController(view)
-                        .navigate(R.id.nav_seller_doc, null, navBuilder.build())
-
-                    "Checking" ->
-                        Navigation.findNavController(view)
-                            .navigate(R.id.nav_waiting, null, navBuilder.build())
-
-                    else -> Navigation.findNavController(view)
-                        .navigate(R.id.nav_shop_seller, bundle, navBuilder.build())
-                }
-            } else Navigation.findNavController(view)
-                .navigate(R.id.nav_shop_buyer, bundle, navBuilder.build())
-//            Navigation.findNavController(view)
-//                .navigate(R.id.nav_address)
-        }
+//        shop.setOnClickListener {
+////            Toast.makeText(requireContext(), "This feature is not implemented yet", Toast.LENGTH_SHORT).show()
+//            val bundle = Bundle()
+//            bundle.putString("userType", userType)
+//            requireFragmentManager().popBackStack()
+//            if (userType == "Seller") {
+//                when (userStatus) {
+//                    "Not Verified" -> Navigation.findNavController(view)
+//                        .navigate(R.id.nav_seller_doc, null, navBuilder.build())
+//
+//                    "Checking" ->
+//                        Navigation.findNavController(view)
+//                            .navigate(R.id.nav_waiting, null, navBuilder.build())
+//
+//                    else -> Navigation.findNavController(view)
+//                        .navigate(R.id.nav_shop_seller, bundle, navBuilder.build())
+//                }
+//            } else Navigation.findNavController(view)
+//                .navigate(R.id.nav_shop_buyer, bundle, navBuilder.build())
+////            Navigation.findNavController(view)
+////                .navigate(R.id.nav_address)
+//        }
 
         add.setOnClickListener {
             requireFragmentManager().popBackStack()
@@ -159,10 +246,74 @@ class Home : Fragment() {
             Navigation.findNavController(view).navigate(R.id.nav_wallet, null, navBuilder.build())
         }
 
+        orders.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.nav_orders, null, navBuilder.build())
+        }
+
+        cart.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.nav_cart, null, navBuilder.build())
+        }
+
+        wishlist.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.nav_wishlist, null, navBuilder.build())
+        }
+
+        val bundle = Bundle()
+
+        groceries.setOnClickListener {
+            bundle.putString("Category", "Groceries")
+            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+        }
+
+        fashion.setOnClickListener {
+            bundle.putString("Category", "Fashion")
+            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+        }
+
+        electronics.setOnClickListener {
+            bundle.putString("Category", "Electronics")
+            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+        }
+
+        appliances.setOnClickListener {
+            bundle.putString("Category", "Appliances")
+            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+        }
+
+        sports.setOnClickListener {
+            bundle.putString("Category", "Sports")
+            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+        }
+
+        furniture.setOnClickListener {
+            bundle.putString("Category", "Furniture")
+            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+        }
+
+        books.setOnClickListener {
+            bundle.putString("Category", "Books")
+            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+        }
+
+        personalcare.setOnClickListener {
+            bundle.putString("Category", "Personal Care")
+            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+        }
+
+        medicines.setOnClickListener {
+            bundle.putString("Category", "Medicines")
+            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+        }
+
+        viewMoreChats.setOnClickListener {
+            bundle.putString("uid", uid)
+            Navigation.findNavController(view).navigate(R.id.nav_chat_list, bundle)
+        }
+
         return view
     }
 
-    private fun fetchData(list: ArrayList<DocumentSnapshot>) {
+    private fun fetchPeopleData(list: ArrayList<DocumentSnapshot>) {
         peopleText.visibility = View.GONE
         peopleLayout.visibility = View.GONE
         peopleItemsArray = arrayListOf()
@@ -182,27 +333,128 @@ class Home : Fragment() {
         peopleAdapter.updatePeople(peopleItemsArray)
     }
 
+    private fun fetchChatData(list: MutableList<DocumentSnapshot>) {
+        if (list.isNotEmpty()) {
+            conversationBox.visibility = View.VISIBLE
+            conversationItemsArray = arrayListOf()
+
+            for (i in 0..2) {
+                if (i < list.size) {
+                    val conversationData = ConversationItems(
+                        list[i].getString("name"),
+                        list[i].getString("image_url"),
+                        list[i].getString("last_message"),
+                        uid,
+                        list[i].getString("uid")
+                    )
+                    conversationItemsArray.add(conversationData)
+                }
+            }
+            conversationAdapter.updateConversations(conversationItemsArray)
+        }
+    }
+
+    private fun fetchProductsList(list: MutableList<DocumentSnapshot>?) {
+        productsItemsArray = arrayListOf()
+        if (list!!.size == 0) {
+            mainLayout.visibility = View.VISIBLE
+            productsLayout.visibility = View.GONE
+            loader.visibility = View.GONE
+        } else {
+            for (i in 0..1) {
+                if (i < list.size) {
+                    val product = SellerProductsItems(
+                        list[i].getString("product_name"),
+                        list[i].getString("brand_name"),
+                        list[i].getString("product_image_url"),
+                        list[i].getString("category"),
+                        list[i].getString("product_price"),
+                        list[i].getString("stocks"),
+                        list[i].getString("description"),
+                        list[i].getString("tags"),
+                        list[i].getString("ratings"),
+                        list[i].getString("raters"),
+                        list[i].getString("seller_name"),
+                        list[i].getString("seller_image"),
+                        list[i].getString("seller_uid"),
+                        list[i].getString("product_id")
+                    )
+                    productsItemsArray.add(product)
+                }
+            }
+            productsAdapter.updateSellerProducts(productsItemsArray)
+            productsRecyclerView.visibility = View.VISIBLE
+            mainLayout.visibility = View.VISIBLE
+            loader.visibility = View.GONE
+        }
+    }
+
+    private fun fetchOrdersList(list: MutableList<DocumentSnapshot>?) {
+        ordersItemsArray = arrayListOf()
+        if (list.isNullOrEmpty()) {
+            ordersBox.visibility = View.GONE
+        } else {
+            val order = SellerReceivedOrdersItems(
+                list[0].getString("buyer_name"),
+                list[0].getString("buyer_uid"),
+                list[0].getString("seller_uid"),
+                list[0].getString("buyer_address"),
+                list[0].getString("order_time"),
+                list[0].getString("delivery_date"),
+                list[0].getString("status"),
+                list[0].getString("product_name"),
+                list[0].getString("brand_name"),
+                list[0].getString("product_image_url"),
+                list[0].getString("category"),
+                list[0].getString("payable_amount"),
+                list[0].getString("quantity"),
+                list[0].getString("order_id")
+            )
+            ordersItemsArray.add(order)
+            ordersAdapter.updateSellerReceivedOrders(ordersItemsArray)
+            ordersBox.visibility = View.VISIBLE
+        }
+    }
+
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if (it != null) {
-                dbViewModel.updateTransactorDetails(it.uid)
-                dbViewModel.fetchContacts(it.uid)
+        authViewModel.userdata.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                uid = user.uid
+                dbViewModel.updateTransactorDetails(user.uid)
+                dbViewModel.fetchContacts(user.uid)
                 dbViewModel.contactDetails.observe(viewLifecycleOwner) {
                     if (it.isNotEmpty()) {
-                        fetchData(it)
+                        fetchPeopleData(it)
                     } else {
                         peopleText.visibility = View.GONE
                         peopleLayout.visibility = View.GONE
                     }
                 }
-                dbViewModel.fetchAccountDetails(it.uid)
+                dbViewModel.fetchAccountDetails(user.uid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
                     if (list.exists()) {
                         userType = list.getString("user_type").toString()
                         userStatus = list.getString("status").toString()
                         mainLayout.visibility = View.VISIBLE
                         loader.visibility = View.GONE
+                        if (userType == "Buyer") {
+                            shopBuyer.visibility = View.VISIBLE
+                        } else {
+                            shopSeller.visibility = View.VISIBLE
+                            dbViewModel.fetchSellerProducts(user.uid)
+                            dbViewModel.sellerProductsData.observe(viewLifecycleOwner) { list1 ->
+                                fetchProductsList(list1)
+                            }
+                            dbViewModel.fetchReceivedOrders(user.uid)
+                            dbViewModel.sellerReceivedOrdersData.observe(viewLifecycleOwner) { list2 ->
+                                fetchOrdersList(list2)
+                            }
+                        }
                     }
+                }
+                dbViewModel.getConversations(user.uid)
+                dbViewModel.conversations.observe(viewLifecycleOwner) { list ->
+                    fetchChatData(list)
                 }
             }
         }

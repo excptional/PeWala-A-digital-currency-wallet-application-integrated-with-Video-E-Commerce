@@ -15,8 +15,9 @@
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="@dimen/_5sdp"
-        app:cardElevation="@dimen/_5sdp"
-        app:cardBackgroundColor="#F0F4F6"
+        app:cardElevation="0dp"
+        android:layout_margin="@dimen/_10sdp"
+        app:cardBackgroundColor="@color/app_background"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -59,7 +60,7 @@
             <View
                 android:layout_width="@dimen/_2sdp"
                 android:layout_height="match_parent"
-                android:background="@color/background"/>
+                android:background="@color/white"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -166,7 +167,7 @@
                         android:id="@+id/accept_btn_order_seller"
                         android:layout_width="@dimen/_60sdp"
                         android:layout_height="@dimen/_25sdp"
-                        app:cardBackgroundColor="@color/material_black"
+                        app:cardBackgroundColor="@color/t_3"
                         android:layout_marginEnd="@dimen/_5sdp"
                         app:cardCornerRadius="@dimen/_5sdp">
 
@@ -185,7 +186,7 @@
                         android:id="@+id/reject_btn_order_seller"
                         android:layout_width="@dimen/_60sdp"
                         android:layout_height="@dimen/_25sdp"
-                        app:cardBackgroundColor="@color/material_black"
+                        app:cardBackgroundColor="@color/t_2"
                         android:layout_margin="@dimen/_2sdp"
                         app:cardCornerRadius="@dimen/_5sdp">
 

@@ -132,7 +132,7 @@ class FinalPayment : Fragment() {
                             senderName = list1.getString("name").toString()
                             senderPhone = list1.getString("phone").toString()
                             senderWalletId = list1.getString("card_id").toString()
-                            senderImageUrl = list1.getString("image-url").toString()
+                            senderImageUrl = list1.getString("image_url").toString()
                             balance = list1.getString("balance").toString()
                             originalPIN = list1.getString("pin")!!
 //                            originalPIN = aesCrypt.decrypt(list1.getString("pin").toString(), key).toString()
