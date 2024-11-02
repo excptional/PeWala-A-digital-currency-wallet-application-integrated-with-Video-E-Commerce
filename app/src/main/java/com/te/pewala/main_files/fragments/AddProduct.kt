@@ -27,6 +27,7 @@ import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
+import com.te.pewala.db.LocalStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import java.util.Locale
@@ -52,6 +53,7 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var myUser: FirebaseUser
     private lateinit var uploadBtn: CardView
     private lateinit var addProductImage: LinearLayout
+    private lateinit var localStorage: LocalStorage
 
     private val productArray = arrayListOf(
         "Category",
@@ -254,31 +256,23 @@ class AddProduct : Fragment(), AdapterView.OnItemSelectedListener {
         if (!isAlright) {
             Toast.makeText(requireContext(), "Enter valid details", Toast.LENGTH_SHORT).show()
         } else {
-            authViewModel.userdata.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    dbViewModel.fetchAccountDetails(it.uid)
-                    dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                        if(list.exists()) {
-                            dbViewModel.addProduct(
-                                it.uid,
-                                list.getString("name").toString(),
-                                list.getString("image_url").toString(),
-                                productNameStr,
-                                brandNameStr,
-                                productImageUri,
-                                priceStr,
-                                quantityStr,
-                                quantityTypeStr,
-                                descriptionStr,
-                                productTypeStr,
-                                keywordsStr
-                            )
-                            Toast.makeText(requireContext(), "Your product listed successfully, you can check it in the shop section", Toast.LENGTH_SHORT).show()
-                            requireActivity().onBackPressed()
-                        }
-                    }
-                }
-            }
+            val userdata = localStorage.getData(requireContext(),"user_data")
+            dbViewModel.addProduct(
+                userdata!!["uid"]!!,
+                userdata["name"]!!,
+                userdata["image_url"]!!,
+                productNameStr,
+                brandNameStr,
+                productImageUri,
+                priceStr,
+                quantityStr,
+                quantityTypeStr,
+                descriptionStr,
+                productTypeStr,
+                keywordsStr
+            )
+            Toast.makeText(requireContext(), "Your product listed successfully, you can check it in the shop section", Toast.LENGTH_SHORT).show()
+            requireActivity().onBackPressed()
         }
     }
 

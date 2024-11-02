@@ -3,42 +3,49 @@ package com.te.pewala.main_files.fragments
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
-import com.google.android.gms.vision.text.Line
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.PeopleAdapter
-import com.te.pewala.main_files.items.PeopleItems
+import com.te.pewala.main_files.models.PeopleItems
 import com.te.pewala.main_files.slider_files.SliderAdapter
 import com.google.firebase.firestore.DocumentSnapshot
 import com.smarteist.autoimageslider.SliderView
 import com.te.pewala.db.AESCrypt
+import com.te.pewala.db.LocalStorage
 import com.te.pewala.main_files.adapters.ConversationAdapter
 import com.te.pewala.main_files.adapters.SellerProductsAdapter
 import com.te.pewala.main_files.adapters.SellerReceivedOrdersAdapter
-import com.te.pewala.main_files.items.ConversationItems
-import com.te.pewala.main_files.items.SellerProductsItems
-import com.te.pewala.main_files.items.SellerReceivedOrdersItems
+import com.te.pewala.main_files.models.ConversationItems
+import com.te.pewala.main_files.models.SellerProductsItems
+import com.te.pewala.main_files.models.SellerReceivedOrdersItems
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class Home : Fragment() {
 
+    private val localStorage = LocalStorage()
     private lateinit var imageUrl: ArrayList<String>
     private lateinit var sliderView: SliderView
     private lateinit var sliderAdapter: SliderAdapter
@@ -55,7 +62,8 @@ class Home : Fragment() {
 
     //    private lateinit var shop: CardView
     private lateinit var userType: String
-    private lateinit var userStatus: String
+
+    //    private lateinit var userStatus: String
     private lateinit var mainLayout: ScrollView
     private lateinit var loader: LottieAnimationView
 
@@ -91,8 +99,11 @@ class Home : Fragment() {
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
     private lateinit var uid: String
+    private lateinit var viewAllReceivedOrders: LinearLayout
+    private lateinit var viewAllProducts: RelativeLayout
     val aesCrypt = AESCrypt()
     val key = ByteArray(32)
+    private var userdata: Map<String, String>? = null
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -114,7 +125,6 @@ class Home : Fragment() {
         recyclerview = view.findViewById(R.id.people_recyclerview_home)
         peopleLayout = view.findViewById(R.id.peopleLayout_home)
         peopleText = view.findViewById(R.id.people_text_home)
-//        shop = view.findViewById(R.id.shop_home)
         mainLayout = view.findViewById(R.id.mainLayout_home)
         loader = view.findViewById(R.id.progressbar_home)
 
@@ -124,6 +134,8 @@ class Home : Fragment() {
         ordersBox = view.findViewById(R.id.orders_box_home)
         addProduct = view.findViewById(R.id.addProduct_seller_home)
         shopSeller = view.findViewById(R.id.shop_layout_seller_home)
+        viewAllReceivedOrders = view.findViewById(R.id.view_all_received_orders_home)
+        viewAllProducts = view.findViewById(R.id.view_all_products_seller_products)
 
         orders = view.findViewById(R.id.orders_buyer_home)
         cart = view.findViewById(R.id.cart_buyer_home)
@@ -141,14 +153,8 @@ class Home : Fragment() {
         conversationRecyclerView = view.findViewById(R.id.chat_recyclerview_home)
         shopBuyer = view.findViewById(R.id.shop_layout_buyer_home)
         viewMoreChats = view.findViewById(R.id.view_more_chats_home)
-        loadData()
 
-
-//        dbViewModel.addAccount("5100D0C7B6F0", "123456")
-//        dbViewModel.addAccount("5100C8940409", "123456")
-//        dbViewModel.addAccount("5100C7B9D5FA", "123456")
-//        dbViewModel.addAccount("5100C7FCBCD6", "123456")
-//        dbViewModel.addAccount("5100D15B06DD", "123456")
+        checkLocalStorageForData()
 
         peopleAdapter = PeopleAdapter(requireContext(), peopleItemsArray)
         recyclerview.layoutManager = GridLayoutManager(view.context, 3)
@@ -262,52 +268,79 @@ class Home : Fragment() {
 
         groceries.setOnClickListener {
             bundle.putString("Category", "Groceries")
-            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_products, bundle, navBuilder.build())
         }
 
         fashion.setOnClickListener {
             bundle.putString("Category", "Fashion")
-            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_products, bundle, navBuilder.build())
         }
 
         electronics.setOnClickListener {
             bundle.putString("Category", "Electronics")
-            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_products, bundle, navBuilder.build())
         }
 
         appliances.setOnClickListener {
             bundle.putString("Category", "Appliances")
-            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_products, bundle, navBuilder.build())
         }
 
         sports.setOnClickListener {
             bundle.putString("Category", "Sports")
-            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_products, bundle, navBuilder.build())
         }
 
         furniture.setOnClickListener {
             bundle.putString("Category", "Furniture")
-            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_products, bundle, navBuilder.build())
         }
 
         books.setOnClickListener {
             bundle.putString("Category", "Books")
-            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_products, bundle, navBuilder.build())
         }
 
         personalcare.setOnClickListener {
             bundle.putString("Category", "Personal Care")
-            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_products, bundle, navBuilder.build())
         }
 
         medicines.setOnClickListener {
             bundle.putString("Category", "Medicines")
-            Navigation.findNavController(view).navigate(R.id.nav_products, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_products, bundle, navBuilder.build())
         }
 
         viewMoreChats.setOnClickListener {
             bundle.putString("uid", uid)
-            Navigation.findNavController(view).navigate(R.id.nav_chat_list, bundle)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_chat_list, bundle, navBuilder.build())
+        }
+
+        viewAllReceivedOrders.setOnClickListener {
+            bundle.putString("uid", uid)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_received_orders, bundle, navBuilder.build())
+        }
+
+        viewAllProducts.setOnClickListener {
+            bundle.putString("uid", uid)
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_seller_products, bundle, navBuilder.build())
+        }
+
+        addProduct.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_add_product, null, navBuilder.build())
         }
 
         return view
@@ -408,7 +441,8 @@ class Home : Fragment() {
                 list[0].getString("category"),
                 list[0].getString("payable_amount"),
                 list[0].getString("quantity"),
-                list[0].getString("order_id")
+                list[0].getString("order_id"),
+                list[0].getString("confirmation_code")
             )
             ordersItemsArray.add(order)
             ordersAdapter.updateSellerReceivedOrders(ordersItemsArray)
@@ -417,44 +451,54 @@ class Home : Fragment() {
     }
 
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                uid = user.uid
-                dbViewModel.updateTransactorDetails(user.uid)
-                dbViewModel.fetchContacts(user.uid)
-                dbViewModel.contactDetails.observe(viewLifecycleOwner) {
-                    if (it.isNotEmpty()) {
-                        fetchPeopleData(it)
-                    } else {
-                        peopleText.visibility = View.GONE
-                        peopleLayout.visibility = View.GONE
-                    }
-                }
-                dbViewModel.fetchAccountDetails(user.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if (list.exists()) {
-                        userType = list.getString("user_type").toString()
-                        userStatus = list.getString("status").toString()
-                        mainLayout.visibility = View.VISIBLE
-                        loader.visibility = View.GONE
-                        if (userType == "Buyer") {
-                            shopBuyer.visibility = View.VISIBLE
-                        } else {
-                            shopSeller.visibility = View.VISIBLE
-                            dbViewModel.fetchSellerProducts(user.uid)
-                            dbViewModel.sellerProductsData.observe(viewLifecycleOwner) { list1 ->
-                                fetchProductsList(list1)
-                            }
-                            dbViewModel.fetchReceivedOrders(user.uid)
-                            dbViewModel.sellerReceivedOrdersData.observe(viewLifecycleOwner) { list2 ->
-                                fetchOrdersList(list2)
-                            }
-                        }
-                    }
-                }
-                dbViewModel.getConversations(user.uid)
-                dbViewModel.conversations.observe(viewLifecycleOwner) { list ->
-                    fetchChatData(list)
+        uid = userdata!!["uid"]!!
+        dbViewModel.updateTransactorDetails(uid)
+        dbViewModel.fetchContacts(uid)
+        dbViewModel.contactDetails.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                fetchPeopleData(it)
+            } else {
+                peopleText.visibility = View.GONE
+                peopleLayout.visibility = View.GONE
+            }
+        }
+        userType = userdata!!["user_type"]!!
+//        userStatus = userdata["status"]!!
+        mainLayout.visibility = View.VISIBLE
+        loader.visibility = View.GONE
+        if (userType == "Buyer") {
+            shopBuyer.visibility = View.VISIBLE
+        } else {
+            shopSeller.visibility = View.VISIBLE
+            dbViewModel.fetchSellerProducts(uid)
+            dbViewModel.sellerProductsData.observe(viewLifecycleOwner) { list1 ->
+                fetchProductsList(list1)
+            }
+            dbViewModel.fetchReceivedOrders(uid)
+            dbViewModel.sellerReceivedOrdersData.observe(viewLifecycleOwner) { list2 ->
+                fetchOrdersList(list2)
+            }
+        }
+        dbViewModel.getConversations(uid)
+        dbViewModel.conversations.observe(viewLifecycleOwner) { list ->
+            fetchChatData(list)
+        }
+    }
+
+    private fun checkLocalStorageForData() {
+        lifecycleScope.launch {
+            while (true) {
+                // Check if data is in local storage
+                if(requireContext() != null)
+                    userdata = localStorage.getData(requireContext(), "user_data")
+
+                if (userdata != null) {
+                    // Data found, update the UI
+                    loadData()
+                    break // Stop the loop
+                } else {
+                    // Data not found, wait for 1 second before checking again
+                    delay(1000)
                 }
             }
         }

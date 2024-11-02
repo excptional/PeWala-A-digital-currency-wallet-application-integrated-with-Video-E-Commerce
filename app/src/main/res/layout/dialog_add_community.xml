@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/_200sdp"
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/paying_text_PIN_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:text="Add tags as per your content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14sdp"
+        android:fontFamily="@font/roboto_medium"
+        android:layout_marginBottom="@dimen/_10sdp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:itemCount="20"
+        tools:listitem="@layout/item_add_community"/>
+
+</LinearLayout>

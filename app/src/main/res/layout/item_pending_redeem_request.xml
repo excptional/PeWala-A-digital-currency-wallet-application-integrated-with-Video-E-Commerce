@@ -18,7 +18,7 @@
             <ImageView
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:src="@drawable/pending_icon"
+                android:src="@drawable/timer_icon"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/_3sdp"/>
 

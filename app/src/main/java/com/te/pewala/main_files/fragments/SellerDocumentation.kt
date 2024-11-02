@@ -7,14 +7,15 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
@@ -24,9 +25,8 @@ import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
+import com.te.pewala.db.LocalStorage
 import com.te.pewala.db.Response
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 
 class SellerDocumentation : Fragment() {
 
@@ -46,7 +46,9 @@ class SellerDocumentation : Fragment() {
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
     private lateinit var uid: String
+    private val localStorage = LocalStorage()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,6 +96,7 @@ class SellerDocumentation : Fragment() {
         return view
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun submit(view: View) {
         val pan = panET.text.toString()
         val gstin = gstET.text.toString()
@@ -191,11 +194,8 @@ class SellerDocumentation : Fragment() {
     }
 
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if (it != null) {
-                uid = it.uid
-            }
-        }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        uid = userdata!!["uid"]!!
     }
 
 }

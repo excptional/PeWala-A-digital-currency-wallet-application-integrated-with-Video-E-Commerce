@@ -2,18 +2,18 @@ package com.te.pewala.main_files.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.VideoView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.R
-import com.te.pewala.main_files.items.VideoTutorialsItems
+import com.te.pewala.main_files.models.VideoTutorialsItems
 class VideoTutorialsAdapter(
     private val context: Context,
     private val videoTutorialsItems: ArrayList<VideoTutorialsItems>
@@ -24,7 +24,7 @@ class VideoTutorialsAdapter(
         viewType: Int
     ): VideoTutorialsViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_order_place_view, parent, false)
+            .inflate(R.layout.item_video_tutorial, parent, false)
         return VideoTutorialsViewHolder(view)
     }
 
@@ -48,9 +48,17 @@ class VideoTutorialsAdapter(
             mp.isLooping = true
             mp.setVolume(0f, 0f)
             holder.loader.visibility = View.GONE
-
+            holder.videoView.start()
         }
-        holder.videoView.start()
+
+        holder.videoView.setOnInfoListener { _, what, _ ->
+            when (what) {
+                MediaPlayer.MEDIA_INFO_BUFFERING_START -> holder.loader.visibility = View.VISIBLE
+                MediaPlayer.MEDIA_INFO_BUFFERING_END -> holder.loader.visibility = View.GONE
+            }
+            true
+        }
+
         holder.videoView.setOnErrorListener { _, _, _ ->
             holder.loader.visibility = View.GONE
             true

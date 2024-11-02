@@ -11,104 +11,163 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/main_layout_cart"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <RelativeLayout
+                android:id="@+id/main_layout_cart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginEnd="@dimen/_15sdp"
-                android:layout_marginBottom="@dimen/_5sdp">
+                android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:fontFamily="@font/roboto_medium"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:layout_centerVertical="true"
-                    android:text="My Cart"
-                    android:textColor="@color/material_black"
-                    android:layout_toEndOf="@id/back_btn_cart"
-                    android:textSize="@dimen/_16sdp" />
+                    android:layout_marginBottom="@dimen/_50sdp"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="@dimen/_90sdp"
-                    android:layout_height="@dimen/_16sdp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/pewala_icon1" />
+                    <RelativeLayout
+                        android:id="@+id/top_layout_cart"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_10sdp">
 
-                <ImageView
-                    android:id="@+id/back_btn_cart"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:scaleType="centerCrop"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/back_black" />
+                        <ImageView
+                            android:layout_width="@dimen/_80sdp"
+                            android:layout_height="@dimen/_16sdp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/pewala_icon1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_toEndOf="@id/back_btn_cart"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="Order Details"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_14sdp" />
+
+                        <ImageButton
+                            android:id="@+id/back_btn_cart"
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:background="@drawable/back_black"
+                            android:scaleType="centerCrop" />
+
+                    </RelativeLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView_cart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:ignore="RtlSymmetry"
+                        tools:listitem="@layout/item_cart" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_layout_cart"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_70sdp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/rectangle_bottom"
+                    android:backgroundTint="@null"
+                    android:orientation="horizontal">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/place_order_cart"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_22sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/t_2"
+                        app:cardCornerRadius="@dimen/_5sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="Place Order"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_13sdp" />
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
 
             </RelativeLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_cart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:ignore="RtlSymmetry"
-                tools:listitem="@layout/item_cart" />
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/_30sdp"
+                app:shimmer_duration="800"
+                tools:ignore="NotSibling">
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/shimmer_cart" />
+                    <include layout="@layout/shimmer_cart" />
+                    <include layout="@layout/shimmer_cart" />
+                    <include layout="@layout/shimmer_cart" />
+                    <include layout="@layout/shimmer_cart" />
+
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <TextView
+                android:id="@+id/notFound_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Cart is empty"
+                android:textColor="@color/material_black"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone" />
+
+
+        </RelativeLayout>
+
+
+        <View
+            android:id="@+id/whiteView_cart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#A1FFFFFF"
+            android:visibility="gone" />
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/progressbar_cart"
-            android:layout_width="@dimen/_200sdp"
-            android:layout_height="@dimen/_100sdp"
+            android:id="@+id/loader_cart"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
             android:layout_centerInParent="true"
-            android:scaleX="2"
-            android:scaleY="2"
+            android:background="@null"
+            android:scaleType="centerCrop"
             android:visibility="gone"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/black_round_loader" />
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer_view_cart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:orientation="vertical"
-            android:visibility="visible"
-            app:shimmer_duration="800">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include layout="@layout/shimmer_products" />
-
-                <include layout="@layout/shimmer_products" />
-
-                <include layout="@layout/shimmer_products" />
-
-            </LinearLayout>
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
-        <TextView
-            android:id="@+id/notFound_cart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Cart is empty"
-            android:textColor="@color/material_black"
-            android:textSize="@dimen/_12sdp"
-            android:visibility="gone" />
 
     </RelativeLayout>
 

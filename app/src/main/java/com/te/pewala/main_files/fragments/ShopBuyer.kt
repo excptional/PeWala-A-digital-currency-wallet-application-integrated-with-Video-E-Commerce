@@ -1,10 +1,7 @@
 package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
@@ -24,9 +20,9 @@ import com.te.pewala.R
 import com.te.pewala.db.AESCrypt
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
+import com.te.pewala.db.LocalStorage
 import com.te.pewala.main_files.adapters.ConversationAdapter
-import com.te.pewala.main_files.adapters.TransactionHistoryAdapter
-import com.te.pewala.main_files.items.ConversationItems
+import com.te.pewala.main_files.models.ConversationItems
 
 
 class ShopBuyer : Fragment() {
@@ -53,6 +49,7 @@ class ShopBuyer : Fragment() {
     private lateinit var uid: String
     val aesCrypt = AESCrypt()
     val key = ByteArray(32)
+    private val localStorage = LocalStorage()
 
     @SuppressLint("MissingInflatedId", "ObsoleteSdkInt")
     override fun onCreateView(
@@ -193,15 +190,12 @@ class ShopBuyer : Fragment() {
     }
 
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                uid = user.uid
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        uid = userdata!!["uid"]!!
 
-                dbViewModel.getConversations(user.uid)
-                dbViewModel.conversations.observe(viewLifecycleOwner) { list ->
-                    fetchData(list)
-                }
-            }
+        dbViewModel.getConversations(uid)
+        dbViewModel.conversations.observe(viewLifecycleOwner) { list ->
+            fetchData(list)
         }
     }
 

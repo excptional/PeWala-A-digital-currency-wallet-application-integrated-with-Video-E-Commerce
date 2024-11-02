@@ -14,7 +14,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.te.pewala.R
-import com.te.pewala.main_files.items.SellerReceivedOrdersItems
+import com.te.pewala.main_files.models.SellerReceivedOrdersItems
 import java.text.SimpleDateFormat
 import java.util.TimeZone
 
@@ -37,17 +37,18 @@ class SellerReceivedOrdersAdapter(
     override fun onBindViewHolder(holder: SellerReceivedOrdersViewHolder, position: Int) {
         val currentItem = ordersItems[position]
         val date = java.util.Date(currentItem.time!!.toLong())
+        val deliveryDate = java.util.Date(currentItem.deliveryDate!!.toLong())
         val timeZone = TimeZone.getTimeZone("Asia/Kolkata")
-        val dateFormat = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa")
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy")
         dateFormat.timeZone = timeZone
 
-        holder.time.text = dateFormat.format(date)
+        holder.time.text = "Ordered on " + dateFormat.format(deliveryDate)
         holder.productName.text = currentItem.productName
         holder.brandName.text = currentItem.brandName
         holder.buyerName.text = "Ordered by " + currentItem.buyerName
         Glide.with(holder.itemView.context).load(currentItem.productImageUrl)
             .into(holder.productImage)
-        holder.productPrice.text = "₹" + currentItem.price
+        holder.productPrice.text = currentItem.price + " INR"
         holder.address.text = currentItem.address
 
         if (currentItem.status == "Pending") {
@@ -56,7 +57,7 @@ class SellerReceivedOrdersAdapter(
         } else {
             holder.btnLayout.visibility = View.GONE
             holder.deliveryDate.visibility = View.VISIBLE
-            holder.deliveryDate.text = "Deliver on " + currentItem.delivery_date
+            holder.deliveryDate.text = "Will be delivered on " + dateFormat.format(deliveryDate)
         }
 
         val bundle = Bundle()
@@ -66,12 +67,15 @@ class SellerReceivedOrdersAdapter(
         bundle.putString("address", currentItem.address)
         bundle.putString("quantity", currentItem.quantity)
         bundle.putString("orderTime", dateFormat.format(date))
+        bundle.putString("deliveryDate", dateFormat.format(deliveryDate))
         bundle.putString("productPrice", currentItem.price)
         bundle.putString("orderId", currentItem.orderId)
         bundle.putString("productImg", currentItem.productImageUrl)
         bundle.putString("buyerUid", currentItem.buyerUid)
         bundle.putString("sellerUid", currentItem.sellerUid)
         bundle.putString("status", currentItem.status)
+        bundle.putString("user", "Seller")
+        bundle.putString("confirmationCode", currentItem.confirmationCode)
 
         val navBuilder = NavOptions.Builder()
         navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)

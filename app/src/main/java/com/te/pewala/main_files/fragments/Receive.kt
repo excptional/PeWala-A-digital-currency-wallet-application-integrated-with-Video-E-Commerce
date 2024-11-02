@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
+import com.te.pewala.db.LocalStorage
 import java.io.*
 import java.util.*
 
@@ -41,6 +42,7 @@ class Receive : Fragment() {
     private lateinit var backBtn: ImageButton
     private lateinit var shareBtn: CardView
     private lateinit var downloadBtn: CardView
+    private val localStorage = LocalStorage()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -74,7 +76,7 @@ class Receive : Fragment() {
         }
 
         scanBtn.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.nav_qr_scanner2)
+            Navigation.findNavController(view).navigate(R.id.nav_qr_scanner)
         }
 
         shareBtn.setOnClickListener {
@@ -92,24 +94,12 @@ class Receive : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun loadData(view: View) {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if(it != null) {
-                dbViewModel.fetchAccountDetails(it.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if(list.exists()) {
-                        Glide.with(view).load(list.getString("qr_code")).into(qrImage)
-                        cardId.text = "Your card id : ${list.getString("card_id")}"
-                        mainLayout.visibility = View.VISIBLE
-                        whiteView.visibility = View.GONE
-                        loaderReceive.visibility = View.GONE
-                    } else {
-                        whiteView.visibility = View.GONE
-                        loaderReceive.visibility = View.GONE
-                        mainLayout.visibility = View.GONE
-                    }
-                }
-            }
-        }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        Glide.with(view).load(userdata!!["qr_code"]).into(qrImage)
+        cardId.text = "Your card id : ${userdata["card_id"]}"
+        mainLayout.visibility = View.VISIBLE
+        whiteView.visibility = View.GONE
+        loaderReceive.visibility = View.GONE
     }
 
     private fun shareQRImage(imageView: ImageView) {

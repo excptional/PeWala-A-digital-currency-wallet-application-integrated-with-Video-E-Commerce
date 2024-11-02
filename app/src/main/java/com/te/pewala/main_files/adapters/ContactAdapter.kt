@@ -12,7 +12,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.te.pewala.R
-import com.te.pewala.main_files.items.ContactItems
+import com.te.pewala.main_files.models.ContactItems
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ContactAdapter(

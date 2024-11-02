@@ -21,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
@@ -37,13 +36,14 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.textfield.TextInputEditText
+import com.te.pewala.db.LocalStorage
 import kotlin.properties.Delegates
 
 class Address : Fragment(), OnMapReadyCallback {
 
+    private val localStorage = LocalStorage()
     private lateinit var area: TextInputEditText
     private lateinit var city: TextInputEditText
     private lateinit var postalCode: TextInputEditText
@@ -397,9 +397,8 @@ class Address : Fragment(), OnMapReadyCallback {
     }
 
     private fun load() {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if(it != null) uid = it.uid
-        }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        uid = userdata!!["uid"]!!
     }
 
     @SuppressLint("ClickableViewAccessibility")

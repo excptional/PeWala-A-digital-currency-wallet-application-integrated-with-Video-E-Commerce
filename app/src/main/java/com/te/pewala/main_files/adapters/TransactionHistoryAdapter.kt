@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.te.pewala.R
-import com.te.pewala.main_files.items.TransactionHistoryItems
+import com.te.pewala.main_files.models.TransactionHistoryItems
 import java.text.SimpleDateFormat
 import java.util.TimeZone
 

@@ -16,7 +16,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.te.pewala.R
-import com.te.pewala.main_files.items.MyOrdersItems
+import com.te.pewala.main_files.models.MyOrdersItems
 import java.text.SimpleDateFormat
 import java.util.TimeZone
 
@@ -36,8 +36,9 @@ class MyOrdersAdapter(
     override fun onBindViewHolder(holder: MyOrdersViewHolder, position: Int) {
         val currentItem = myOrdersItems[position]
         val date = java.util.Date(currentItem.time!!.toLong())
+        val deliveryDate = java.util.Date(currentItem.deliveryDate!!.toLong())
         val timeZone = TimeZone.getTimeZone("Asia/Kolkata")
-        val dateFormat = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm aa")
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy")
         dateFormat.timeZone = timeZone
 
         holder.time.text = dateFormat.format(date)
@@ -48,15 +49,15 @@ class MyOrdersAdapter(
             .into(holder.productImage)
 
         when (currentItem.status) {
-            "Pending" -> {
-                holder.deliveryDate.text = "Status : Pending"
+            "Processing" -> {
+                holder.deliveryDate.text = "Your order will be delivered by\n" + dateFormat.format(deliveryDate)
             }
-            "Rejected" -> {
-                holder.deliveryDate.text = "Your order was cancelled by the seller"
+//            "Rejected" -> {
+//                holder.deliveryDate.text = "Your order was cancelled by the seller"
 //                holder.deliveryDate.setTextColor(Color.RED)
-            }
+//            }
             "Delivered" -> {
-                holder.deliveryDate.text = "Your order delivered on\n" + currentItem.delivery_date
+                holder.deliveryDate.text = "Your order was delivered on\n" + dateFormat.format(deliveryDate)
                 holder.ratingLayout.visibility = View.VISIBLE
                 if(currentItem.rating != "0") {
                     holder.ratingLayout.isClickable = false
@@ -65,7 +66,7 @@ class MyOrdersAdapter(
                 }
             }
             else -> {
-                holder.deliveryDate.text = "Your order will deliver on\n" + currentItem.delivery_date
+                holder.deliveryDate.text = "Your order will be delivered on\n" + dateFormat.format(deliveryDate)
             }
         }
 
@@ -77,11 +78,15 @@ class MyOrdersAdapter(
         bundle.putString("address", currentItem.address)
         bundle.putString("quantity", currentItem.quantity)
         bundle.putString("orderTime", dateFormat.format(date))
+        bundle.putString("deliveryDate", dateFormat.format(deliveryDate))
         bundle.putString("productPrice", currentItem.price)
         bundle.putString("orderId", currentItem.orderId)
         bundle.putString("productImg", currentItem.productImageUrl)
         bundle.putString("buyerUid", currentItem.buyerUid)
         bundle.putString("sellerUid", currentItem.sellerUid)
+        bundle.putString("user", "Buyer")
+        bundle.putString("confirmationCode", currentItem.confirmationCode)
+        bundle.putString("status", currentItem.status)
 
         val navBuilder = NavOptions.Builder()
         navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)

@@ -20,7 +20,7 @@ import com.te.pewala.db.DBViewModel
 import com.te.pewala.db.Response
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
-import java.util.*
+import com.te.pewala.db.LocalStorage
 
 class Redeem : Fragment() {
 
@@ -37,6 +37,7 @@ class Redeem : Fragment() {
     private lateinit var mainLayout: RelativeLayout
     private lateinit var amount: String
     private lateinit var originalPIN: String
+    private val localStorage = LocalStorage()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -171,6 +172,7 @@ class Redeem : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun loadData() {
+        val userdata = localStorage.getData(requireContext(),"user_data")
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
                 myUser = it

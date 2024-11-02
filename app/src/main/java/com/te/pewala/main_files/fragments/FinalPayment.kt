@@ -27,12 +27,14 @@ import com.te.pewala.db.DBViewModel
 import com.te.pewala.db.Response
 import com.google.android.material.textfield.TextInputEditText
 import com.te.pewala.db.AESCrypt
+import com.te.pewala.db.LocalStorage
 import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FinalPayment : Fragment() {
 
+    private val localStorage = LocalStorage()
     private lateinit var whiteView: View
     private lateinit var loaderFinalPay: LottieAnimationView
     private lateinit var mainLayout: LinearLayout
@@ -45,7 +47,7 @@ class FinalPayment : Fragment() {
     private lateinit var profileImg: CircleImageView
     private lateinit var receiverUid: String
     private lateinit var senderUid: String
-    private lateinit var balance: String
+//    private lateinit var balance: String
     private lateinit var senderWalletId: String
     private lateinit var senderName: String
     private lateinit var senderPhone: String
@@ -87,6 +89,8 @@ class FinalPayment : Fragment() {
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
 
+        key.fill(1)
+
         loadData()
 
         backBtn.setOnClickListener {
@@ -115,56 +119,46 @@ class FinalPayment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) { it ->
-            if (it != null) {
-                senderUid = it.uid
-                dbViewModel.fetchAccountDetails(it.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) { list1 ->
-                    if (list1.exists()) {
-                        if (list1.getString("pin")!!.isEmpty()) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Set your 4 digit PIN before use this feature",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            requireActivity().onBackPressed()
-                        } else {
-                            senderName = list1.getString("name").toString()
-                            senderPhone = list1.getString("phone").toString()
-                            senderWalletId = list1.getString("card_id").toString()
-                            senderImageUrl = list1.getString("image_url").toString()
-                            balance = list1.getString("balance").toString()
-                            originalPIN = list1.getString("pin")!!
-//                            originalPIN = aesCrypt.decrypt(list1.getString("pin").toString(), key).toString()
-                            dbViewModel.getPayerDetails(
-                                requireArguments().getString("walletId").toString()
-                            )
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        if (userdata!!["pin"]!!.isEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                "Set your 4 digit PIN before use this feature",
+                Toast.LENGTH_SHORT
+            ).show()
+            requireActivity().onBackPressed()
+        } else {
+            senderName = userdata["name"]!!
+            senderPhone = userdata["phone"]!!
+            senderWalletId = userdata["card_id"]!!
+            senderImageUrl = userdata["image_url"]!!
+//            balance = list1.getString("balance").toString()
+            originalPIN = aesCrypt.decrypt(userdata["pin"]!!, key)!!
+            dbViewModel.getPayerDetails(
+                requireArguments().getString("walletId").toString()
+            )
 
-                            dbViewModel.payerDetails.observe(viewLifecycleOwner) { list2 ->
-                                if (list2.isNullOrEmpty()) {
-                                    whiteView.visibility = View.GONE
-                                    loaderFinalPay.visibility = View.GONE
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Your given phone number is not registered in this app",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    requireActivity().onBackPressed()
-                                } else {
-                                    receiverName = list2[0]
-                                    receiverPhone = list2[1]
-                                    receiverWalletId = "$receiverPhone@smart"
-                                    name.text = "Paying ${list2[0]}"
-                                    phone.text = "Phone : +91 ${list2[1]}"
-                                    Glide.with(this).load(list2[2]).into(profileImg)
-                                    mainLayout.visibility = View.VISIBLE
-                                    whiteView.visibility = View.GONE
-                                    loaderFinalPay.visibility = View.GONE
-                                    getUid(walletId.text.toString())
-                                }
-                            }
-                        }
-                    }
+            dbViewModel.payerDetails.observe(viewLifecycleOwner) { list ->
+                if (list.isNullOrEmpty()) {
+                    whiteView.visibility = View.GONE
+                    loaderFinalPay.visibility = View.GONE
+                    Toast.makeText(
+                        requireContext(),
+                        "Your given phone number is not registered in this app",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    requireActivity().onBackPressed()
+                } else {
+                    receiverName = list[0]
+                    receiverPhone = list[1]
+                    receiverWalletId = "$receiverPhone@smart"
+                    name.text = "Paying ${list[0]}"
+                    phone.text = "Phone : +91 ${list[1]}"
+                    Glide.with(this).load(list[2]).into(profileImg)
+                    mainLayout.visibility = View.VISIBLE
+                    whiteView.visibility = View.GONE
+                    loaderFinalPay.visibility = View.GONE
+                    getUid(walletId.text.toString())
                 }
             }
         }
@@ -205,12 +199,6 @@ class FinalPayment : Fragment() {
                 whiteView.visibility = View.GONE
                 loaderFinalPay.visibility = View.GONE
             }
-//          else if(!BCrypt.checkpw(pin, originalPIN)) {
-//                Toast.makeText(requireContext(), "Entered wrong PIN, try again", Toast.LENGTH_SHORT).show()
-//                pinEditText.text = null
-//                whiteView.visibility = View.GONE
-//                loaderFinalPay.visibility = View.GONE
-//          }
             else {
                 dbViewModel.payment(senderUid, receiverUid, amount, note)
                 dbViewModel.dbResponse.observe(viewLifecycleOwner) {
@@ -302,15 +290,17 @@ class FinalPayment : Fragment() {
                 "You can't send more than 5000 rupees",
                 Toast.LENGTH_SHORT
             ).show()
-        } else if (balance.toDouble() - amount.toDouble() <= 0) {
-            whiteView.visibility = View.GONE
-            loaderFinalPay.visibility = View.GONE
-            Toast.makeText(
-                requireContext(),
-                "You have insufficient balance to pay",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
+        }
+//        else if (balance.toDouble() - amount.toDouble() <= 0) {
+//            whiteView.visibility = View.GONE
+//            loaderFinalPay.visibility = View.GONE
+//            Toast.makeText(
+//                requireContext(),
+//                "You have insufficient balance to pay",
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        }
+        else {
             showDialog()
             whiteView.visibility = View.GONE
             loaderFinalPay.visibility = View.GONE

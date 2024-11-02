@@ -6,34 +6,47 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.CartAdapter
-import com.te.pewala.main_files.items.CartItems
+import com.te.pewala.main_files.models.CartItems
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.firestore.DocumentSnapshot
+import com.te.pewala.db.LocalStorage
 
 class Cart : Fragment() {
 
+    private val localStorage = LocalStorage()
     private lateinit var cartAdapter: CartAdapter
     private var cartItemsArray = arrayListOf<CartItems>()
-    private var dbViewModel: DBViewModel? = null
-    private var authViewModel: AuthViewModel? = null
+    private lateinit var selectedCartItems: ArrayList<DocumentSnapshot>
+    private val dbViewModel: DBViewModel by viewModels()
+    private val authViewModel: AuthViewModel? by viewModels()
     private lateinit var cartRecyclerView: RecyclerView
     private lateinit var shimmerContainerProduct: ShimmerFrameLayout
     private lateinit var notFoundText: TextView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var mainLayout: LinearLayout
+    private lateinit var mainLayout: RelativeLayout
     private lateinit var backBtn: ImageView
+    private lateinit var uid: String
+    private lateinit var placeOrder: CardView
+    private lateinit var btnlayout: LinearLayout
+    private lateinit var loader: LottieAnimationView
+    private lateinit var whiteView: View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,22 +56,24 @@ class Cart : Fragment() {
 
         requireActivity().window.statusBarColor = Color.WHITE
 
-        dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
-        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout_cart)
         cartRecyclerView = view.findViewById(R.id.recyclerView_cart)
         notFoundText = view.findViewById(R.id.notFound_cart)
         mainLayout = view.findViewById(R.id.main_layout_cart)
         backBtn = view.findViewById(R.id.back_btn_cart)
+        placeOrder = view.findViewById(R.id.place_order_cart)
+        btnlayout = view.findViewById(R.id.btn_layout_cart)
+        loader = view.findViewById(R.id.loader_cart)
+        whiteView = view.findViewById(R.id.whiteView_cart)
 
         shimmerContainerProduct = view.findViewById(R.id.shimmer_view_cart)
         shimmerContainerProduct.startShimmer()
         shimmerContainerProduct.visibility = View.VISIBLE
         mainLayout.visibility = View.GONE
 
-        cartAdapter = CartAdapter(requireContext(), this, viewLifecycleOwner, cartItemsArray)
+        cartAdapter = CartAdapter(requireContext(), this, cartItemsArray)
         cartRecyclerView.layoutManager = LinearLayoutManager(view.context)
-        cartRecyclerView.setHasFixedSize(true)
+//        cartRecyclerView.setHasFixedSize(true)
         cartRecyclerView.setItemViewCacheSize(20)
         cartRecyclerView.adapter = cartAdapter
 
@@ -75,6 +90,24 @@ class Cart : Fragment() {
             requireActivity().onBackPressed()
         }
 
+        placeOrder.setOnClickListener {
+            placeOrder.isClickable = false
+            whiteView.visibility = View.VISIBLE
+            loader.visibility = View.VISIBLE
+            cartItemsArray.let {
+                if(it.isEmpty()) {
+                    Toast.makeText(requireContext(), "Select items to proceed", Toast.LENGTH_SHORT).show()
+                } else {
+                    val bundle = Bundle()
+                    bundle.putParcelableArrayList("cartItems", cartItemsArray)
+                    Navigation.findNavController(view).navigate(R.id.nav_final_order_place, bundle)
+                }
+                whiteView.visibility = View.GONE
+                loader.visibility = View.GONE
+                placeOrder.isClickable = true
+            }
+        }
+
         return view
     }
 
@@ -85,6 +118,7 @@ class Cart : Fragment() {
             shimmerContainerProduct.visibility = View.GONE
             mainLayout.visibility = View.VISIBLE
             cartRecyclerView.visibility = View.GONE
+            btnlayout.visibility = View.GONE
         } else {
             for (i in list) {
                 if (i.exists()) {
@@ -99,8 +133,10 @@ class Cart : Fragment() {
                         i.getString("seller_name"),
                         i.getString("seller_image_url"),
                         i.getString("seller_uid"),
+                        uid,
                         i.getString("ratings"),
-                        i.getString("product_id")
+                        i.getString("product_id"),
+                        i.get("selected") as Boolean
                     )
                     cartItemsArray.add(acc)
                 }
@@ -112,19 +148,22 @@ class Cart : Fragment() {
             cartRecyclerView.visibility = View.VISIBLE
             notFoundText.visibility = View.GONE
             swipeRefreshLayout.isRefreshing = false
+            btnlayout.visibility = View.VISIBLE
         }
     }
 
     private fun loadData() {
-        authViewModel!!.userdata.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                dbViewModel!!.fetchCartItems(user.uid)
-                dbViewModel!!.cartData.observe(viewLifecycleOwner) {
-                    fetchCartList(it)
-                    swipeRefreshLayout.isRefreshing = false
-                }
-            }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        uid = userdata!!["uid"]!!
+        dbViewModel.fetchCartItems(uid)
+        dbViewModel.selectedCartData.observe(viewLifecycleOwner) { list ->
+            selectedCartItems = list
         }
+        dbViewModel.cartData.observe(viewLifecycleOwner) {
+            fetchCartList(it)
+            swipeRefreshLayout.isRefreshing = false
+        }
+        dbViewModel.getSelectedCartItems(uid)
     }
 
 }

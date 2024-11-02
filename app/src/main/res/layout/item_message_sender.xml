@@ -27,7 +27,6 @@
             android:textColor="@color/white"
             android:maxWidth="@dimen/_200sdp"
             android:minWidth="@dimen/_120sdp"
-            android:textAlignment="textEnd"
             android:textSize="@dimen/_12sdp"/>
 
         <RelativeLayout

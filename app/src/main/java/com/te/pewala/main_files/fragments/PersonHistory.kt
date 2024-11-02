@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -20,9 +20,10 @@ import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.TransactionHistoryAdapter
-import com.te.pewala.main_files.items.TransactionHistoryItems
+import com.te.pewala.main_files.models.TransactionHistoryItems
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.firestore.DocumentSnapshot
+import com.te.pewala.db.LocalStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class PersonHistory : Fragment() {
@@ -41,8 +42,9 @@ class PersonHistory : Fragment() {
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
     private lateinit var payerUid: String
-    private lateinit var backBtn: ImageButton
+    private lateinit var backBtn: ImageView
     private lateinit var payerPhone: String
+    private val localStorage = LocalStorage()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -97,7 +99,7 @@ class PersonHistory : Fragment() {
     private fun fetchData(list: MutableList<DocumentSnapshot>) {
         transactionHistoryItems = arrayListOf()
         for (i in list) {
-            if (i.exists()) {
+            if (i.exists() and i.getString("operator_id").equals(payerUid)) {
                 val transactionData = TransactionHistoryItems(
                     i.getString("amount"),
                     i.getString("operation"),
@@ -117,12 +119,13 @@ class PersonHistory : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun loadData() {
+        val userdata = localStorage.getData(requireContext(),"user_data")
         authViewModel.userdata.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 dbViewModel.fetchAccountDetails(payerUid)
                 dbViewModel.accDetails.observe(viewLifecycleOwner) {
                     name.text = it.getString("name")
-                    payerPhone = it.getString("phone").toString()
+                    payerPhone = it.getString("phone")!!
                     phone.text = "Ph : ${it.getString("phone")}"
                     walletId.text = "Wallet Id : ${it.getString("card_id")}"
                     Glide.with(requireView()).load(it.getString("image_url")).into(profileImage)

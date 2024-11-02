@@ -652,7 +652,7 @@
                                 android:layout_width="@dimen/_23sdp"
                                 android:layout_height="@dimen/_23sdp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/whishlist_icon" />
+                                android:src="@drawable/wishlist_icon" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -759,16 +759,41 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_15sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:text="My products"
-                        android:fontFamily="@font/roboto_medium"
-                        android:textColor="@color/text_color1"
-                        android:textSize="@dimen/_14sdp" />
+                        android:layout_marginTop="@dimen/_5sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="My Products"
+                            android:textSize="@dimen/_14sdp"
+                            android:textColor="@color/black"
+                            android:layout_marginStart="@dimen/_12sdp" />
+
+                        <RelativeLayout
+                            android:id="@+id/view_all_products_seller_products"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_15sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:text="View all"
+                                android:fontFamily="@font/roboto_medium"
+                                android:layout_centerVertical="true"
+                                android:textColor="@color/black"
+                                android:layout_marginEnd="@dimen/_10sdp"
+                                android:textSize="@dimen/_10sdp" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/seller_products_recyclerView_seller_home"
@@ -847,7 +872,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/_5sdp"
-                            android:text="Orders"/>
+                            android:text="Received Orders"/>
 
                         <View
                             android:layout_width="match_parent"
@@ -868,6 +893,7 @@
                             android:background="@color/app_background"/>
 
                         <LinearLayout
+                            android:id="@+id/view_all_received_orders_home"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"

@@ -10,16 +10,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.te.pewala.R
 import com.te.pewala.db.AESCrypt
-import com.te.pewala.db.AuthViewModel
-import com.te.pewala.db.DBViewModel
-import com.te.pewala.main_files.items.ConversationItems
+import com.te.pewala.main_files.models.ConversationItems
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ConversationAdapter(

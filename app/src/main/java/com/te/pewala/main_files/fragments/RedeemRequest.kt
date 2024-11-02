@@ -15,9 +15,10 @@ import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.RedeemAdapter
-import com.te.pewala.main_files.items.RedeemItems
+import com.te.pewala.main_files.models.RedeemItems
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.firestore.DocumentSnapshot
+import com.te.pewala.db.LocalStorage
 
 class RedeemRequest : Fragment() {
 
@@ -32,6 +33,7 @@ class RedeemRequest : Fragment() {
     private lateinit var dbViewModel: DBViewModel
     private lateinit var name: String
     private lateinit var phone: String
+    private val localStorage = LocalStorage()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,24 +95,18 @@ class RedeemRequest : Fragment() {
     }
 
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                dbViewModel.fetchAccountDetails(user.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) {
-                    name = it.getString("name").toString()
-                    phone = it.getString("phone").toString()
-                    dbViewModel.fetchRedeemRequest(user.uid)
-                    dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list ->
-                        if(list.isNotEmpty()) fetchData(list)
-                        else {
-                            nothingFoundText.visibility = View.VISIBLE
-                            mainLayout.visibility = View.GONE
-                            redeemShimmer.clearAnimation()
-                            redeemShimmer.visibility = View.GONE
-                            refreshLayout.isRefreshing = false
-                        }
-                    }
-                }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        name = userdata!!["name"]!!
+        phone = userdata["phone"]!!
+        dbViewModel.fetchRedeemRequest(userdata["uid"]!!)
+        dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list ->
+            if(list.isNotEmpty()) fetchData(list)
+            else {
+                nothingFoundText.visibility = View.VISIBLE
+                mainLayout.visibility = View.GONE
+                redeemShimmer.clearAnimation()
+                redeemShimmer.visibility = View.GONE
+                refreshLayout.isRefreshing = false
             }
         }
     }

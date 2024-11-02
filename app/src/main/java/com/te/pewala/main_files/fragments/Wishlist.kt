@@ -229,10 +229,11 @@ import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.ProductsAdapter
-import com.te.pewala.main_files.items.ProductsItems
+import com.te.pewala.main_files.models.ProductsItems
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.DocumentSnapshot
+import com.te.pewala.db.LocalStorage
 
 class Wishlist : Fragment() {
 
@@ -246,6 +247,7 @@ class Wishlist : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var searchET: TextInputEditText
     private lateinit var searchView: LinearLayout
+    private val localStorage = LocalStorage()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -403,14 +405,11 @@ class Wishlist : Fragment() {
     }
 
     private fun loadData() {
-        authViewModel!!.userdata.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                dbViewModel!!.fetchWishlistItems(user.uid)
-                dbViewModel!!.wishlistData.observe(viewLifecycleOwner) {
-                    fetchProductsList(it)
-                    swipeRefreshLayout.isRefreshing = false
-                }
-            }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        dbViewModel!!.fetchWishlistItems(userdata!!["uid"]!!)
+        dbViewModel!!.wishlistData.observe(viewLifecycleOwner) {
+            fetchProductsList(it)
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 }

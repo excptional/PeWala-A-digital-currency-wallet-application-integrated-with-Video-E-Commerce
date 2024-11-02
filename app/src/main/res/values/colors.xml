@@ -2,8 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="light_red">#FF725E</color>
-<!--    <color name="material_black">#495963</color>-->
+    <!--    <color name="material_black">#495963</color>-->
     <color name="material_black">#333333</color>
     <color name="background">#dddddd</color>
     <color name="rating_color_1">#E53935</color>
@@ -14,7 +13,6 @@
 
     <color name="text_color1">#B1AFAF</color>
     <color name="text_color2">#A2A2A2</color>
-    <color name="blue_2">#0277BD</color>
     <color name="t_2">#6B3E2E</color>
     <color name="t_3">#E3C099</color>
 </resources>

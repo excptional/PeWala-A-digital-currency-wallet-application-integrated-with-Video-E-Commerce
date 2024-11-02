@@ -2,13 +2,11 @@ package com.te.pewala.main_files.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
@@ -19,10 +17,9 @@ import com.te.pewala.R
 import com.te.pewala.db.AESCrypt
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
-import com.te.pewala.main_files.items.MessageItems
+import com.te.pewala.main_files.models.MessageItems
 import java.text.SimpleDateFormat
 import java.util.TimeZone
-import javax.crypto.SecretKey
 
 class ChatAdapter(
     val context: Context,

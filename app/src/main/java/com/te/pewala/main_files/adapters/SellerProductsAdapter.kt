@@ -13,7 +13,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.te.pewala.R
-import com.te.pewala.main_files.items.SellerProductsItems
+import com.te.pewala.main_files.models.SellerProductsItems
 
 class SellerProductsAdapter(
     private val sellerProductItems: ArrayList<SellerProductsItems>
@@ -32,7 +32,7 @@ class SellerProductsAdapter(
         holder.brandName.text = currentItem.brandName
         Glide.with(holder.itemView.context).load(currentItem.productImageUrl)
             .into(holder.sellerProductImage)
-        holder.sellerProductPrice.text = "₹" + currentItem.price
+        holder.sellerProductPrice.text = currentItem.price + " INR"
         holder.sellerProductRatingBar.rating = currentItem.ratings!!.toFloat()
 
         val bundle = Bundle()

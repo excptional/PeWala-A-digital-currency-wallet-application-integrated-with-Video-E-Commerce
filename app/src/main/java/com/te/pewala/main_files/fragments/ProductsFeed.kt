@@ -1,8 +1,6 @@
 package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -18,9 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.te.pewala.R
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.FeedAdapter
-import com.te.pewala.main_files.adapters.ProductsAdapter
-import com.te.pewala.main_files.items.FeedItems
-import com.te.pewala.main_files.items.ProductsItems
+import com.te.pewala.main_files.models.FeedItems
 
 class ProductsFeed : Fragment() {
 

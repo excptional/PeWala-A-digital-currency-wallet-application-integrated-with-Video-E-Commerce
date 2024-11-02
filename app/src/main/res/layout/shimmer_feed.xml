@@ -17,7 +17,6 @@
             android:background="@color/background"/>
 
         <View
-            android:id="@+id/seller_name_feed_item"
             android:layout_width="@dimen/_150sdp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -28,7 +27,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/order_btn_feed_item"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50sdp"
         android:layout_margin="@dimen/_10sdp"

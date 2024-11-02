@@ -20,7 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.te.pewala.R
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.EditVideoDetailsAdapter
-import com.te.pewala.main_files.items.EditVideoDetailsItems
+import com.te.pewala.main_files.models.EditVideoDetailsItems
 
 class ProductDashboard : Fragment() {
 

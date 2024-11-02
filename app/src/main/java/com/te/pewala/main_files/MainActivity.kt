@@ -9,27 +9,39 @@ import android.os.Handler
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.te.pewala.R
 import com.te.pewala.auth.AuthenticationActivity
-import com.te.pewala.db.AuthViewModel
 import com.te.pewala.databinding.ActivityMainBinding
+import com.te.pewala.db.AuthViewModel
+import com.te.pewala.db.DBViewModel
+import com.te.pewala.db.LocalStorage
+import com.te.pewala.main_files.fragments.Home
+import com.zegocloud.uikit.prebuilt.call.ZegoUIKitPrebuiltCallService
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig
 import java.util.concurrent.Executor
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var authViewModel: AuthViewModel
+    private val authViewModel: AuthViewModel by viewModels()
+    private val dbViewModel: DBViewModel by viewModels()
     private lateinit var navController: NavController
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private lateinit var executor: Executor
+    private lateinit var uid: String
+    private lateinit var userName: String
+    private val localStorage = LocalStorage()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,27 +51,21 @@ class MainActivity : AppCompatActivity() {
         window.statusBarColor = Color.parseColor("#F7F9FD")
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
-        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         navController = findNavController(R.id.nav_host_fragment)
 
-        authViewModel.userdata.observe(this) {
-            if(it == null) {
-                startActivity(Intent(this, AuthenticationActivity::class.java))
-                finish()
-            }
-        }
+        loadData()
 
         binding.qrScanner.setOnClickListener {
 //            Toast.makeText(this, "This feature is not implemented yet", Toast.LENGTH_SHORT).show()
-            navController.navigate(R.id.nav_qr_scanner2)
+            navController.navigate(R.id.nav_qr_scanner)
 //            navController.navigate(R.id.nav_qr_scanner)
         }
 
-        if(intent.getStringExtra("fragmentToLoad") == "Send") {
+        if (intent.getStringExtra("fragmentToLoad") == "Send") {
             navController.navigate(R.id.nav_history_)
         }
 
-        if(intent.getStringExtra("orderPlaced") == "order") {
+        if (intent.getStringExtra("orderPlaced") == "order") {
             navController.navigate(R.id.nav_orders)
         }
 
@@ -72,7 +78,8 @@ class MainActivity : AppCompatActivity() {
                     errString: CharSequence
                 ) {
                     super.onAuthenticationError(errorCode, errString)
-                    Toast.makeText(this@MainActivity, "Application is closing", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Application is closing", Toast.LENGTH_SHORT)
+                        .show()
                     Handler().postDelayed({
                         finish()
                         exitProcess(-1)
@@ -83,8 +90,10 @@ class MainActivity : AppCompatActivity() {
                     result: BiometricPrompt.AuthenticationResult
                 ) {
                     super.onAuthenticationSucceeded(result)
-                    Toast.makeText(this@MainActivity, "Authentication succeed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Authentication succeed", Toast.LENGTH_SHORT)
+                        .show()
                 }
+
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
                     Toast.makeText(
@@ -104,7 +113,7 @@ class MainActivity : AppCompatActivity() {
         biometricPrompt.authenticate(promptInfo)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if((destination.id == R.id.nav_home) or (destination.id == R.id.nav_account) or (destination.id == R.id.nav_history) or (destination.id == R.id.nav_redeem_request)) {
+            if ((destination.id == R.id.nav_home) or (destination.id == R.id.nav_account) or (destination.id == R.id.nav_history) or (destination.id == R.id.nav_redeem_request)) {
                 binding.bottomNav.visibility = View.VISIBLE
                 binding.bottomAppbar.visibility = View.VISIBLE
                 binding.qrScanner.visibility = View.VISIBLE
@@ -123,16 +132,19 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.nav_home)
                     return@setOnNavigationItemSelectedListener true
                 }
+
                 R.id.account -> {
                     navController.popBackStack()
                     navController.navigate(R.id.nav_account)
                     return@setOnNavigationItemSelectedListener true
                 }
+
                 R.id.redeem_req -> {
                     navController.popBackStack()
                     navController.navigate(R.id.nav_redeem_request)
                     return@setOnNavigationItemSelectedListener true
                 }
+
                 R.id.history -> {
                     navController.popBackStack()
                     navController.navigate(R.id.nav_history)
@@ -141,6 +153,26 @@ class MainActivity : AppCompatActivity() {
             }
             false
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.bottomNav.isVisible) {
+                    val selectedItemId = binding.bottomNav.selectedItemId
+                    when (selectedItemId) {
+                        R.id.home -> {
+                            finish()
+                        }
+
+                        else -> {
+                            navController.navigate(R.id.nav_home)
+                            binding.bottomNav.selectedItemId = R.id.home
+                        }
+                    }
+                }
+            }
+        })
+
+
     }
 
     @SuppressLint("SwitchIntDef")
@@ -150,12 +182,14 @@ class MainActivity : AppCompatActivity() {
             BiometricManager.BIOMETRIC_SUCCESS ->
                 Toast.makeText(this, "App can authenticate using biometrics.", Toast.LENGTH_SHORT)
                     .show()
+
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
                 Toast.makeText(
                     this,
                     "No biometric features available on this device.",
                     Toast.LENGTH_SHORT
                 ).show()
+
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {}
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -173,4 +207,73 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun videoCallServices() {
+        val appID: Long = getString(R.string.ZEGOCLOUD_APP_ID).toLong()
+        val appSign: String = getString(R.string.ZEGOCLOUD_APP_SIGN)
+
+        val callInvitationConfig = ZegoUIKitPrebuiltCallInvitationConfig()
+
+//        callInvitationConfig.incomingCallRingtone = "res/raw/incomingcall.mp3"
+//        callInvitationConfig.outgoingCallRingtone = "res/raw/outgoingcall.mp3"
+
+        ZegoUIKitPrebuiltCallService.init(
+            application,
+            appID,
+            appSign,
+            uid,
+            userName,
+            callInvitationConfig
+        )
+    }
+
+    private fun loadData() {
+        authViewModel.userdata.observe(this) { user ->
+            if (user == null) {
+                startActivity(Intent(this, AuthenticationActivity::class.java))
+                finish()
+            } else {
+                uid = user.uid
+                dbViewModel.fetchAccountDetails(user.uid)
+                dbViewModel.accDetails.observe(this) { details ->
+                    val retrieveData = localStorage.getData(this, "user_data")
+                    if (retrieveData == null || retrieveData["image_url"] != details.getString("image_url")
+                        || retrieveData["balance"] != details.getString("balance")
+                    ) {
+                        val userdata = mapOf(
+                            "uid" to user.uid,
+                            "name" to details.getString("name")!!,
+                            "phone" to details.getString("phone")!!,
+                            "card_id" to details.getString("card_id")!!,
+                            "user_type" to details.getString("user_type")!!,
+                            "image_url" to details.getString("image_url")!!,
+                            "pin" to details.getString("pin")!!,
+                            "qr_code" to details.getString("qr_code")!!,
+                            "balance" to details.getString("balance")!!
+                        )
+                        localStorage.saveData(this, "user_data", userdata)
+                    }
+                    userName = details.getString("name")!!
+                    videoCallServices()
+                }
+            }
+        }
+    }
+
+//    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
+//    override fun onBackPressed() {
+//        if(binding.bottomNav.isVisible) {
+//            val selectedItemId = binding.bottomNav.selectedItemId
+//            when (selectedItemId) {
+//                R.id.home -> {
+//                    super.finish()
+//                }
+//                else -> {
+//                    navController.navigate(R.id.nav_home)
+//                    binding.bottomNav.selectedItemId = R.id.home
+//                }
+//            }
+//        } else super.onBackPressed()
+//    }
+
 }

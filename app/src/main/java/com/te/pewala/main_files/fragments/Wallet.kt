@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -22,8 +22,9 @@ import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.PendingRequestAdapter
-import com.te.pewala.main_files.items.RedeemItems
+import com.te.pewala.main_files.models.RedeemItems
 import com.google.firebase.firestore.DocumentSnapshot
+import com.te.pewala.db.LocalStorage
 
 class Wallet : Fragment() {
 
@@ -32,17 +33,20 @@ class Wallet : Fragment() {
     private lateinit var recyclerview: RecyclerView
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
-    private lateinit var backBtn: ImageButton
+    private lateinit var backBtn: ImageView
     private lateinit var addMoney: CardView
     private lateinit var withdrawMoney: CardView
     private lateinit var walletBalance: TextView
     private lateinit var whiteView: View
     private lateinit var loaderWallet: LottieAnimationView
     private lateinit var refreshLayout: SwipeRefreshLayout
+    private lateinit var pendingPaymentsBtn: CardView
+    private lateinit var redeemRequestsBtn: CardView
     private lateinit var mainLayout: LinearLayout
     private lateinit var name: String
     private lateinit var phone: String
     private lateinit var grpPendingRequest: LinearLayout
+    private val localStorage = LocalStorage()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -55,12 +59,9 @@ class Wallet : Fragment() {
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
-
-        loadData()
-
         backBtn = view.findViewById(R.id.back_btn_wallet)
         addMoney = view.findViewById(R.id.add_money_btn_wallet)
-        withdrawMoney = view.findViewById(R.id.withdraw_money_btn_wallet)
+        withdrawMoney = view.findViewById(R.id.redeem_money_btn_wallet)
         walletBalance = view.findViewById(R.id.balance_wallet)
         whiteView = view.findViewById(R.id.whiteView_wallet)
         loaderWallet = view.findViewById(R.id.loader_wallet)
@@ -68,9 +69,14 @@ class Wallet : Fragment() {
         mainLayout = view.findViewById(R.id.main_layout_wallet)
         recyclerview = view.findViewById(R.id.pending_request_recyclerview_wallet)
         grpPendingRequest = view.findViewById(R.id.grp_pending_request_wallet)
+        pendingPaymentsBtn = view.findViewById(R.id.pending_payments_wallet)
+        redeemRequestsBtn = view.findViewById(R.id.redeem_request_wallet)
+
+        loadData()
 
         redeemAdapter = PendingRequestAdapter(requireContext(), redeemItemsArray)
-        recyclerview.layoutManager = LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
+        recyclerview.layoutManager =
+            LinearLayoutManager(view.context, RecyclerView.HORIZONTAL, false)
         recyclerview.setHasFixedSize(true)
         recyclerview.setItemViewCacheSize(20)
         recyclerview.adapter = redeemAdapter
@@ -95,38 +101,31 @@ class Wallet : Fragment() {
             Navigation.findNavController(view).navigate(R.id.nav_redeem, null, navBuilder.build())
         }
 
+        pendingPaymentsBtn.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.nav_pending_payments, null, navBuilder.build())
+        }
+
         return view
     }
 
     @SuppressLint("SetTextI18n")
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                dbViewModel.fetchAccountDetails(user.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) { list1 ->
-                    if (list1.exists()) {
-                        walletBalance.text = "₹${list1.getString("balance")}"
-                        mainLayout.visibility = View.VISIBLE
-                        whiteView.visibility = View.GONE
-                        loaderWallet.visibility = View.GONE
-                        refreshLayout.isRefreshing = false
-                        name = list1.getString("name").toString()
-                        phone = list1.getString("phone").toString()
-                        dbViewModel.fetchRedeemRequest(user.uid)
-                        dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list2 ->
-                            if(list2.isNotEmpty()) fetchData(list2)
-                            else {
-                                recyclerview.visibility = View.GONE
-                                refreshLayout.isRefreshing = false
-                                grpPendingRequest.visibility = View.GONE
-                            }
-                        }
-                    } else {
-                        mainLayout.visibility = View.VISIBLE
-                        whiteView.visibility = View.GONE
-                        loaderWallet.visibility = View.GONE
-                    }
-                }
+        val userdata = localStorage.getData(requireContext(), "user_data")
+        walletBalance.text = "₹${userdata!!["balance"]}"
+        mainLayout.visibility = View.VISIBLE
+        whiteView.visibility = View.GONE
+        loaderWallet.visibility = View.GONE
+        refreshLayout.isRefreshing = false
+        name = userdata["name"]!!
+        phone = userdata["phone"]!!
+        dbViewModel.fetchRedeemRequest(userdata["uid"]!!)
+        dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list2 ->
+            if (list2.isNotEmpty()) fetchData(list2)
+            else {
+                recyclerview.visibility = View.GONE
+                refreshLayout.isRefreshing = false
+                grpPendingRequest.visibility = View.GONE
             }
         }
     }
@@ -147,7 +146,7 @@ class Wallet : Fragment() {
         }
         redeemAdapter.updateRedeemItems(redeemItemsArray)
         recyclerview.visibility = View.VISIBLE
-        grpPendingRequest.visibility =View.VISIBLE
+        grpPendingRequest.visibility = View.VISIBLE
         refreshLayout.isRefreshing = false
     }
 

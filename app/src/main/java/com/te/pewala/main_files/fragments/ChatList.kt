@@ -1,6 +1,5 @@
 package com.te.pewala.main_files.fragments
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,17 +15,16 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.firestore.DocumentSnapshot
 import com.te.pewala.R
 import com.te.pewala.db.AESCrypt
-import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.ConversationAdapter
-import com.te.pewala.main_files.items.ConversationItems
+import com.te.pewala.main_files.models.ConversationItems
 
 class ChatList : Fragment() {
 
     private lateinit var backBtn: ImageView
     private lateinit var notFoundText: TextView
     private lateinit var shimmer: ShimmerFrameLayout
-    private lateinit var conversationRecyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
     private lateinit var conversationAdapter: ConversationAdapter
     private var conversationItemsArray = arrayListOf<ConversationItems>()
     val aesCrypt = AESCrypt()
@@ -47,7 +44,7 @@ class ChatList : Fragment() {
 
         notFoundText = view.findViewById(R.id.nothing_found_chat_list)
         shimmer = view.findViewById(R.id.shimmer_chat_list)
-        conversationRecyclerView = view.findViewById(R.id.recyclerview_chat_list)
+        recyclerView = view.findViewById(R.id.recyclerview_chat_list)
         backBtn = view.findViewById(R.id.back_btn_chat_list)
 
         shimmer.startShimmer()
@@ -57,10 +54,9 @@ class ChatList : Fragment() {
         key.fill(1)
         conversationAdapter =
             ConversationAdapter(requireContext(), conversationItemsArray, key)
-        conversationRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-//        conversationRecyclerView.setHasFixedSize(true)
-        conversationRecyclerView.setItemViewCacheSize(20)
-        conversationRecyclerView.adapter = conversationAdapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.setItemViewCacheSize(20)
+        recyclerView.adapter = conversationAdapter
 
         loadData()
 

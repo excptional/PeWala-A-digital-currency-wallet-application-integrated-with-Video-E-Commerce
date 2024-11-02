@@ -9,10 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -27,12 +25,13 @@ import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.SellerProductsAdapter
 import com.te.pewala.main_files.adapters.SellerReceivedOrdersAdapter
-import com.te.pewala.main_files.items.SellerProductsItems
-import com.te.pewala.main_files.items.SellerReceivedOrdersItems
+import com.te.pewala.main_files.models.SellerProductsItems
+import com.te.pewala.main_files.models.SellerReceivedOrdersItems
 import com.google.firebase.firestore.DocumentSnapshot
 import com.te.pewala.db.AESCrypt
+import com.te.pewala.db.LocalStorage
 import com.te.pewala.main_files.adapters.ConversationAdapter
-import com.te.pewala.main_files.items.ConversationItems
+import com.te.pewala.main_files.models.ConversationItems
 
 class ShopSeller : Fragment() {
 
@@ -61,6 +60,7 @@ class ShopSeller : Fragment() {
     private var conversationItemsArray = arrayListOf<ConversationItems>()
     val aesCrypt = AESCrypt()
     val key = ByteArray(32)
+    private val localStorage = LocalStorage()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -243,22 +243,19 @@ class ShopSeller : Fragment() {
     }
 
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                sellerUid = user.uid
-                dbViewModel.fetchSellerProducts(user.uid)
-                dbViewModel.sellerProductsData.observe(viewLifecycleOwner) { list1 ->
-                    fetchProductsList(list1)
-                }
-                dbViewModel.fetchReceivedOrders(user.uid)
-                dbViewModel.sellerReceivedOrdersData.observe(viewLifecycleOwner) { list2 ->
-                    fetchOrdersList(list2)
-                }
-                dbViewModel.getConversations(user.uid)
-                dbViewModel.conversations.observe(viewLifecycleOwner) { list3 ->
-                    fetchConversations(list3)
-                }
-            }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        sellerUid = userdata!!["uid"]!!
+        dbViewModel.fetchSellerProducts(sellerUid)
+        dbViewModel.sellerProductsData.observe(viewLifecycleOwner) { list1 ->
+            fetchProductsList(list1)
+        }
+        dbViewModel.fetchReceivedOrders(sellerUid)
+        dbViewModel.sellerReceivedOrdersData.observe(viewLifecycleOwner) { list2 ->
+            fetchOrdersList(list2)
+        }
+        dbViewModel.getConversations(sellerUid)
+        dbViewModel.conversations.observe(viewLifecycleOwner) { list3 ->
+            fetchConversations(list3)
         }
     }
 

@@ -7,10 +7,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -24,9 +22,10 @@ import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.ContactAdapter
-import com.te.pewala.main_files.items.ContactItems
+import com.te.pewala.main_files.models.ContactItems
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.DocumentSnapshot
+import com.te.pewala.db.LocalStorage
 
 class Send : Fragment() {
 
@@ -44,6 +43,7 @@ class Send : Fragment() {
     private var contactItems = arrayListOf<ContactItems>()
     private lateinit var recyclerview: RecyclerView
     private lateinit var contactLayout: LinearLayout
+    private val localStorage = LocalStorage()
 
     @SuppressLint("MissingInflatedId", "ClickableViewAccessibility", "ResourceType")
     override fun onCreateView(
@@ -160,6 +160,7 @@ class Send : Fragment() {
     }
 
     private fun loadData() {
+        val userdata = localStorage.getData(requireContext(),"user_data")
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
                 dbViewModel.fetchAccountDetails(it.uid)

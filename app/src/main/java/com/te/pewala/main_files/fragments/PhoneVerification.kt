@@ -2,6 +2,7 @@ package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -11,25 +12,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.airbnb.lottie.LottieAnimationView
+import com.te.pewala.BuildConfig
 import com.te.pewala.R
 import com.te.pewala.db.*
-import com.te.pewala.db.MessageResponse
+import com.te.pewala.server.MessageResponse
+import com.te.pewala.server.TwoFactorApiClient
+import com.te.pewala.server.TwoFactorApiInterface
+import com.te.pewala.server.otp.Msg91ApiClient
+import com.te.pewala.server.otp.Msg91Response
+import com.te.pewala.server.otp.OTPCallback
+import com.te.pewala.server.otp.OTPService
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class PhoneVerification : Fragment() {
+class PhoneVerification : Fragment(), OTPCallback {
 
     private lateinit var box1: EditText
     private lateinit var box2: EditText
@@ -42,17 +52,18 @@ class PhoneVerification : Fragment() {
     private lateinit var otpPh: TextView
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
-    private var count = 60
-    private lateinit var phNum: String
+    private lateinit var phone: String
     private lateinit var otp: String
-    private lateinit var apiKey: String
-    private lateinit var sessionId: String
+//    private lateinit var apiKey: String
+//    private lateinit var sessionId: String
     private lateinit var uid: String
-    private lateinit var pin: String
-    private lateinit var temp: String
+//    private lateinit var pin: String
+//    private lateinit var temp: String
+    private lateinit var otpSend: String
     private lateinit var backBtn: ImageView
+    private val otpService = OTPService()
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,12 +75,11 @@ class PhoneVerification : Fragment() {
 
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         dbViewModel = ViewModelProvider(this)[DBViewModel::class.java]
-        phNum = requireArguments().getString("phone").toString()
-        sessionId = requireArguments().getString("sessionId").toString()
-        apiKey = requireArguments().getString("api_key").toString()
-        pin = requireArguments().getString("pin").toString()
+        phone = requireArguments().getString("phone").toString()
         uid = requireArguments().getString("uid").toString()
-        temp = requireArguments().getString("temp").toString()
+//        pin = requireArguments().getString("pin").toString()
+//        temp = requireArguments().getString("temp").toString()
+        otpSend = requireArguments().getString("otp").toString()
 
 
         box1 = view.findViewById(R.id.box1)
@@ -83,7 +93,7 @@ class PhoneVerification : Fragment() {
         timerText = view.findViewById(R.id.timerText)
         backBtn = view.findViewById(R.id.back_btn_otp)
 
-        otpPh.text = "+91$phNum"
+        otpPh.text = "+91$phone"
         numberOtpMove()
 
         resendTimer()
@@ -109,59 +119,42 @@ class PhoneVerification : Fragment() {
                 whiteView.visibility = View.GONE
                 otpLoader.visibility = View.GONE
             } else {
-                verifyOTP()
+                lifecycleScope.launch {
+                    delay(2000) // Delay for 2 seconds
+                    verifyOTP()
+                }
             }
         }
 
         return view
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun verifyOTP() {
-        val apiService: ApiInterface =
-            ApiClient().getClient()!!.create(ApiInterface::class.java)
+        if (otpSend == otp) {
+//            dbViewModel.changePIN(uid, pin)
+            Toast.makeText(
+                requireContext(),
+                "Your phone number is verified successfully",
+                Toast.LENGTH_SHORT
+            ).show()
+            Navigation.findNavController(requireView()).popBackStack()
+            Navigation.findNavController(requireView()).popBackStack()
+            Navigation.findNavController(requireView()).navigate(R.id.nav_account)
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "The OTP you entered is incorrect. Please try again.",
+                Toast.LENGTH_SHORT
+            ).show()
+            timerText.isClickable = true
+            timerText.text = "Resend OTP"
+            whiteView.visibility = View.GONE
+            otpLoader.visibility = View.GONE
+        }
 
-        val call: Call<MessageResponse?>? = apiService.verifyOTP(apiKey, sessionId, otp)
-
-        call!!.enqueue(object : Callback<MessageResponse?> {
-
-            override fun onFailure(call: Call<MessageResponse?>, t: Throwable) {
-                Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
-                whiteView.visibility = View.GONE
-                otpLoader.visibility = View.GONE
-            }
-
-            override fun onResponse(
-                call: Call<MessageResponse?>,
-                response: Response<MessageResponse?>
-            ) {
-                try {
-                    if (response.body()!!.getStatus().equals("Success")) {
-                        dbViewModel.changePIN(uid, pin)
-                        Handler().postDelayed({
-                            Toast.makeText(
-                                requireContext(),
-                                temp,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            Navigation.findNavController(requireView()).popBackStack()
-                            Navigation.findNavController(requireView()).popBackStack()
-                            Navigation.findNavController(requireView()).navigate(R.id.nav_account)
-                        }, 2000)
-                    } else {
-                        Toast.makeText(requireContext(), response.message(), Toast.LENGTH_SHORT)
-                            .show()
-                        timerText.isClickable = true
-                        timerText.text = "Resend OTP"
-                        whiteView.visibility = View.GONE
-                        otpLoader.visibility = View.GONE
-
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        })
     }
+
 
     private fun resendTimer() {
         timerText.isClickable = false
@@ -185,26 +178,13 @@ class PhoneVerification : Fragment() {
     @SuppressLint("ResourceAsColor")
     private fun resendOTP() {
         timerText.setTextColor(R.color.material_black)
+        otpSend = otpService.generateOtp()
+        otpService.sendOtpMessage(phone, otpSend, this)
+        box1.text = null
+        box2.text = null
+        box3.text = null
+        box4.text = null
 
-        val apiService: ApiInterface =
-            ApiClient().getClient()!!.create(ApiInterface::class.java)
-
-        val call: Call<MessageResponse?>? =
-            apiService.sentOTP(apiKey, phNum)
-        call!!.enqueue(object : Callback<MessageResponse?> {
-
-            override fun onFailure(call: Call<MessageResponse?>, t: Throwable) {
-                Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onResponse(
-                call: Call<MessageResponse?>,
-                response: Response<MessageResponse?>
-            ) {
-                sessionId = response.body()!!.getDetails()!!
-                resendTimer()
-            }
-        })
     }
 
     private fun numberOtpMove() {
@@ -256,6 +236,17 @@ class PhoneVerification : Fragment() {
 
         })
 
+    }
+
+    override fun onOtpSentSuccess(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        resendTimer()
+        whiteView.visibility = View.GONE
+    }
+
+    override fun onOtpSentFailure(error: String) {
+        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+        whiteView.visibility = View.GONE
     }
 
 }

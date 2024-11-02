@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
+import com.te.pewala.db.LocalStorage
 import com.te.pewala.db.Response
 
 class RemoveCartItems : Fragment() {
@@ -39,6 +40,7 @@ class RemoveCartItems : Fragment() {
     private lateinit var dbViewModel: DBViewModel
     private lateinit var userUid: String
     private lateinit var mainLayout: RelativeLayout
+    private val localStorage = LocalStorage()
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
@@ -133,12 +135,9 @@ class RemoveCartItems : Fragment() {
     }
 
     private fun load() {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if(it != null) {
-                mainLayout.visibility = View.VISIBLE
-                loader.visibility = View.GONE
-                userUid = it.uid
-            }
-        }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        mainLayout.visibility = View.VISIBLE
+        loader.visibility = View.GONE
+        userUid = userdata!!["uid"]!!
     }
 }

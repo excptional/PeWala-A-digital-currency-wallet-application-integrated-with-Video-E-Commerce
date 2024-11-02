@@ -1,7 +1,6 @@
 package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -29,12 +28,12 @@ import com.te.pewala.db.DBViewModel
 import com.te.pewala.db.Response
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseUser
+import com.te.pewala.db.LocalStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
 
 class Account : Fragment() {
 
@@ -58,8 +57,10 @@ class Account : Fragment() {
     private lateinit var loaderAccount: LottieAnimationView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var uploadImage: FloatingActionButton
-    private lateinit var myUser: FirebaseUser
+//    private lateinit var myUser: FirebaseUser
+    private lateinit var uid: String
     private lateinit var imgUrl: String
+    private val localStorage = LocalStorage()
 
     private val cropActivityResultContract = object : ActivityResultContract<Any?, Uri?>() {
         override fun createIntent(context: Context, input: Any?): Intent {
@@ -170,7 +171,7 @@ class Account : Fragment() {
     private fun imageUploadToStorage(uri: Uri, view: View) {
         loaderAccount.visibility = View.VISIBLE
         whiteView.visibility = View.VISIBLE
-        dbViewModel.uploadImageToStorage(uri, myUser)
+        dbViewModel.uploadImageToStorage(uri, uid)
         dbViewModel.dbResponse.observe(this.viewLifecycleOwner) {
             when (it) {
                 is Response.Success -> {
@@ -208,41 +209,73 @@ class Account : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun loadData(view: View) {
-        authViewModel.userdata.observe(viewLifecycleOwner) {
-            if (it != null) {
-                myUser = it
-                dbViewModel.fetchAccountDetails(it.uid)
-                dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
-                    if (list.exists()) {
-                        if (list.getString("pin").isNullOrEmpty()) {
-                            verifyIcon.visibility = View.GONE
-                            pinText.text = "PIN : _ _ _ _ (Not set)"
-                        } else {
-                            pinText.text = "PIN : * * * *"
-                            verifyIcon.visibility = View.VISIBLE
-                        }
-                        nameAccount.text = list.getString("name")
-                        phoneAccount.text = "Phone : +91 ${list.getString("phone")}"
-                        cardIdAccount.text = "Wallet id : ${list.getString("card_id")}"
-                        Glide.with(view).load(list.getString("image_url")).into(profileImg)
-                        imgUrl = list.getString("image_url")!!
-                        mainLayout.visibility = View.VISIBLE
-                        whiteView.visibility = View.GONE
-                        loaderAccount.visibility = View.GONE
-                        uploadImage.isClickable = true
-                        errorText.visibility = View.GONE
-                        swipeRefreshLayout.isRefreshing = false
-                    } else {
-                        errorText.visibility = View.VISIBLE
-                        whiteView.visibility = View.GONE
-                        loaderAccount.visibility = View.GONE
-                        mainLayout.visibility = View.GONE
-                        uploadImage.isClickable = true
-                        swipeRefreshLayout.isRefreshing = false
-                    }
-                }
+
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        uid = userdata!!["uid"]!!
+
+        if (userdata != null) {
+            if (userdata["pin"].isNullOrEmpty()) {
+                verifyIcon.visibility = View.GONE
+                pinText.text = "PIN : _ _ _ _ (Not set)"
+            } else {
+                pinText.text = "PIN : * * * *"
+                verifyIcon.visibility = View.VISIBLE
             }
+            nameAccount.text = userdata["name"]
+            phoneAccount.text = "Phone : +91 ${userdata["phone"]}"
+            cardIdAccount.text = "Wallet id : ${userdata["card_id"]}"
+            Glide.with(view).load(userdata["image_url"]).into(profileImg)
+            imgUrl = userdata["image_url"]!!
+            mainLayout.visibility = View.VISIBLE
+            whiteView.visibility = View.GONE
+            loaderAccount.visibility = View.GONE
+            uploadImage.isClickable = true
+            errorText.visibility = View.GONE
+            swipeRefreshLayout.isRefreshing = false
+        } else {
+            errorText.visibility = View.VISIBLE
+            whiteView.visibility = View.GONE
+            loaderAccount.visibility = View.GONE
+            mainLayout.visibility = View.GONE
+            uploadImage.isClickable = true
+            swipeRefreshLayout.isRefreshing = false
         }
+
+//        authViewModel.userdata.observe(viewLifecycleOwner) {
+//            if (it != null) {
+//                myUser = it
+//                dbViewModel.fetchAccountDetails(it.uid)
+//                dbViewModel.accDetails.observe(viewLifecycleOwner) { list ->
+//                    if (list.exists()) {
+//                        if (list.getString("pin").isNullOrEmpty()) {
+//                            verifyIcon.visibility = View.GONE
+//                            pinText.text = "PIN : _ _ _ _ (Not set)"
+//                        } else {
+//                            pinText.text = "PIN : * * * *"
+//                            verifyIcon.visibility = View.VISIBLE
+//                        }
+//                        nameAccount.text = list.getString("name")
+//                        phoneAccount.text = "Phone : +91 ${list.getString("phone")}"
+//                        cardIdAccount.text = "Wallet id : ${list.getString("card_id")}"
+//                        Glide.with(view).load(list.getString("image_url")).into(profileImg)
+//                        imgUrl = list.getString("image_url")!!
+//                        mainLayout.visibility = View.VISIBLE
+//                        whiteView.visibility = View.GONE
+//                        loaderAccount.visibility = View.GONE
+//                        uploadImage.isClickable = true
+//                        errorText.visibility = View.GONE
+//                        swipeRefreshLayout.isRefreshing = false
+//                    } else {
+//                        errorText.visibility = View.VISIBLE
+//                        whiteView.visibility = View.GONE
+//                        loaderAccount.visibility = View.GONE
+//                        mainLayout.visibility = View.GONE
+//                        uploadImage.isClickable = true
+//                        swipeRefreshLayout.isRefreshing = false
+//                    }
+//                }
+//            }
+//        }
     }
 
     @SuppressLint("Recycle")

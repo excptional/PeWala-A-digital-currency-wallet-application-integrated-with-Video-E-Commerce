@@ -6,12 +6,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.InputStream
 
 class DBViewModel(application: Application) : AndroidViewModel(application) {
@@ -62,6 +58,9 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     val myOrdersData: LiveData<MutableList<DocumentSnapshot>>
         get() = dbRepository.myOrdersData
 
+    val pendingPaymentsData: LiveData<MutableList<DocumentSnapshot>>
+        get() = dbRepository.pendingPaymentsData
+
     val wishlistData: LiveData<MutableList<DocumentSnapshot>>
         get() = dbRepository.wishlistData
 
@@ -70,6 +69,9 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     val cartData: LiveData<MutableList<DocumentSnapshot>>
         get() = dbRepository.cartData
+
+    val selectedCartData: LiveData<ArrayList<DocumentSnapshot>>
+        get() = dbRepository.selectedCartData
 
     val isInCartData: LiveData<Boolean>
         get() = dbRepository.isInCartData
@@ -97,8 +99,8 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         dbRepository.updateTransactorDetails(uid)
     }
 
-    fun uploadImageToStorage(imageUri: Uri, user: FirebaseUser) {
-        dbRepository.uploadImageToStorage(imageUri, user)
+    fun uploadImageToStorage(imageUri: Uri, uid: String) {
+        dbRepository.uploadImageToStorage(imageUri, uid)
     }
 
     fun replaceImage(imageUrl: String, newImageStream: InputStream) {
@@ -202,6 +204,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         dbRepository.fetchProducts(category)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun addOrder(
         userName: String,
         userNumber: String,
@@ -215,7 +218,9 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         productCategory: String,
         payableAmount: String,
         quantity: String,
-        sellerUID: String
+        sellerUID: String,
+        orderId: String,
+        time: String
     ) {
         dbRepository.addOrder(
             userName,
@@ -230,8 +235,18 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
             productCategory,
             payableAmount,
             quantity,
-            sellerUID
+            sellerUID,
+            orderId,
+            time
         )
+    }
+
+    fun completeOrder(
+        sellerUid: String,
+        buyerUid: String,
+        orderId: String
+    ) {
+        dbRepository.completeOrder(sellerUid, buyerUid, orderId)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -247,6 +262,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         dbRepository.fetchReceivedOrders(sellerUid)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun acceptOrders(sellerUid: String, buyerUid: String, orderId: String, date: String) {
         dbRepository.acceptOrders(sellerUid, buyerUid, orderId, date)
     }
@@ -281,6 +297,14 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
 
     fun isInCart(productId: String, uid: String) {
         dbRepository.isInCart(productId, uid)
+    }
+
+    fun getSelectedCartItems(uid: String) {
+        dbRepository.getSelectedCartItems(uid)
+    }
+
+    fun updateSelectOptionCart(productId: String, uid: String) {
+        dbRepository.updateSelectOptionCart(productId, uid)
     }
 
     fun removeFromCart(productId: String, uid: String) {
@@ -377,6 +401,21 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
         description: String,
     ) {
         dbRepository.updateProductDetails(sellerUid, productId, category, productName, brandName, productImage, productPrice, stocks, description)
+    }
+
+    fun addSellerDuePayment(
+        sellerUid: String,
+        amount: String,
+        orderId: String,
+        time: String
+    ) {
+        dbRepository.addSellerDuePayment(sellerUid, amount, orderId, time)
+    }
+
+    fun fetchSellerDuePayment(
+        sellerUid: String
+    ) {
+        dbRepository.fetchSellerDuePayment(sellerUid)
     }
 
 }

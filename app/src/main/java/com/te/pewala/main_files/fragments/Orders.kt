@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,8 +18,9 @@ import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.MyOrdersAdapter
-import com.te.pewala.main_files.items.MyOrdersItems
+import com.te.pewala.main_files.models.MyOrdersItems
 import com.google.firebase.firestore.DocumentSnapshot
+import com.te.pewala.db.LocalStorage
 
 class Orders : Fragment() {
 
@@ -33,7 +33,8 @@ class Orders : Fragment() {
     private lateinit var backBtn: ImageView
     private lateinit var noOrders: TextView
     private lateinit var loader: LottieAnimationView
-//    private lateinit var mainLayout: LinearLayout
+    //    private lateinit var mainLayout: LinearLayout
+    private val localStorage = LocalStorage()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -70,7 +71,7 @@ class Orders : Fragment() {
             loader.visibility = View.VISIBLE
             loadData()
         }
-        
+
         return view
     }
 
@@ -101,7 +102,8 @@ class Orders : Fragment() {
                         i.getString("payable_amount"),
                         i.getString("quantity"),
                         i.getString("order_id"),
-                        i.getString("product_rating")
+                        i.getString("product_rating"),
+                        i.getString("confirmation_code")
                     )
                     ordersItemsArray.add(order)
                 }
@@ -115,6 +117,7 @@ class Orders : Fragment() {
     }
 
     private fun loadData() {
+        val userdata = localStorage.getData(requireContext(), "user_data")
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
 //                sellerUid = it.uid

@@ -21,7 +21,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Are you sure to remove this item?"
+                android:text="Sure to remove this item?"
                 android:textColor="@color/material_black"
                 android:textSize="@dimen/_17sdp"
                 android:singleLine="true"

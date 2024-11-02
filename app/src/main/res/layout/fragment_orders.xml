@@ -37,10 +37,10 @@
                     android:text="My Orders"
                     android:textColor="@color/material_black"
                     android:layout_toEndOf="@id/back_btn_my_orders"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_14sdp" />
 
                 <ImageView
-                    android:layout_width="@dimen/_90sdp"
+                    android:layout_width="@dimen/_60sdp"
                     android:layout_height="@dimen/_16sdp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"

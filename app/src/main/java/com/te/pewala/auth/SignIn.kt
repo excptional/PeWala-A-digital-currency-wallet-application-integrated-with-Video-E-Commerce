@@ -20,7 +20,6 @@ import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.main_files.MainActivity
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.Response
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.te.pewala.R
 
@@ -59,13 +58,13 @@ class SignIn : Fragment() {
 
         signInBtn.setOnClickListener {
             signInBtn.isClickable = false
-            signIn(view)
+            signIn()
         }
 
         registerText.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("LastFragment", "SignIn")
-            Navigation.findNavController(it).navigate(R.id.nav_register, bundle)
+            Navigation.findNavController(view).navigate(R.id.nav_register, bundle)
         }
 
         phEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -95,7 +94,7 @@ class SignIn : Fragment() {
         passwordEditText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 signInBtn.isClickable = false
-                signIn(view)
+                signIn()
                 true
             } else false
         }
@@ -103,7 +102,7 @@ class SignIn : Fragment() {
         return view
     }
 
-    private fun signIn(view: View) {
+    private fun signIn() {
         whiteView.visibility = View.VISIBLE
         signInLoader.visibility = View.VISIBLE
         passwordLayout.isPasswordVisibilityToggleEnabled = true

@@ -102,7 +102,6 @@ class Feedback : Fragment() {
         return view
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun getColorForRating(rating: Float): Int {
         // Customize the color based on the rating
         // Implement your logic to determine color based on the rating

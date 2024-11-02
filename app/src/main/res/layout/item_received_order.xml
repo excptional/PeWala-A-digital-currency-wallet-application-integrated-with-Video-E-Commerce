@@ -49,9 +49,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="₹1200"
-                    android:textSize="@dimen/_20sdp"
+                    android:textSize="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:textColor="@color/material_black"
+                    android:textColor="@color/t_2"
                     android:textStyle="bold"
                     android:layout_gravity="center"/>
 
@@ -113,10 +113,10 @@
                     android:layout_marginBottom="@dimen/_2sdp"
                     android:ellipsize="end"
                     android:maxLines="3"
-                    android:singleLine="true"
                     android:text="Kona, Howrah 711114"
                     android:textStyle="bold"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
 
                 <TextView
                     android:id="@+id/quantity_order_seller"

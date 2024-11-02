@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
@@ -18,12 +18,14 @@ import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.TransactionHistoryAdapter
-import com.te.pewala.main_files.items.TransactionHistoryItems
+import com.te.pewala.main_files.models.TransactionHistoryItems
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.firestore.DocumentSnapshot
+import com.te.pewala.db.LocalStorage
 
 class History_ : Fragment() {
 
+    private val localStorage = LocalStorage()
     private lateinit var transactionHistoryAdapter: TransactionHistoryAdapter
     private var transactionHistoryItems = arrayListOf<TransactionHistoryItems>()
     private lateinit var historyShimmer: ShimmerFrameLayout
@@ -33,7 +35,7 @@ class History_ : Fragment() {
     private lateinit var mainLayout: LinearLayout
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
-    private lateinit var backBtn: ImageButton
+    private lateinit var backBtn: ImageView
     private lateinit var uid: String
 
     @SuppressLint("MissingInflatedId")
@@ -121,11 +123,8 @@ class History_ : Fragment() {
     }
 
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) { it ->
-            if (it != null) {
-                uid = it.uid
-                getData()
-            }
-        }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        uid = userdata!!["uid"]!!
+        getData()
     }
 }

@@ -18,11 +18,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.DocumentSnapshot
@@ -30,20 +28,18 @@ import com.te.pewala.R
 import com.te.pewala.db.AESCrypt
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
-import com.te.pewala.db.Response
+import com.te.pewala.db.LocalStorage
 import com.te.pewala.main_files.adapters.ChatAdapter
-import com.te.pewala.main_files.items.MessageItems
-import java.security.SecureRandom
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
+import com.te.pewala.main_files.models.MessageItems
 
 class ChatSection : Fragment() {
 
+    private val localStorage = LocalStorage()
     private lateinit var chatAdapter: ChatAdapter
     private var chatItemsArray = arrayListOf<MessageItems>()
     private var dbViewModel: DBViewModel? = null
     private var authViewModel: AuthViewModel? = null
-    private lateinit var backBtn: ImageButton
+    private lateinit var backBtn: ImageView
     private lateinit var receiverName: TextView
     private lateinit var msgET: TextInputEditText
     private lateinit var mic: ImageButton
@@ -213,32 +209,27 @@ class ChatSection : Fragment() {
     }
 
     private fun loadData() {
-        authViewModel!!.userdata.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                uid = user.uid
-                dbViewModel!!.fetchAccountDetails(user.uid)
-                dbViewModel!!.accDetails.observe(viewLifecycleOwner) { accDetail ->
-                    userType = accDetail.getString("user_type")!!
-                    if (userType == "Buyer") {
-                        cId = "$uid:$receiverUid"
-                    } else {
-                        cId = "$receiverUid:$uid"
-                    }
-                    dbViewModel!!.fetchMessages(cId)
-                    dbViewModel!!.chats.observe(viewLifecycleOwner) { msgList ->
-                        if (msgList.isNotEmpty()) {
-                            fetchMessages(msgList)
-                        } else {
-                            Toast.makeText(
-                                requireContext(),
-                                "There are no chats found",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            mainLayout.visibility = View.VISIBLE
-                            chatShimmer.visibility = View.GONE
-                        }
-                    }
-                }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        uid = userdata!!["uid"]!!
+        dbViewModel!!.fetchAccountDetails(uid)
+        userType = userdata["user_type"]!!
+        if (userType == "Buyer") {
+            cId = "$uid:$receiverUid"
+        } else {
+            cId = "$receiverUid:$uid"
+        }
+        dbViewModel!!.fetchMessages(cId)
+        dbViewModel!!.chats.observe(viewLifecycleOwner) { msgList ->
+            if (msgList.isNotEmpty()) {
+                fetchMessages(msgList)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "There are no chats found",
+                    Toast.LENGTH_SHORT
+                ).show()
+                mainLayout.visibility = View.VISIBLE
+                chatShimmer.visibility = View.GONE
             }
         }
     }

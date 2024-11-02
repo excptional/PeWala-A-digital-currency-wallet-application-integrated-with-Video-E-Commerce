@@ -77,11 +77,6 @@
         tools:layout="@layout/fragment_q_r_scanner" />
 
     <fragment
-        android:id="@+id/nav_qr_scanner2"
-        android:name="com.te.pewala.main_files.fragments.QRScanner2"
-        tools:layout="@layout/fragment_q_r_scanner2" />
-
-    <fragment
         android:id="@+id/nav_final_pay"
         android:name="com.te.pewala.main_files.fragments.FinalPayment"
         tools:layout="@layout/fragment_final_payment" />
@@ -216,5 +211,25 @@
         android:id="@+id/nav_chat_list"
         android:name="com.te.pewala.main_files.fragments.ChatList"
         tools:layout="@layout/fragment_chat_list" />
+
+    <fragment
+        android:id="@+id/nav_received_orders"
+        android:name="com.te.pewala.main_files.fragments.ReceivedOrders"
+        tools:layout="@layout/fragment_received_orders" />
+
+    <fragment
+        android:id="@+id/nav_seller_products"
+        android:name="com.te.pewala.main_files.fragments.SellerProducts"
+        tools:layout="@layout/fragment_seller_products" />
+
+    <fragment
+        android:id="@+id/nav_pending_payments"
+        android:name="com.te.pewala.main_files.fragments.PendingPayments"
+        tools:layout="@layout/fragment_pending_payments" />
+
+    <fragment
+        android:id="@+id/nav_razorpay_payment"
+        android:name="com.te.pewala.main_files.fragments.RazorpayPayment"
+        tools:layout="@layout/fragment_razorpay_payment" />
 
 </navigation>

@@ -13,6 +13,8 @@ dependencyResolutionManagement {
         jcenter()
         maven { url "https://maven.google.com" }
         maven { url 'https://jitpack.io' }
+        maven { url 'https://storage.zego.im/maven' }
+        maven { url  "https://phonepe.mycloudrepo.io/public/repositories/phonepe-intentsdk-android" }
     }
 }
 rootProject.name = "Trigeredge Digital Currency Project"

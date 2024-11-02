@@ -7,11 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -19,16 +18,14 @@ import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.TransactionHistoryAdapter
-import com.te.pewala.main_files.items.TransactionHistoryItems
+import com.te.pewala.main_files.models.TransactionHistoryItems
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.firestore.DocumentSnapshot
-import com.te.pewala.db.Response
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import com.te.pewala.db.LocalStorage
 
 class History : Fragment() {
 
+    private val localStorage = LocalStorage()
     private lateinit var transactionHistoryAdapter: TransactionHistoryAdapter
     private var transactionHistoryItems = arrayListOf<TransactionHistoryItems>()
     private lateinit var historyShimmer: ShimmerFrameLayout
@@ -40,6 +37,7 @@ class History : Fragment() {
     private lateinit var dbViewModel: DBViewModel
     private lateinit var uid: String
     private lateinit var phone: String
+    private lateinit var backBtn: ImageView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -58,6 +56,7 @@ class History : Fragment() {
         refreshLayout = view.findViewById(R.id.swipe_refresh_layout_history)
         mainLayout = view.findViewById(R.id.mainLayout_history)
         nothingFoundText = view.findViewById(R.id.nothingFound_history)
+        backBtn = view.findViewById(R.id.back_btn_history)
 
         historyShimmer.startShimmer()
         historyShimmer.visibility = View.VISIBLE
@@ -77,6 +76,10 @@ class History : Fragment() {
             historyShimmer.visibility = View.VISIBLE
             mainLayout.visibility = View.GONE
             getData()
+        }
+
+        backBtn.setOnClickListener {
+            requireActivity().onBackPressed()
         }
 
         return view
@@ -121,11 +124,9 @@ class History : Fragment() {
     }
 
     private fun loadData() {
-        authViewModel.userdata.observe(viewLifecycleOwner) { it ->
-            if (it != null) {
-                uid = it.uid
-                getData()
-            }
-        }
+        val userdata = localStorage.getData(requireContext(),"user_data")
+        uid = userdata!!["uid"]!!
+        getData()
+
     }
 }

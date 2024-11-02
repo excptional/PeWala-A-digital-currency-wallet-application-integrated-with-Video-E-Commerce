@@ -21,7 +21,7 @@
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_margin="@dimen/_8sdp"
-            app:cardBackgroundColor="@color/material_black"
+            app:cardBackgroundColor="@color/t_3"
             app:cardCornerRadius="@dimen/_5sdp">
 
             <ImageView

@@ -16,35 +16,40 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
 
-                <ImageButton
-                    android:id="@+id/back_btn_order_details"
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:background="@null"
-                    android:contentDescription="@string/app_name"
-                    android:padding="@dimen/_4sdp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/back_black"
-                    tools:ignore="TouchTargetSizeCheck"/>
+                <ImageView
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pewala_icon1" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_toEndOf="@id/back_btn_order_details"
+                    android:fontFamily="@font/roboto_medium"
                     android:text="Order Details"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_16sdp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sdp" />
 
-            </LinearLayout>
+                <ImageButton
+                    android:id="@+id/back_btn_order_details"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:background="@drawable/back_black"
+                    android:scaleType="centerCrop" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,9 +57,113 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
-                android:weightSum="5"
+                android:weightSum="6"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="4"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:padding="@dimen/_5sdp">
+
+                    <RelativeLayout
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:background="#F2F5F6"
+                        android:layout_gravity="start"
+                        android:layout_marginBottom="@dimen/_5sdp">
+
+                        <TextView
+                            android:id="@+id/status_order_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Processing"
+                            android:textAllCaps="true"
+                            android:textSize="@dimen/_9sdp"
+                            android:textColor="@color/text_color1"
+                            android:fontFamily="@font/roboto_medium"
+                            android:layout_centerInParent="true"/>
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/brandName_order_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="Coca Cola"
+                        android:textAlignment="center"
+                        android:textColor="@color/t_2"
+                        android:fontFamily="@font/roboto_black"
+                        android:textSize="@dimen/_12sdp"
+                        />
+
+                    <TextView
+                        android:id="@+id/productName_order_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:text="Coca Cola Black soda drink"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/buyerName_order_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:text="Ordered by Bikash Dutta"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/address_order_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:text="Kona, Howrah 711114"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/quantity_order_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:singleLine="true"
+                        android:text="Quantity - 5"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/time_order_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:text="Ordered on 14 July, 2023"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <TextView
+                        android:id="@+id/orderId_order_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:singleLine="true"
+                        android:text="Order Id - 64654654654"
+                        android:textColor="@color/text_color1"
+                        android:textSize="@dimen/_11sdp" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -68,7 +177,7 @@
                     <ImageView
                         android:id="@+id/productImg_order_details"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_110sdp"
+                        android:layout_height="@dimen/_80sdp"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="@dimen/_3sdp"
                         android:scaleType="fitCenter"
@@ -81,92 +190,9 @@
                         android:text="₹1200"
                         android:textSize="@dimen/_20sdp"
                         android:layout_marginTop="@dimen/_5sdp"
-                        android:textColor="@color/material_black"
-                        android:textStyle="bold"
+                        android:textColor="@color/t_2"
+                        android:fontFamily="@font/roboto_black"
                         android:layout_gravity="center"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="3"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:padding="@dimen/_5sdp">
-
-                    <TextView
-                        android:id="@+id/brandName_order_details"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="2"
-                        android:text="Coca Cola"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/productName_order_details"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_2sdp"
-                        android:singleLine="true"
-                        android:text="Coca Cola Black soda drink"
-                        android:textColor="@color/material_black"
-                        android:textSize="@dimen/_12sdp" />
-
-                    <TextView
-                        android:id="@+id/buyerName_order_details"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_2sdp"
-                        android:text="Ordered by Bikash Dutta"
-                        android:textColor="#2196F3"
-                        android:textSize="@dimen/_13sdp" />
-
-                    <TextView
-                        android:id="@+id/address_order_details"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_2sdp"
-                        android:text="Kona, Howrah 711114"
-                        android:textStyle="bold"
-                        android:textSize="@dimen/_13sdp" />
-
-                    <TextView
-                        android:id="@+id/quantity_order_details"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_2sdp"
-                        android:ellipsize="end"
-                        android:maxLines="3"
-                        android:singleLine="true"
-                        android:text="Quantity : 5"
-                        android:textColor="@color/material_black"
-                        android:textSize="@dimen/_13sdp" />
-
-                    <TextView
-                        android:id="@+id/time_order_details"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_2sdp"
-                        android:text="Ordered on 14 July, 2023"
-                        android:textColor="@color/material_black"
-                        android:textSize="@dimen/_13sdp" />
-
-                    <TextView
-                        android:id="@+id/orderId_order_details"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_2sdp"
-                        android:ellipsize="end"
-                        android:maxLines="3"
-                        android:singleLine="true"
-                        android:text="Order Id : 64654654654"
-                        android:textColor="@color/material_black"
-                        android:textSize="@dimen/_13sdp" />
 
                 </LinearLayout>
 
@@ -178,9 +204,207 @@
                 android:background="#4FC4D9E6"/>
 
             <LinearLayout
+                android:id="@+id/buyer_layout_order_details"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:weightSum="1"
+                android:visibility="gone"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/code_layout_order_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/_18sdp"
+                            android:layout_height="@dimen/_18sdp"
+                            android:src="@drawable/fast_delivery"/>
+
+                        <TextView
+                            android:id="@+id/delivery_text_order_details"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Your order will be delivered by 10 Sep, 2024."
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_11sdp"
+                            android:layout_gravity="center_vertical"
+                            android:fontFamily="@font/roboto_bold"
+                            />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Share this 6 digit code with the delivery person after receiving your product."
+                        android:textColor="@color/text_color1"
+                        android:textSize="@dimen/_10sdp"
+                        android:textAlignment="textStart"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:fontFamily="@font/roboto_bold_italic"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:orientation="horizontal"
+                        android:weightSum="6">
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/confirmation_code_background"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/text1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_20sdp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/confirmation_code_background"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/text2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_20sdp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/confirmation_code_background"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/text3"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_20sdp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:background="@drawable/confirmation_code_background"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/text4"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_20sdp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:background="@drawable/confirmation_code_background"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/text5"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_20sdp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/confirmation_code_background"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/text6"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_20sdp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:alpha="0.6"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:src="@drawable/out_of_the_box"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/decision_layout_order_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="1"
+                android:visibility="gone"
                 android:orientation="vertical" >
 
                 <ImageView
@@ -203,7 +427,7 @@
                         android:id="@+id/accept_btn_order_details"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_40sdp"
-                        app:cardBackgroundColor="@color/material_black"
+                        app:cardBackgroundColor="@color/t_2"
                         android:layout_weight="1"
                         android:clipToPadding="true"
                         android:elevation="@dimen/_5sdp"
@@ -228,7 +452,7 @@
                         android:id="@+id/reject_btn_order_details"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_40sdp"
-                        app:cardBackgroundColor="@color/material_black"
+                        app:cardBackgroundColor="@color/t_3"
                         android:layout_weight="1"
                         android:clipToPadding="true"
                         android:elevation="@dimen/_5sdp"
@@ -252,6 +476,88 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/confirmation_layout_order_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Enter the 6 digit confirmation code provided by the buyer to complete the order."
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        android:textAlignment="textStart"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:fontFamily="@font/roboto_medium"
+                        />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_35sdp"
+                        android:background="@drawable/et_outline_bg"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        app:boxBackgroundMode="none"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/confirmation_code_order_details"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="000000"
+                            android:inputType="numberDecimal"
+                            android:padding="@dimen/_5sdp"
+                            android:textColor="@color/material_black"
+                            android:textColorHint="@color/text_color2"
+                            android:imeOptions="actionDone"
+                            android:maxLength="6"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/submit_btn_order_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_15sdp"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/_15sdp"
+                    app:cardBackgroundColor="@color/t_2"
+                    app:cardCornerRadius="@dimen/_5sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Submit"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold" />
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

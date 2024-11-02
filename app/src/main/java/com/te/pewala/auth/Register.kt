@@ -118,12 +118,12 @@ class Register : Fragment(), AdapterView.OnItemSelectedListener {
                 Navigation.findNavController(view).popBackStack()
             }
             Navigation.findNavController(view).popBackStack()
-            Navigation.findNavController(it).navigate(R.id.nav_sign_in)
+            Navigation.findNavController(view).navigate(R.id.nav_sign_in)
         }
 
         registerBtn.setOnClickListener {
             registerBtn.isClickable = false
-            signUp(view)
+            signUp()
         }
 
         val userTypeAdapter = CustomSpinnerAdapter(
@@ -148,7 +148,7 @@ class Register : Fragment(), AdapterView.OnItemSelectedListener {
         passwordEditText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 registerBtn.isClickable = false
-                signUp(view)
+                signUp()
                 true
             } else false
         }
@@ -156,7 +156,7 @@ class Register : Fragment(), AdapterView.OnItemSelectedListener {
         return view
     }
 
-    private fun signUp(view: View) {
+    private fun signUp() {
 
         whiteView.visibility = View.VISIBLE
         signUpLoader.visibility = View.VISIBLE

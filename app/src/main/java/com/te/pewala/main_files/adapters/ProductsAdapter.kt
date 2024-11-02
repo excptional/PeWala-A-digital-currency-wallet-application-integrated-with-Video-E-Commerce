@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
@@ -15,8 +13,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.te.pewala.R
-import com.te.pewala.main_files.items.ProductsItems
-import de.hdodenhof.circleimageview.CircleImageView
+import com.te.pewala.main_files.models.ProductsItems
 
 class ProductsAdapter(
     private val productItems: ArrayList<ProductsItems>

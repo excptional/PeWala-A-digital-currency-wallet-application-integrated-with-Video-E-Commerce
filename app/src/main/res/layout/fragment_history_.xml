@@ -21,45 +21,57 @@
             android:layout_centerInParent="true"/>
 
         <LinearLayout
-            android:id="@+id/mainLayout_history_"
+            android:id="@+id/top_layout_history_"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
-            <LinearLayout
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_5sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/pewala_icon1" />
+
+                <ImageView
+                    android:id="@+id/back_btn_history_"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/back_black" />
+
+            </RelativeLayout>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/back_btn_history_"
-                    android:layout_width="@dimen/_35sdp"
-                    android:layout_height="@dimen/_35sdp"
-                    android:padding="@dimen/_4sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:background="@null"
-                    android:contentDescription="@string/app_name"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/back_black"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Transaction History"
-                    android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:text="Transaction History"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:background="#CACACA"/>
+                android:background="@color/background"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mainLayout_history_"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_below="@id/top_layout_history_"
+            android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_history_"
@@ -76,6 +88,7 @@
             android:layout_centerHorizontal="true"
             android:orientation="vertical"
             android:visibility="visible"
+            android:layout_below="@id/top_layout_history_"
             app:shimmer_duration="800">
 
             <LinearLayout

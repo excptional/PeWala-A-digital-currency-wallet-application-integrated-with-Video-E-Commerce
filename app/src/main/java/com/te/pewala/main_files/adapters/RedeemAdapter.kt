@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.te.pewala.R
-import com.te.pewala.main_files.items.RedeemItems
+import com.te.pewala.main_files.models.RedeemItems
 import java.text.SimpleDateFormat
 import java.util.TimeZone
 

@@ -20,7 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.te.pewala.R
 import com.te.pewala.db.DBViewModel
 import com.te.pewala.main_files.adapters.ProductsAdapter
-import com.te.pewala.main_files.items.ProductsItems
+import com.te.pewala.main_files.models.ProductsItems
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.DocumentSnapshot

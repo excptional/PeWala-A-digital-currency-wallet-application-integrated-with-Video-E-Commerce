@@ -1,8 +1,13 @@
-<resources>
-    <string name="app_name">PeWala</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Celer</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="wallet">Wallet</string>
     <string name="qr_code">QR code</string>
     <string name="your_redeem_request_of_50_pts_was_submitted_successfully_amount_will_be_send_to_your_respective_bank_account_soon">Your redeem request of 50 PTS was submitted successfully. Amount will be send to your respective bank account soon.</string>
+    <string name="TWO_FACTOR_API_KEY" tools:ignore="TypographyDashes">09e68d45-c8eb-11ed-81b6-0200cd936042</string>
+    <string name="ZEGOCLOUD_APP_ID">1494524213</string>
+    <string name="ZEGOCLOUD_APP_SIGN">af05babd9cc67d6fd9ea5e46e2f200cf6c47f960d4452c3b0e3d6554ee857089</string>
+    <string name="RAZORPAY_KEY_ID">rzp_live_KpR99KMEuOY7EN</string>
+    <string name="RAZORPAY_KEY_ID_TEST">rzp_test_sMx2OXFbQknevH</string>
 </resources>

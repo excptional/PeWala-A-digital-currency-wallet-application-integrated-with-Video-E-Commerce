@@ -8,12 +8,10 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.VideoView
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.R
-import com.te.pewala.main_files.items.EditVideoDetailsItems
-import pl.droidsonroids.gif.GifImageView
+import com.te.pewala.main_files.models.EditVideoDetailsItems
 
 class EditVideoDetailsAdapter (
     private val videoDetailsItems: ArrayList<EditVideoDetailsItems>

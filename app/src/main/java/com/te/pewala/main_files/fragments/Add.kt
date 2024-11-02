@@ -29,7 +29,6 @@ import com.airbnb.lottie.LottieAnimationView
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
-import com.te.pewala.db.UPIPayment
 import com.te.pewala.main_files.MainActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
@@ -167,24 +166,24 @@ class Add : Fragment() {
         return view
     }
 
-    private fun startPayment(payment: UPIPayment): Intent {
-        val uri = Uri.parse("upi://pay").buildUpon()
-            .appendQueryParameter("pa", payment.vpa)
-            .appendQueryParameter("pn", payment.name)
-            .appendQueryParameter("tn", payment.description)
-            .appendQueryParameter("am", payment.amount)
-            .appendQueryParameter("cu", "INR")
-            .appendQueryParameter("tr", payment.transactionId)
-            .appendQueryParameter("mc", "")
-            .appendQueryParameter("url", "")
-            .appendQueryParameter("mode", "UPI")
-            .build()
-
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = uri
-
-        return Intent.createChooser(intent, "Pay with")
-    }
+//    private fun startPayment(payment: UPIPayment): Intent {
+//        val uri = Uri.parse("upi://pay").buildUpon()
+//            .appendQueryParameter("pa", payment.vpa)
+//            .appendQueryParameter("pn", payment.name)
+//            .appendQueryParameter("tn", payment.description)
+//            .appendQueryParameter("am", payment.amount)
+//            .appendQueryParameter("cu", "INR")
+//            .appendQueryParameter("tr", payment.transactionId)
+//            .appendQueryParameter("mc", "")
+//            .appendQueryParameter("url", "")
+//            .appendQueryParameter("mode", "UPI")
+//            .build()
+//
+//        val intent = Intent(Intent.ACTION_VIEW)
+//        intent.data = uri
+//
+//        return Intent.createChooser(intent, "Pay with")
+//    }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

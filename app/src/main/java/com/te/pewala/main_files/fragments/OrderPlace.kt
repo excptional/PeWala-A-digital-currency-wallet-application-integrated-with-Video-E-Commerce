@@ -1,9 +1,7 @@
 package com.te.pewala.main_files.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,9 +13,9 @@ import android.widget.RatingBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.VideoView
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,17 +25,21 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.te.pewala.R
 import com.te.pewala.db.AuthViewModel
 import com.te.pewala.db.DBViewModel
+import com.te.pewala.db.LocalStorage
 import com.te.pewala.db.Response
 import com.te.pewala.main_files.adapters.VideoTutorialsAdapter
-import com.te.pewala.main_files.items.VideoTutorialsItems
+import com.te.pewala.main_files.models.VideoTutorialsItems
+import com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton
+import com.zegocloud.uikit.service.defines.ZegoUIKitUser
 import de.hdodenhof.circleimageview.CircleImageView
-import org.bouncycastle.util.Integers
 import kotlin.properties.Delegates
 
 class OrderPlace : Fragment() {
 
     private lateinit var backBtn: ImageButton
-    private lateinit var addToWishlistBtn: ImageButton
+    private lateinit var addToWishlistBtn: RelativeLayout
+    private lateinit var wishlistIcon: ImageView
+    private lateinit var wishlistText: TextView
     private lateinit var shareBtn: ImageButton
     private lateinit var productImage: ImageView
     private lateinit var productName: TextView
@@ -51,7 +53,7 @@ class OrderPlace : Fragment() {
     private lateinit var sellerName: TextView
     private lateinit var cartText: TextView
     private lateinit var sellerImg: CircleImageView
-    private lateinit var placeOrder: CardView
+//    private lateinit var placeOrder: CardView
     private lateinit var addToCart: CardView
     private lateinit var authViewModel: AuthViewModel
     private lateinit var dbViewModel: DBViewModel
@@ -76,6 +78,11 @@ class OrderPlace : Fragment() {
     private var videoItemsArray = arrayListOf<VideoTutorialsItems>()
     private lateinit var recyclerview: RecyclerView
     private lateinit var messageOrder: CardView
+    private lateinit var videoCall: ZegoSendCallInvitationButton
+    private lateinit var voiceCall: ZegoSendCallInvitationButton
+    private lateinit var videoCallBtn: CardView
+    private lateinit var voiceCallBtn: CardView
+    private val localStorage = LocalStorage()
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
@@ -87,7 +94,9 @@ class OrderPlace : Fragment() {
         requireActivity().window.statusBarColor = Color.WHITE
 
         backBtn = view.findViewById(R.id.back_btn_order)
-        addToWishlistBtn = view.findViewById(R.id.add_to_whishlist_order)
+        addToWishlistBtn = view.findViewById(R.id.add_to_wishlist_order)
+        wishlistIcon = view.findViewById(R.id.wishlist_icon_order)
+        wishlistText = view.findViewById(R.id.wishlist_text_order)
 //        shareBtn = view.findViewById(R.id.share_order)
         productNameTitle = view.findViewById(R.id.title_productName_order)
         productName = view.findViewById(R.id.productName_order)
@@ -98,7 +107,6 @@ class OrderPlace : Fragment() {
         ratingText = view.findViewById(R.id.rating_text_order)
         description = view.findViewById(R.id.description_order)
         productPrice = view.findViewById(R.id.product_price_order)
-        placeOrder = view.findViewById(R.id.place_order)
         addToCart = view.findViewById(R.id.add_to_card_order)
         sellerName = view.findViewById(R.id.sellerName_order)
         sellerImg = view.findViewById(R.id.sellerImage_order)
@@ -110,23 +118,15 @@ class OrderPlace : Fragment() {
         mainLayout = view.findViewById(R.id.main_layout_order)
         recyclerview = view.findViewById(R.id.recyclerView_order)
         messageOrder = view.findViewById(R.id.message_order)
+        videoCall = view.findViewById(R.id.video_call_order)
+        voiceCall = view.findViewById(R.id.voice_call_order)
+//        videoCallBtn = view.findViewById(R.id.video_call_btn_order)
+//        voiceCallBtn = view.findViewById(R.id.voice_call_btn_order)
 
         mainLayout.visibility = View.GONE
 
         productId = requireArguments().getString("productId").toString()
         sellerUid = requireArguments().getString("seller_uid").toString()
-
-//        productVideo.setVideoURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/videos%2FRetro%20Kahuna%20Icon%20Senior%20Cricket%20Bat%20_%20Kookaburra%20Cricket.mp4?alt=media&token=87bc641b-ae8c-4b05-8b38-a49197a83ea9"))
-//        productVideo.setOnPreparedListener {
-//            mp -> mp.isLooping = true
-//            mp.setVolume(0f, 0f)
-//            loaderVideo.visibility = View.GONE
-//        }
-//        productVideo.start()
-//
-//        productVideo.setOnClickListener {
-//            Navigation.findNavController(view).navigate(R.id.nav_product_feed)
-//        }
 
         dbViewModel.getProductDetails(
             requireArguments().getString("category").toString(),
@@ -152,7 +152,7 @@ class OrderPlace : Fragment() {
                 productPrice.text = "$productPriceStr INR"
                 brandName.text = brandNameStr
 //                stocks.text = "Stocks : $stocksStr"
-                ratingBar.rating = Integer.parseInt(ratings).toFloat()
+                ratingBar.rating = ratings.toFloat()
                 ratingText.text = ratings
                 description.text = descriptionStr
                 sellerName.text = sellerNameStr
@@ -178,6 +178,10 @@ class OrderPlace : Fragment() {
         recyclerview.setItemViewCacheSize(20)
         recyclerview.adapter = videoAdapter
 
+        val navBuilder = NavOptions.Builder()
+        navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)
+            .setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out)
+
 //        loadData()
 
         backBtn.setOnClickListener {
@@ -187,7 +191,7 @@ class OrderPlace : Fragment() {
         messageOrder.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("receiverUid", sellerUid)
-            Navigation.findNavController(it).navigate(R.id.nav_chat, bundle)
+            Navigation.findNavController(view).navigate(R.id.nav_chat, bundle, navBuilder.build())
         }
 
         addToWishlistBtn.setOnClickListener {
@@ -201,35 +205,38 @@ class OrderPlace : Fragment() {
             whiteView.visibility = View.VISIBLE
             loader.visibility = View.VISIBLE
             if (!check) addToCart(requireArguments().getString("productId").toString())
-            else Navigation.findNavController(view).navigate(R.id.nav_cart)
+            else Navigation.findNavController(view).navigate(R.id.nav_cart, null, navBuilder.build())
         }
 
-        placeOrder.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("brandName", brandNameStr)
-            bundle.putString("productName", productNameStr)
-            bundle.putString("productImageUrl", productImageUrl)
-            bundle.putString("productPrice", productPriceStr)
-            bundle.putString("sellerName", sellerNameStr)
-            bundle.putString("sellerImageUrl", sellerImageUrl)
-            bundle.putString("rating", ratings)
-//            bundle.putString("quantity", stocksStr)
-            bundle.putString("description", descriptionStr)
-            bundle.putString("productId", productId)
-            bundle.putString("category", category)
-            bundle.putString("sellerUid", sellerUid)
-            Navigation.findNavController(it).navigate(R.id.nav_final_order_place, bundle)
-        }
+//        placeOrder.setOnClickListener {
+//            val bundle = Bundle()
+//            bundle.putString("brandName", brandNameStr)
+//            bundle.putString("productName", productNameStr)
+//            bundle.putString("productImageUrl", productImageUrl)
+//            bundle.putString("productPrice", productPriceStr)
+//            bundle.putString("sellerName", sellerNameStr)
+//            bundle.putString("sellerImageUrl", sellerImageUrl)
+//            bundle.putString("rating", ratings)
+////            bundle.putString("quantity", stocksStr)
+//            bundle.putString("description", descriptionStr)
+//            bundle.putString("productId", productId)
+//            bundle.putString("category", category)
+//            bundle.putString("sellerUid", sellerUid)
+//            Navigation.findNavController(view).navigate(R.id.nav_final_order_place, bundle, navBuilder.build())
+//        }
 
-        val data = arguments?.getString("data")
-        data?.let {
-            // Do something with the data
-        }
+        startVideoCall()
+        startVoiceCall()
 
         return view
     }
 
     private fun addToWishlist(productId: String) {
+        Toast.makeText(
+            requireContext(),
+            "This product is added to your wishlist",
+            Toast.LENGTH_SHORT
+        ).show()
         dbViewModel.addToWishlist(
             requireArguments().getString("category").toString(),
             productId,
@@ -240,13 +247,14 @@ class OrderPlace : Fragment() {
                 is Response.Success -> {
                     whiteView.visibility = View.GONE
                     loader.visibility = View.GONE
-                    addToWishlistBtn.setImageResource(R.drawable.love_icon)
+                    wishlistIcon.setImageResource(R.drawable.love_icon)
+                    wishlistText.text = "Wishlisted"
                     flag = true
-                    Toast.makeText(
-                        requireContext(),
-                        "This product is added to your wishlist",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "This product is added to your wishlist",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
 
                 is Response.Failure -> {
@@ -260,18 +268,24 @@ class OrderPlace : Fragment() {
     }
 
     private fun removeFromWishlist(productId: String) {
+        Toast.makeText(
+            requireContext(),
+            "This product is removed from your wishlist",
+            Toast.LENGTH_SHORT
+        ).show()
         dbViewModel.removeFromWishlist(productId, uid!!)
         dbViewModel.dbResponse.observe(viewLifecycleOwner) {
             when (it) {
                 is Response.Success -> {
                     whiteView.visibility = View.GONE
                     loader.visibility = View.GONE
-                    addToWishlistBtn.setImageResource(R.drawable.whishlist_icon)
-                    Toast.makeText(
-                        requireContext(),
-                        "This product is removed from your wishlist",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    wishlistIcon.setImageResource(R.drawable.wishlist_icon)
+                    wishlistText.text = "Wishlist"
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "This product is removed from your wishlist",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
 
                 is Response.Failure -> {
@@ -284,6 +298,11 @@ class OrderPlace : Fragment() {
     }
 
     private fun addToCart(productId: String) {
+        Toast.makeText(
+            requireContext(),
+            "This product is added to your cart",
+            Toast.LENGTH_SHORT
+        ).show()
         dbViewModel.addToCart(requireArguments().getString("category").toString(), productId, uid!!)
         dbViewModel.dbResponse.observe(viewLifecycleOwner) {
             when (it) {
@@ -292,11 +311,11 @@ class OrderPlace : Fragment() {
                     loader.visibility = View.GONE
                     cartText.text = "Go to cart"
                     check = true
-                    Toast.makeText(
-                        requireContext(),
-                        "This product is added to your cart",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "This product is added to your cart",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
 
                 is Response.Failure -> {
@@ -309,18 +328,45 @@ class OrderPlace : Fragment() {
         }
     }
 
+    private fun startVideoCall() {
+        videoCall.setIsVideoCall(true)
+        videoCall.resourceID = "zego_uikit_call"
+        videoCall.setInvitees(listOf(ZegoUIKitUser(sellerUid)))
+//        ZegoUIKitPrebuiltCallService.sendCallInvitation(inviteeUserID, isVideoCall, object : ZegoUIKitPrebuiltCallService.Callback {
+//            override fun onResult(errorCode: Int, errorMessage: String) {
+//                if (errorCode == 0) {
+//                    // Call invitation sent successfully
+//                    Toast.makeText(this@MainActivity, "Call invitation sent successfully!", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    // Handle error
+//                    Toast.makeText(this@MainActivity, "Failed to send call invitation: $errorMessage", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        })
+
+    }
+
+    private fun startVoiceCall() {
+        voiceCall.setIsVideoCall(false)
+        voiceCall.resourceID = "zego_uikit_call"
+        voiceCall.setInvitees(listOf(ZegoUIKitUser(sellerUid)))
+    }
+
     @SuppressLint("SetTextI18n")
     private fun loadData() {
+        val userdata = localStorage.getData(requireContext(),"user_data")
         authViewModel.userdata.observe(viewLifecycleOwner) {
             if (it != null) {
                 uid = it.uid
                 dbViewModel.isInWishList(productId, it.uid)
                 dbViewModel.isInWishlistData.observe(viewLifecycleOwner) { bool1 ->
                     if (bool1) {
-                        addToWishlistBtn.setImageResource(R.drawable.love_icon)
+                        wishlistIcon.setImageResource(R.drawable.love_icon)
+                        wishlistText.text = "Wishlisted"
                         flag = true
                     } else {
-                        addToWishlistBtn.setImageResource(R.drawable.whishlist_icon)
+                        wishlistIcon.setImageResource(R.drawable.wishlist_icon)
+                        wishlistText.text = "Wishlist"
                         flag = false
                     }
                 }
