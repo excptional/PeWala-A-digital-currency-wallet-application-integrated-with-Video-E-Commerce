@@ -21,7 +21,7 @@
             android:layout_marginBottom="@dimen/_5sdp">
 
             <ImageView
-                android:layout_width="@dimen/_80sdp"
+                android:layout_width="@dimen/_60sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
@@ -33,6 +33,17 @@
                 android:layout_height="@dimen/_20sdp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/back_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="My Products"
+                android:textColor="@color/material_black"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/back_btn_seller_products"
+                android:textSize="@dimen/_14sdp" />
 
         </RelativeLayout>
 
@@ -47,18 +58,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:layout_marginStart="@dimen/_15sdp"
-                    android:text="My Products"/>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:background="@color/background"/>
 
                 <androidx.recyclerview.widget.RecyclerView

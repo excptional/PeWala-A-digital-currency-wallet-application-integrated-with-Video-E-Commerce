@@ -97,7 +97,7 @@
                             android:id="@+id/download_btn_receive"
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="match_parent"
-                            app:cardBackgroundColor="@color/material_black"
+                            app:cardBackgroundColor="@color/t_2"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_10sdp"
                             app:cardCornerRadius="@dimen/_20sdp"
@@ -118,7 +118,7 @@
                             android:id="@+id/share_btn_receive"
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="match_parent"
-                            app:cardBackgroundColor="@color/material_black"
+                            app:cardBackgroundColor="@color/t_3"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_10sdp"
                             app:cardCornerRadius="@dimen/_20sdp"
@@ -149,7 +149,7 @@
             android:layout_height="@dimen/_35sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             app:cardCornerRadius="@dimen/_10sdp"
-            app:cardBackgroundColor="@color/material_black"
+            app:cardBackgroundColor="@color/t_2"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:clickable="true"
@@ -192,7 +192,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#A1FFFFFF"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/loader_receive"

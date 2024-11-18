@@ -75,7 +75,7 @@
                         android:maxLines="2"
                         android:text="Coca Cola"
                         android:textAlignment="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/t_2"
                         android:textSize="@dimen/_13sdp"
                         android:textStyle="bold" />
 
@@ -86,7 +86,7 @@
                         android:layout_marginBottom="@dimen/_2sdp"
                         android:singleLine="true"
                         android:text="Coca Cola Black soda drink"
-                        android:textColor="@color/material_black"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/_12sdp" />
 
                     <TextView
@@ -118,7 +118,7 @@
                         android:layout_marginTop="@dimen/_2sdp"
                         android:text="₹10000"
                         android:textStyle="bold"
-                        android:textColor="#2196F3"
+                        android:textColor="@color/t_2"
                         android:textSize="@dimen/_20sdp" />
 
                 </LinearLayout>
@@ -158,7 +158,7 @@
                         android:id="@+id/no_btn_remove_cart"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_40sdp"
-                        app:cardBackgroundColor="@color/material_black"
+                        app:cardBackgroundColor="@color/t_3"
                         android:layout_weight="1"
                         android:clipToPadding="true"
                         android:elevation="@dimen/_5sdp"
@@ -183,7 +183,7 @@
                         android:id="@+id/yes_btn_remove_cart"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_40sdp"
-                        app:cardBackgroundColor="@color/material_black"
+                        app:cardBackgroundColor="@color/t_2"
                         android:layout_weight="1"
                         android:clipToPadding="true"
                         android:elevation="@dimen/_5sdp"

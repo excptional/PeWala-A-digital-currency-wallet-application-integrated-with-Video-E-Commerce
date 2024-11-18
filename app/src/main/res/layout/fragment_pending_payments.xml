@@ -18,7 +18,7 @@
         android:layout_marginBottom="@dimen/_5sdp">
 
         <ImageView
-            android:layout_width="@dimen/_80sdp"
+            android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_16sdp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"

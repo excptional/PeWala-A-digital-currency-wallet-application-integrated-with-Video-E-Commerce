@@ -4,21 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:id="@+id/itemLayout_order_seller"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_180sdp"
         android:layout_centerInParent="true"
-        android:layout_marginStart="@dimen/_2sdp"
-        android:layout_marginEnd="@dimen/_2sdp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
-        app:cardCornerRadius="@dimen/_5sdp"
-        app:cardElevation="0dp"
-        android:layout_margin="@dimen/_10sdp"
-        app:cardBackgroundColor="@color/app_background"
-        app:cardUseCompatPadding="true">
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@drawable/background_shop"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,9 +56,9 @@
             </LinearLayout>
 
             <View
-                android:layout_width="@dimen/_2sdp"
+                android:layout_width="@dimen/_1sdp"
                 android:layout_height="match_parent"
-                android:background="@color/white"/>
+                android:background="@color/background"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -79,7 +77,7 @@
                     android:text="Coca Cola"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp"
+                    android:textSize="@dimen/_12sdp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -103,8 +101,8 @@
                     android:maxLines="2"
                     android:singleLine="true"
                     android:text="Ordered by Bikash Dutta"
-                    android:textColor="#2196F3"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textColor="@color/t_2"
+                    android:textSize="@dimen/_12sdp" />
 
                 <TextView
                     android:id="@+id/address_order_seller"
@@ -128,7 +126,7 @@
                     android:singleLine="true"
                     android:text="Quantity : 5"
                     android:textColor="@color/material_black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_11sdp" />
 
                 <TextView
                     android:id="@+id/time_order_seller"
@@ -136,11 +134,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_2sdp"
                     android:ellipsize="end"
-                    android:maxLines="3"
-                    android:singleLine="true"
+                    android:maxLines="2"
                     android:text="Ordered on 14 July, 2023"
                     android:textColor="@color/material_black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_11sdp" />
 
                 <TextView
                     android:id="@+id/delivery_date_order_seller"
@@ -149,11 +146,10 @@
                     android:layout_marginBottom="@dimen/_2sdp"
                     android:ellipsize="end"
                     android:maxLines="3"
-                    android:singleLine="true"
                     android:visibility="gone"
                     android:text="Deliver on 14 July, 2023"
-                    android:textColor="@color/material_black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textColor="@color/text_color1"
+                    android:textSize="@dimen/_11sdp" />
 
                 <LinearLayout
                     android:id="@+id/btn_layout_order_seller"
@@ -207,6 +203,6 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
 </RelativeLayout>

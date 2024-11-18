@@ -12,7 +12,7 @@
     android:background="@drawable/add_community_background">
 
     <TextView
-        android:id="@+id/text_community_item"
+        android:id="@+id/text_add_community_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ONDC"
@@ -23,7 +23,7 @@
         android:fontFamily="@font/roboto_medium" />
 
     <ImageView
-        android:id="@+id/cancel_community_item"
+        android:id="@+id/image_add_community_item"
         android:layout_width="@dimen/_15sdp"
         android:layout_height="@dimen/_15sdp"
         android:src="@drawable/add_circle_icon"/>

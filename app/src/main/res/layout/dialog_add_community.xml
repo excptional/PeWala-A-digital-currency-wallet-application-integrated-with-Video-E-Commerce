@@ -5,6 +5,7 @@
     android:layout_gravity="bottom"
     android:orientation="vertical"
     android:padding="@dimen/_10sdp"
+    android:background="@color/white"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
@@ -19,6 +20,7 @@
         android:layout_marginBottom="@dimen/_10sdp" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_add_community_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:itemCount="20"

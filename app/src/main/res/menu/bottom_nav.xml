@@ -7,7 +7,7 @@
     <item android:title="Account"
         android:id="@+id/account"
         android:icon="@drawable/account"/>
-    <item android:title="" />
+<!--    <item android:title="" />-->
     <item android:title="Redeem Request"
         android:id="@+id/redeem_req"
         android:icon="@drawable/withdrawl"/>

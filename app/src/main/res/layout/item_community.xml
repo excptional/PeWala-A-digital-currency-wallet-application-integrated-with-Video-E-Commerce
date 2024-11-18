@@ -23,7 +23,7 @@
         android:fontFamily="@font/roboto_medium" />
 
     <ImageView
-        android:id="@+id/cancel_community_item"
+        android:id="@+id/image_community_item"
         android:layout_width="@dimen/_12sdp"
         android:layout_height="@dimen/_12sdp"
         android:src="@drawable/cancel_icon"/>

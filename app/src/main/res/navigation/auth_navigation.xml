@@ -7,17 +7,22 @@
 
     <fragment
         android:id="@+id/nav_sign_in"
-        android:name="com.te.pewala.auth.SignIn"
+        android:name="com.te.celer.auth.SignIn"
         tools:layout="@layout/fragment_sign_in" />
 
     <fragment
         android:id="@+id/nav_register"
-        android:name="com.te.pewala.auth.Register"
+        android:name="com.te.celer.auth.Register"
         tools:layout="@layout/fragment_register" />
 
     <fragment
         android:id="@+id/nav_discovery"
-        android:name="com.te.pewala.auth.Discovery"
+        android:name="com.te.celer.auth.Discovery"
         tools:layout="@layout/fragment_discovery" />
+
+    <fragment
+        android:id="@+id/nav_phone_verification"
+        android:name="com.te.celer.auth.PhoneVerification"
+        tools:layout="@layout/fragment_phone_verification" />
 
 </navigation>

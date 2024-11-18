@@ -17,6 +17,7 @@
         android:weightSum="2">
 
         <ImageView
+            android:id="@+id/image_view_pp_item"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_gravity="center_vertical"
@@ -51,7 +52,7 @@
                 android:textSize="@dimen/_9sdp" />
 
             <TextView
-                android:id="@+id/tId_item"
+                android:id="@+id/tId_pp_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pending amount will be transferred within 10 days per T&amp;Cs"
