@@ -296,7 +296,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:layout_marginBottom="@dimen/_15sdp"
                 android:orientation="vertical">
 
                 <TextView
@@ -870,7 +869,6 @@
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/_15sdp"
                         android:layout_marginEnd="@dimen/_15sdp"
-                        android:layout_marginBottom="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_15sdp"
                         android:background="@drawable/background_shop"
                         android:orientation="vertical">
@@ -934,6 +932,7 @@
                     android:id="@+id/chat_box_home"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/_15sdp"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_marginEnd="@dimen/_15sdp"
                     android:layout_marginBottom="@dimen/_15sdp"

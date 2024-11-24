@@ -1,7 +1,9 @@
 package com.te.celer.main_files
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +15,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
@@ -47,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment)
 
-        loadData()
+//        loadData()
 
 //        binding.qrScanner.setOnClickListener {
 ////            Toast.makeText(this, "This feature is not implemented yet", Toast.LENGTH_SHORT).show()
@@ -150,27 +154,6 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
-//        val callback = object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                if (binding.bottomNav.isVisible) {
-//                    val selectedItemId = binding.bottomNav.selectedItemId
-//                    when (selectedItemId) {
-//                        R.id.home -> {
-//                            finish()
-//                        }
-//                        else -> {
-//                            navController.navigate(R.id.nav_home)
-//                            binding.bottomNav.selectedItemId = R.id.home
-//                        }
-//                    }
-//                } else {
-//                    // No action or perform default back press behavior (optional)
-//                }
-//            }
-//        }
-//
-//        this.onBackPressedDispatcher.addCallback(this, callback)
-
         onBackButtonPressed {
             if (binding.bottomNav.isVisible) {
                 false
@@ -178,40 +161,69 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    2484
+                )
+            }
+        }
+
     }
 
-    @SuppressLint("SwitchIntDef")
-    private fun checkDeviceHasBiometric() {
-        val biometricManager = BiometricManager.from(this)
-        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
-            BiometricManager.BIOMETRIC_SUCCESS ->
-                Toast.makeText(this, "App can authenticate using biometrics.", Toast.LENGTH_SHORT)
-                    .show()
-
-            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-                Toast.makeText(
-                    this,
-                    "No biometric features available on this device.",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {}
-            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            putExtra(
-                                Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
-                                BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
-                            )
-                        }
-                    }
-                } else {
-                    TODO("VERSION.SDK_INT < R")
-                }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 2484) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+//    @SuppressLint("SwitchIntDef")
+//    private fun checkDeviceHasBiometric() {
+//        val biometricManager = BiometricManager.from(this)
+//        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
+//            BiometricManager.BIOMETRIC_SUCCESS ->
+//                Toast.makeText(this, "App can authenticate using biometrics.", Toast.LENGTH_SHORT)
+//                    .show()
+//
+//            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+//                Toast.makeText(
+//                    this,
+//                    "No biometric features available on this device.",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//
+//            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {}
+//            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                    Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                            putExtra(
+//                                Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
+//                                BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+//                            )
+//                        }
+//                    }
+//                } else {
+//                    TODO("VERSION.SDK_INT < R")
+//                }
+//            }
+//        }
+//    }
 
 //    private fun videoCallServices() {
 //        val appID: Long = getString(R.string.ZEGOCLOUD_APP_ID).toLong()
@@ -232,38 +244,38 @@ class MainActivity : AppCompatActivity() {
 //        )
 //    }
 
-    private fun loadData() {
-        authViewModel.userdata.observe(this) { user ->
-            if (user == null) {
-                startActivity(Intent(this, AuthenticationActivity::class.java))
-                finish()
-            } else {
-                uid = user.uid
-                dbViewModel.fetchAccountDetails(user.uid)
-                dbViewModel.accDetails.observe(this) { details ->
-                    val retrieveData = localStorage.getData(this@MainActivity,"user_data")
-                    if (retrieveData == null || retrieveData["image_url"] != details.getString("image_url")
-                        || retrieveData["balance"] != details.getString("balance")
-                    ) {
-                        val userdata = mapOf(
-                            "uid" to user.uid,
-                            "name" to details.getString("name")!!,
-                            "phone" to details.getString("phone")!!,
-                            "card_id" to details.getString("card_id")!!,
-                            "user_type" to details.getString("user_type")!!,
-                            "image_url" to details.getString("image_url")!!,
-                            "pin" to details.getString("pin")!!,
-                            "qr_code" to details.getString("qr_code")!!,
-                            "balance" to details.getString("balance")!!
-                        )
-                        localStorage.saveData(this@MainActivity,"user_data", userdata)
-                    }
-                    userName = details.getString("name")!!
-//                    videoCallServices()
-                }
-            }
-        }
-    }
+//    private fun loadData() {
+//        authViewModel.userdata.observe(this) { user ->
+//            if (user == null) {
+//                startActivity(Intent(this, AuthenticationActivity::class.java))
+//                finish()
+//            } else {
+//                uid = user.uid
+//                dbViewModel.fetchAccountDetails(user.uid)
+//                dbViewModel.accDetails.observe(this) { details ->
+//                    val retrieveData = localStorage.getData(this@MainActivity,"user_data")
+//                    if (retrieveData == null || retrieveData["image_url"] != details.getString("image_url")
+//                        || retrieveData["balance"] != details.getString("balance")
+//                    ) {
+//                        val userdata = mapOf(
+//                            "uid" to user.uid,
+//                            "name" to details.getString("name")!!,
+//                            "phone" to details.getString("phone")!!,
+//                            "card_id" to details.getString("card_id")!!,
+//                            "user_type" to details.getString("user_type")!!,
+//                            "image_url" to details.getString("image_url")!!,
+//                            "pin" to details.getString("pin")!!,
+//                            "qr_code" to details.getString("qr_code")!!,
+//                            "balance" to details.getString("balance")!!
+//                        )
+//                        localStorage.saveData(this@MainActivity,"user_data", userdata)
+//                    }
+//                    userName = details.getString("name")!!
+////                    videoCallServices()
+//                }
+//            }
+//        }
+//    }
 
     private fun onBackButtonPressed(callback: (() -> Boolean)) {
         (this as? FragmentActivity)?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
@@ -281,22 +293,6 @@ class MainActivity : AppCompatActivity() {
                     remove()
                     performBackPress()
                 }
-
-//                if (!callback()) {
-//                    val selectedItemId = binding.bottomNav.selectedItemId
-//                    when (selectedItemId) {
-//                        R.id.home -> {
-//                            finish()
-//                        }
-//                        else -> {
-//                            navController.navigate(R.id.nav_home)
-//                            binding.bottomNav.selectedItemId = R.id.home
-//                        }
-//                    }
-//                } else {
-//                    remove()
-//                    performBackPress()
-//                }
             }
         })
     }

@@ -28,6 +28,7 @@ import com.te.celer.db.DBViewModel
 import com.te.celer.db.Response
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.te.celer.db.LocalStorage
+import com.te.celer.main_files.MainActivity
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import de.hdodenhof.circleimageview.CircleImageView
@@ -151,7 +152,7 @@ class Account : Fragment() {
 //        }
 
         viewAbout.setOnClickListener {
-
+            Navigation.findNavController(view).navigate(R.id.nav_about)
         }
 
         viewPaymentRecords.setOnClickListener {
@@ -181,7 +182,7 @@ class Account : Fragment() {
         dbViewModel.dbResponse.observe(this.viewLifecycleOwner) {
             when (it) {
                 is Response.Success -> {
-                    loadData(view)
+                    updateLocalStorage(uid)
                 }
                 is Response.Failure -> {
                     loaderAccount.visibility = View.GONE
@@ -192,26 +193,26 @@ class Account : Fragment() {
         }
     }
 
-    private fun replaceImage(uri: Uri, view: View) {
-        loaderAccount.visibility = View.VISIBLE
-        whiteView.visibility = View.VISIBLE
-        val newImageByteArray: ByteArray = uriToByteArray(requireContext(), uri)
-        val newImageStream = ByteArrayInputStream(newImageByteArray)
-        dbViewModel.replaceImage(imgUrl, newImageStream)
-        dbViewModel.dbResponse.observe(this.viewLifecycleOwner) {
-            when (it) {
-                is Response.Success -> {
-                    loadData(view)
-                }
-
-                is Response.Failure -> {
-                    loaderAccount.visibility = View.GONE
-                    whiteView.visibility = View.GONE
-                    Toast.makeText(requireContext(), it.errorMassage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
+//    private fun replaceImage(uri: Uri, view: View) {
+//        loaderAccount.visibility = View.VISIBLE
+//        whiteView.visibility = View.VISIBLE
+//        val newImageByteArray: ByteArray = uriToByteArray(requireContext(), uri)
+//        val newImageStream = ByteArrayInputStream(newImageByteArray)
+//        dbViewModel.replaceImage(imgUrl, newImageStream)
+//        dbViewModel.dbResponse.observe(this.viewLifecycleOwner) {
+//            when (it) {
+//                is Response.Success -> {
+//                    updateLocalStorage(uid)
+//                }
+//
+//                is Response.Failure -> {
+//                    loaderAccount.visibility = View.GONE
+//                    whiteView.visibility = View.GONE
+//                    Toast.makeText(requireContext(), it.errorMassage, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//    }
 
     @SuppressLint("SetTextI18n")
     private fun loadData(view: View) {
@@ -276,6 +277,31 @@ class Account : Fragment() {
 //                }
 //            }
 //        }
+    }
+
+    private fun updateLocalStorage(uid: String) {
+        dbViewModel.fetchAccountDetails(uid)
+        dbViewModel.accDetails.observe(viewLifecycleOwner) { details ->
+            val retrieveData = localStorage.getData(requireContext(),"user_data")
+            if (retrieveData == null || retrieveData["image_url"] != details.getString("image_url")
+                || retrieveData["balance"] != details.getString("balance")
+            ) {
+                val userdata = mapOf(
+                    "uid" to uid,
+                    "name" to details.getString("name")!!,
+                    "phone" to details.getString("phone")!!,
+                    "card_id" to details.getString("card_id")!!,
+                    "user_type" to details.getString("user_type")!!,
+                    "image_url" to details.getString("image_url")!!,
+                    "pin" to details.getString("pin")!!,
+                    "qr_code" to details.getString("qr_code")!!,
+                    "balance" to details.getString("balance")!!
+                )
+                localStorage.removeData(requireContext(), "user_data")
+                localStorage.saveData(requireContext(), "user_data", userdata)
+            }
+        }
+        loadData(requireView())
     }
 
     @SuppressLint("Recycle")

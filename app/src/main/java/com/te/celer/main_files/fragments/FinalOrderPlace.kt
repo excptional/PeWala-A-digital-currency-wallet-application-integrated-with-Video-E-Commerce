@@ -230,7 +230,7 @@ class FinalOrderPlace : Fragment() {
         dbViewModel.getAddress(senderUid)
 
         dbViewModel.addressData.observe(viewLifecycleOwner) { doc ->
-            if (doc.exists()) {
+            if (doc != null && doc.exists()) {
                 lat = doc.getString("latitude")!!.toDouble()
                 long = doc.getString("longitude")!!.toDouble()
                 locality.text = doc.getString("locality")

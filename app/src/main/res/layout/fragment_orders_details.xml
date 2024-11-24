@@ -159,6 +159,7 @@
                         android:layout_marginBottom="@dimen/_2sdp"
                         android:text="Will be delivered on 14 July, 2023"
                         android:textColor="@color/black"
+                        android:visibility="gone"
                         android:textSize="@dimen/_12sdp" />
 
                     <TextView
@@ -186,8 +187,8 @@
 
                     <ImageView
                         android:id="@+id/productImg_order_details"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_80sdp"
+                        android:layout_width="@dimen/_100sdp"
+                        android:layout_height="@dimen/_100sdp"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="@dimen/_3sdp"
                         android:scaleType="fitCenter"

@@ -100,7 +100,7 @@ class RedeemRequest : Fragment() {
         phone = userdata["phone"]!!
         dbViewModel.fetchRedeemRequest(userdata["uid"]!!)
         dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list ->
-            if(list.isNotEmpty()) fetchData(list)
+            if(!list.isNullOrEmpty()) fetchData(list)
             else {
                 nothingFoundText.visibility = View.VISIBLE
                 mainLayout.visibility = View.GONE

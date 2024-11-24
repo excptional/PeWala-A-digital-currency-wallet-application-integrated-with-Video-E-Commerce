@@ -111,7 +111,7 @@ class FinalPayment : Fragment() {
     private fun getUid(receiverWalletId: String) {
         dbViewModel.getPayerDetails(receiverWalletId)
         dbViewModel.payerDetails.observe(viewLifecycleOwner) {
-            receiverUid = it[3]
+            receiverUid = it!![3]
             receiverImageUrl = it[2]
         }
     }

@@ -431,7 +431,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Get details about digital currencies"
+                                    android:text="Discover what we offer at Celer"
                                     android:textColor="@color/material_black"
                                     android:textSize="@dimen/_10sdp" />
 

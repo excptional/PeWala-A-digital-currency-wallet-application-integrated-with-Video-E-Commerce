@@ -49,7 +49,7 @@ class CartAdapter(
 
         holder.checkBox.isClickable = false
 
-        if(currentItem.isChecked!!) {
+        if(currentItem.isChecked) {
             holder.checkBox.isChecked = true
             holder.checkText.text = "Selected"
         } else {
@@ -90,7 +90,7 @@ class CartAdapter(
         }
 
         holder.selectBtn.setOnClickListener {
-            if(currentItem.isChecked!!) {
+            if(currentItem.isChecked) {
                 holder.checkBox.isChecked = false
                 holder.checkText.text = "Select"
             } else {

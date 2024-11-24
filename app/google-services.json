@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "930301141222",
-    "project_id": "pewala-a26d9",
-    "storage_bucket": "pewala-a26d9.appspot.com"
+    "project_number": "190999031833",
+    "project_id": "pewala-app",
+    "storage_bucket": "pewala-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:930301141222:android:03517dad0c93afd2451b27",
+        "mobilesdk_app_id": "1:190999031833:android:9924732901c073b9d7fa88",
         "android_client_info": {
           "package_name": "com.te.celer"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyANX1tBnXkyekFrrGV0Hj7x6NXl_7JKrDA"
+          "current_key": "AIzaSyA2SvXGHPoa428bRSrvgJ_ug4-S73CQNHQ"
         }
       ],
       "services": {

@@ -121,7 +121,7 @@ class Wallet : Fragment() {
         phone = userdata["phone"]!!
         dbViewModel.fetchRedeemRequest(userdata["uid"]!!)
         dbViewModel.redeemRequestDetails.observe(viewLifecycleOwner) { list2 ->
-            if (list2.isNotEmpty()) fetchData(list2)
+            if (list2!!.isNotEmpty()) fetchData(list2)
             else {
                 recyclerview.visibility = View.GONE
                 refreshLayout.isRefreshing = false

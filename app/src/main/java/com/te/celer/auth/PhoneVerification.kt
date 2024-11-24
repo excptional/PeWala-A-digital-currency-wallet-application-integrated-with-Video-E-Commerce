@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.te.celer.db.Response.Success
 import com.te.celer.db.Response.Failure
+import com.te.celer.main_files.SplashScreen
 
 
 class PhoneVerification : Fragment(), OTPCallback {
@@ -132,7 +134,7 @@ class PhoneVerification : Fragment(), OTPCallback {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun verifyOTP() {
-        if (otp == "3352") {
+        if (otp == otpSend) {
 //            dbViewModel.changePIN(uid, pin)
 //            Toast.makeText(
 //                requireContext(),
@@ -147,7 +149,7 @@ class PhoneVerification : Fragment(), OTPCallback {
                 when(it) {
                     is Success -> {
                         Toast.makeText(requireContext(), "Welcome to Celer", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(requireContext(), MainActivity::class.java))
+                        startActivity(Intent(requireContext(), SplashScreen::class.java))
                         requireActivity().finish()
                         whiteView.visibility = View.GONE
                         otpLoader.visibility = View.GONE
@@ -211,55 +213,48 @@ class PhoneVerification : Fragment(), OTPCallback {
 
     }
 
+
     private fun numberOtpMove() {
-        box1.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+        box1.addTextChangedListener(createOtpTextWatcher(box2, null))
+        box2.addTextChangedListener(createOtpTextWatcher(box3, box1))
+        box3.addTextChangedListener(createOtpTextWatcher(box4, box2))
+        box4.addTextChangedListener(createOtpTextWatcher(null, box3))
+
+        addDeleteKeyListener(box2, box1)
+        addDeleteKeyListener(box3, box2)
+        addDeleteKeyListener(box4, box3)
+    }
+
+
+    private fun createOtpTextWatcher(
+        nextBox: EditText?,
+        previousBox: EditText?
+    ): TextWatcher {
+        return object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().trim().isNotEmpty()) {
-                    box2.requestFocus()
+                if (s.toString().trim().isNotEmpty() && nextBox != null) {
+                    nextBox.requestFocus()
+                } else if (before > 0 && previousBox != null) {
+                    previousBox.requestFocus()
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) {
+            override fun afterTextChanged(s: Editable?) {}
+        }
+    }
+
+
+    private fun addDeleteKeyListener(currentBox: EditText, previousBox: EditText?) {
+        currentBox.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN && currentBox.text.isNullOrEmpty()) {
+                previousBox?.requestFocus()
+                true
+            } else {
+                false
             }
-
-        })
-
-        box2.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().trim().isNotEmpty()) {
-                    box3.requestFocus()
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-        })
-
-        box3.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().trim().isNotEmpty()) {
-                    box4.requestFocus()
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-        })
-
+        }
     }
 
     override fun onOtpSentSuccess(message: String) {

@@ -82,7 +82,7 @@ class AuthRepository(private val application: Application) {
             "pan" to "",
             "gstin" to "",
             "trade_license" to "",
-            "image_url" to "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/user2.png?alt=media&token=91a4d9d4-71cc-4d25-919b-eed55ff51842"
+            "image_url" to "https://firebasestorage.googleapis.com/v0/b/pewala-app.firebasestorage.app/o/user2.png?alt=media&token=b1a9f1b8-2b92-485d-b2d6-c327cfb4068e"
         ).apply {
             if (userType == "Seller") {
                 put("status", "Not Verified")

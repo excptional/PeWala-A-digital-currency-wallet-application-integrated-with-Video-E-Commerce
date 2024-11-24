@@ -22,6 +22,7 @@ import com.te.celer.db.AuthViewModel
 import com.te.celer.db.Response
 import com.google.android.material.textfield.TextInputLayout
 import com.te.celer.R
+import com.te.celer.main_files.SplashScreen
 
 class SignIn : Fragment() {
 
@@ -128,7 +129,7 @@ class SignIn : Fragment() {
             authViewModel.response.observe(viewLifecycleOwner) {
                 when (it) {
                     is Response.Success -> {
-                        startActivity(Intent(requireContext(), MainActivity::class.java))
+                        startActivity(Intent(requireContext(), SplashScreen::class.java))
                         requireActivity().finish()
                         whiteView.visibility = View.GONE
                         signInLoader.visibility = View.GONE

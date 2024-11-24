@@ -32,8 +32,8 @@ class DBRepository(private val application: Application) {
     val accDetails: LiveData<DocumentSnapshot>
         get() = accDetailsLiveData
 
-    private val productDetailsLiveData = MutableLiveData<DocumentSnapshot>()
-    val productDetails: LiveData<DocumentSnapshot>
+    private val productDetailsLiveData = MutableLiveData<DocumentSnapshot?>()
+    val productDetails: MutableLiveData<DocumentSnapshot?>
         get() = productDetailsLiveData
 
     private val transactionDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
@@ -56,16 +56,16 @@ class DBRepository(private val application: Application) {
     val feedVideos: LiveData<ArrayList<DocumentSnapshot>>
         get() = feedVideosLiveData
 
-    private val redeemRequestDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
-    val redeemRequestDetails: LiveData<ArrayList<DocumentSnapshot>>
+    private val redeemRequestDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>?>()
+    val redeemRequestDetails: MutableLiveData<ArrayList<DocumentSnapshot>?>
         get() = redeemRequestDetailsLiveData
 
-    private val contactDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>>()
-    val contactDetails: LiveData<ArrayList<DocumentSnapshot>>
+    private val contactDetailsLiveData = MutableLiveData<ArrayList<DocumentSnapshot>?>()
+    val contactDetails: MutableLiveData<ArrayList<DocumentSnapshot>?>
         get() = contactDetailsLiveData
 
-    private val payerDetailsLiveData = MutableLiveData<ArrayList<String>>()
-    val payerDetails: LiveData<ArrayList<String>>
+    private val payerDetailsLiveData = MutableLiveData<ArrayList<String>?>()
+    val payerDetails: MutableLiveData<ArrayList<String>?>
         get() = payerDetailsLiveData
 
     private val limitLivedata = MutableLiveData<Double>()
@@ -112,8 +112,8 @@ class DBRepository(private val application: Application) {
     val cartData: LiveData<MutableList<DocumentSnapshot>>
         get() = cartLivedata
 
-    private val addressLivedata = MutableLiveData<DocumentSnapshot>()
-    val addressData: LiveData<DocumentSnapshot>
+    private val addressLivedata = MutableLiveData<DocumentSnapshot?>()
+    val addressData: MutableLiveData<DocumentSnapshot?>
         get() = addressLivedata
 
     private val videoTutorialsLivedata = MutableLiveData<MutableList<DocumentSnapshot>>()
@@ -203,15 +203,21 @@ class DBRepository(private val application: Application) {
             )
             .get()
             .addOnSuccessListener { documents ->
-                val list = arrayListOf<DocumentSnapshot>()
-                for (document in documents) {
-                    list.add(document)
+                if (!documents.isEmpty) {
+                    val list = arrayListOf<DocumentSnapshot>()
+                    for (document in documents) {
+                        list.add(document)
+                    }
+                    transactionDetailsLiveData.postValue(list)
+                    dbResponseLiveData.postValue(Response.Success())
+                } else {
+                    dbResponseLiveData.postValue(Response.Success()) // Indicate success
+                    transactionDetailsLiveData.postValue(arrayListOf()) // Post an empty list
                 }
-                dbResponseLiveData.postValue(Response.Success())
-                transactionDetailsLiveData.postValue(list)
             }
             .addOnFailureListener {
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+                transactionDetailsLiveData.postValue(arrayListOf())
             }
     }
 
@@ -341,22 +347,32 @@ class DBRepository(private val application: Application) {
 
     fun getPayerDetails(id: String) {
         val ref = firebaseDB.collection("users")
-        ref.get().addOnSuccessListener { documents ->
-            for (document in documents) {
+        ref.addSnapshotListener { snapshot, exception ->
+            if (exception != null) {
+                payerDetailsLiveData.postValue(null) // Or handle error state in LiveData
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && !snapshot.isEmpty) {
                 val list = arrayListOf<String>()
-                if (document.getString("card_id") == id) {
-                    list.add(document.getString("name").toString())
-                    list.add(document.getString("phone").toString())
-                    list.add(document.getString("image_url").toString())
-                    list.add(document.getString("uid").toString())
-                    payerDetailsLiveData.postValue(list)
-                    break
-                } else {
-                    payerDetailsLiveData.postValue(list)
+                for (document in snapshot.documents) {
+                    if (document.getString("card_id") == id) {
+                        list.add(document.getString("name").toString())
+                        list.add(document.getString("phone").toString())
+                        list.add(document.getString("image_url").toString())
+                        list.add(document.getString("uid").toString())
+                        payerDetailsLiveData.postValue(list)
+                        return@addSnapshotListener
+                    }
                 }
+
+                payerDetailsLiveData.postValue(list)
+            } else {
+                payerDetailsLiveData.postValue(null)
             }
         }
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun changePIN(uid: String, PIN: String) {
@@ -425,15 +441,27 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchContacts(uid: String) {
-        firebaseDB.collection("contacts").document("contacts").collection(uid).get()
-            .addOnSuccessListener { documents ->
-                val list = arrayListOf<DocumentSnapshot>()
-                for (document in documents) {
-                    list.add(document)
+        firebaseDB.collection("contacts")
+            .document("contacts")
+            .collection(uid)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    contactDetailsLiveData.postValue(null) // Or handle error state in LiveData
+                    return@addSnapshotListener
                 }
-                contactDetailsLiveData.postValue(list)
+
+                if (snapshot != null && !snapshot.isEmpty) {
+                    val list = arrayListOf<DocumentSnapshot>()
+                    for (document in snapshot.documents) {
+                        list.add(document)
+                    }
+                    contactDetailsLiveData.postValue(list)
+                } else {
+                    contactDetailsLiveData.postValue(arrayListOf())
+                }
             }
     }
+
 
     fun sendRedeemRequest(uid: String, amount: String) {
 //        val time =
@@ -476,6 +504,9 @@ class DBRepository(private val application: Application) {
                     list.add(document)
                 }
                 redeemRequestDetailsLiveData.postValue(list)
+            }
+            .addOnFailureListener {
+                redeemRequestDetailsLiveData.postValue(null)
             }
     }
 
@@ -525,19 +556,30 @@ class DBRepository(private val application: Application) {
     }
 
     fun fetchProducts(category: String) {
-        firebaseDB.collection("products").document("products").collection(category).get()
-            .addOnSuccessListener { documents ->
-                val list = mutableListOf<DocumentSnapshot>()
-                for (document in documents) {
-                    list.add(document)
+        firebaseDB.collection("products")
+            .document("products")
+            .collection(category)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    dbResponseLiveData.postValue(Response.Failure(getErrorMassage(exception)))
+                    productsLivedata.postValue(mutableListOf())
+                    return@addSnapshotListener
                 }
-                dbResponseLiveData.postValue(Response.Success())
-                productsLivedata.postValue(list)
-            }
-            .addOnFailureListener {
-                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
+
+                if (snapshot != null && !snapshot.isEmpty) {
+                    val list = mutableListOf<DocumentSnapshot>()
+                    for (document in snapshot.documents) {
+                        list.add(document)
+                    }
+                    dbResponseLiveData.postValue(Response.Success())
+                    productsLivedata.postValue(list)
+                } else {
+                    dbResponseLiveData.postValue(Response.Success())
+                    productsLivedata.postValue(mutableListOf())
+                }
             }
     }
+
 
     fun getProductDetails(category: String, productId: String) {
         firebaseDB.collection("products").document("products").collection(category)
@@ -547,6 +589,7 @@ class DBRepository(private val application: Application) {
                 dbResponseLiveData.postValue(Response.Success())
             }
             .addOnFailureListener {
+                productDetailsLiveData.postValue(null)
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
     }
@@ -621,6 +664,7 @@ class DBRepository(private val application: Application) {
                     dbResponseLiveData.postValue(Response.Success())
                     wishlistLivedata.postValue(list)
                 } else {
+                    wishlistLivedata.postValue(arrayListOf())
                     dbResponseLiveData.postValue(Response.Failure(getErrorMassage(e)))
                 }
             }
@@ -681,6 +725,7 @@ class DBRepository(private val application: Application) {
                     dbResponseLiveData.postValue(Response.Success())
                     cartLivedata.postValue(list)
                 } else {
+                    cartLivedata.postValue(arrayListOf())
                     dbResponseLiveData.postValue(Response.Failure(getErrorMassage(e!!)))
                 }
             }
@@ -709,6 +754,7 @@ class DBRepository(private val application: Application) {
                     dbResponseLiveData.postValue(Response.Success())
                     selectedCartLivedata.postValue(list)
                 } else {
+                    selectedCartLivedata.postValue(arrayListOf())
                     dbResponseLiveData.postValue(Response.Failure(getErrorMassage(e!!)))
                 }
             }
@@ -807,9 +853,8 @@ class DBRepository(private val application: Application) {
 
         doc1.get().addOnSuccessListener {
             if (it.exists()) {
-
                 dbResponseLiveData.postValue(Response.Success())
-                doc1.update("delivery_data", System.currentTimeMillis())
+                doc1.update("delivery_date", System.currentTimeMillis())
                 doc1.update("status", "Delivered")
             }
         }
@@ -820,6 +865,7 @@ class DBRepository(private val application: Application) {
         doc2.get().addOnSuccessListener {
             if (it.exists()) {
                 dbResponseLiveData.postValue(Response.Success())
+                doc2.update("delivery_date", System.currentTimeMillis())
                 doc2.update("status", "Delivered")
             }
         }
@@ -879,6 +925,7 @@ class DBRepository(private val application: Application) {
                     dbResponseLiveData.postValue(Response.Success())
                     sellerProductsLivedata.postValue(list)
                 } else {
+                    sellerProductsLivedata.postValue(arrayListOf())
                     dbResponseLiveData.postValue(Response.Failure(getErrorMassage(e)))
                 }
             }
@@ -897,6 +944,7 @@ class DBRepository(private val application: Application) {
                     dbResponseLiveData.postValue(Response.Success())
                     sellerReceivedOrdersLivedata.postValue(list)
                 } else {
+                    sellerReceivedOrdersLivedata.postValue(arrayListOf())
                     dbResponseLiveData.postValue(Response.Failure(getErrorMassage(e)))
                 }
             }
@@ -915,6 +963,7 @@ class DBRepository(private val application: Application) {
                     dbResponseLiveData.postValue(Response.Success())
                     myOrdersLivedata.postValue(list)
                 } else {
+                    myOrdersLivedata.postValue(arrayListOf())
                     dbResponseLiveData.postValue(Response.Failure(getErrorMassage(e)))
                 }
             }
@@ -1025,6 +1074,10 @@ class DBRepository(private val application: Application) {
                     addressLivedata.postValue(it)
                     dbResponseLiveData.postValue(Response.Success())
                 } else dbResponseLiveData.postValue(Response.Failure("No address found"))
+            }
+            .addOnFailureListener {
+                addressLivedata.postValue(null)
+                dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
     }
 
@@ -1259,6 +1312,7 @@ class DBRepository(private val application: Application) {
                     chatsLiveData.postValue(list)
                     dbResponseLiveData.postValue(Response.Success())
                 } else {
+                    chatsLiveData.postValue(arrayListOf())
                     dbResponseLiveData.postValue(Response.Failure(getErrorMassage(e)))
                 }
 
@@ -1286,6 +1340,7 @@ class DBRepository(private val application: Application) {
                 dbResponseLiveData.postValue(Response.Success())
             }
             .addOnFailureListener {
+                conversationLiveData.postValue(arrayListOf())
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
     }
@@ -1333,6 +1388,9 @@ class DBRepository(private val application: Application) {
                     list.add(document)
                 }
                 videoTutorialsLivedata.postValue(list)
+            }
+            .addOnFailureListener {
+                videoTutorialsLivedata.postValue(arrayListOf())
             }
     }
 
@@ -1473,6 +1531,7 @@ class DBRepository(private val application: Application) {
                 dbResponseLiveData.postValue(Response.Success())
             }
             .addOnFailureListener {
+                pendingPaymentsLivedata.postValue(arrayListOf())
                 dbResponseLiveData.postValue(Response.Failure(getErrorMassage(it)))
             }
 

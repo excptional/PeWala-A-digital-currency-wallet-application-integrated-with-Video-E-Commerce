@@ -92,7 +92,7 @@ class Cart : Fragment() {
             whiteView.visibility = View.VISIBLE
             loader.visibility = View.VISIBLE
             cartItemsArray.let {
-                if(it.isEmpty()) {
+                if(!isSelectedAny(selectedCartItems)) {
                     Toast.makeText(requireContext(), "Select items to proceed", Toast.LENGTH_SHORT).show()
                 } else {
                     val bundle = Bundle()
@@ -147,6 +147,15 @@ class Cart : Fragment() {
             swipeRefreshLayout.isRefreshing = false
             btnLayout.visibility = View.VISIBLE
         }
+    }
+
+    private fun isSelectedAny(list: MutableList<DocumentSnapshot>?): Boolean {
+        for (item in list!!) {
+            if(item.get("selected") as Boolean) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun loadData() {

@@ -87,7 +87,7 @@ class Send : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 dbViewModel.contactDetails.observe(viewLifecycleOwner) {
                     if (s != null) {
-                        fetchData(it, s)
+                        fetchData(it!!, s)
                     }
                 }
             }

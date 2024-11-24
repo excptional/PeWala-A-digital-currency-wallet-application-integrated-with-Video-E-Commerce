@@ -221,7 +221,7 @@ class RazorpayPayment : AppCompatActivity(), PaymentResultListener {
             options.put("amount", amount)
             options.put(
                 "image",
-                "https://firebasestorage.googleapis.com/v0/b/my-chat-app-98801.appspot.com/o/pewala_app_icon.png?alt=media&token=817f21f9-e36c-4e27-b119-aa1cb0217140"
+                "https://firebasestorage.googleapis.com/v0/b/pewala-app.firebasestorage.app/o/celar_icon.png?alt=media&token=0de24b88-2953-4347-b98f-e0a029ff2408"
             )
             options.put("theme.color", "#6B3E2E")
 

@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.DocumentSnapshot
 import java.io.InputStream
 
@@ -18,16 +19,16 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     val accDetails: LiveData<DocumentSnapshot>
         get() = dbRepository.accDetails
 
-    val productDetails: LiveData<DocumentSnapshot>
+    val productDetails: MutableLiveData<DocumentSnapshot?>
         get() = dbRepository.productDetails
 
-    val contactDetails: LiveData<ArrayList<DocumentSnapshot>>
+    val contactDetails: MutableLiveData<ArrayList<DocumentSnapshot>?>
         get() = dbRepository.contactDetails
 
     val feedVideos: LiveData<ArrayList<DocumentSnapshot>>
         get() = dbRepository.feedVideos
 
-    val redeemRequestDetails: LiveData<ArrayList<DocumentSnapshot>>
+    val redeemRequestDetails: MutableLiveData<ArrayList<DocumentSnapshot>?>
         get() = dbRepository.redeemRequestDetails
 
     val transactionDetails: LiveData<ArrayList<DocumentSnapshot>>
@@ -39,7 +40,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     val isConversation: LiveData<Boolean>
         get() = dbRepository.isConversation
 
-    val payerDetails: LiveData<ArrayList<String>>
+    val payerDetails: MutableLiveData<ArrayList<String>?>
         get() = dbRepository.payerDetails
 
     val dailyAddLimit: LiveData<Double>
@@ -75,7 +76,7 @@ class DBViewModel(application: Application) : AndroidViewModel(application) {
     val isInCartData: LiveData<Boolean>
         get() = dbRepository.isInCartData
 
-    val addressData: LiveData<DocumentSnapshot>
+    val addressData: MutableLiveData<DocumentSnapshot?>
         get() = dbRepository.addressData
 
     val conversations: LiveData<MutableList<DocumentSnapshot>>

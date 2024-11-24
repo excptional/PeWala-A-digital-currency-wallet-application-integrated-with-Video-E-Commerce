@@ -29,6 +29,7 @@ import com.te.celer.db.Response
 
 class OrdersDetails : Fragment() {
 
+    private lateinit var deliveryDetails: TextView
     private lateinit var backBtn: ImageView
     private lateinit var brandName: TextView
     private lateinit var productName: TextView
@@ -89,6 +90,7 @@ class OrdersDetails : Fragment() {
         quantity = view.findViewById(R.id.quantity_order_details)
         orderTime = view.findViewById(R.id.time_order_details)
         deliveryText = view.findViewById(R.id.delivery_text_order_details)
+        deliveryDetails = view.findViewById(R.id.delivery_order_details)
         acceptBtn = view.findViewById(R.id.accept_btn_order_details)
         rejectBtn = view.findViewById(R.id.reject_btn_order_details)
         whiteView = view.findViewById(R.id.whiteView_order_details)
@@ -123,17 +125,21 @@ class OrdersDetails : Fragment() {
         address.text = requireArguments().getString("address").toString()
         quantity.text = "Quantity - " + requireArguments().getString("quantity").toString()
         orderTime.text = "Ordered on " + requireArguments().getString("orderTime").toString()
-        orderId.text = "Order ID - " + requireArguments().getString("orderId").toString()
+        orderId.text = requireArguments().getString("orderId").toString()
         Glide.with(view).load(requireArguments().getString("productImg").toString())
             .into(productImg)
 
         val decryptedCode = aesCrypt.decrypt(confirmationCode, key).toString()
 
-        if(statusText.text == "Pending")
-            deliveryText.text = "Will be delivered by " + requireArguments().getString("deliveryDate").toString()
-        else if(statusText.text == "Delivered")
-            deliveryText.text = "Delivered on " + requireArguments().getString("deliveryDate").toString()
-        else
+        if(statusText.text == "Pending") {
+            deliveryText.text =
+                "Will be delivered by " + requireArguments().getString("deliveryDate").toString()
+            deliveryDetails.visibility = View.GONE
+        } else if(statusText.text == "Delivered") {
+            deliveryDetails.visibility = View.VISIBLE
+            deliveryDetails.text =
+                "Delivered on " + requireArguments().getString("deliveryDate").toString()
+        } else
             deliveryText.visibility = View.GONE
 
         if (requireArguments().getString("user").toString() == "Seller") {
@@ -168,11 +174,13 @@ class OrdersDetails : Fragment() {
                             loader.visibility = View.GONE
                             Toast.makeText(
                                 requireContext(),
-                                "Order ID - $orderIdString is completed now",
+                                "Order is completed now",
                                 Toast.LENGTH_SHORT
                             ).show()
                             confirmationLayout.visibility = View.GONE
                             statusText.text = "DELIVERED"
+                            deliveryDetails.text =
+                                "Order has been delivered"
                         }
 
                         is Response.Failure -> {

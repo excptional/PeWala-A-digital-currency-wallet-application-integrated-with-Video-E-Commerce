@@ -141,7 +141,9 @@ class Home : Fragment() {
         shopBuyer = view.findViewById(R.id.shop_layout_buyer_home)
         viewMoreChats = view.findViewById(R.id.view_more_chats_home)
 
-        checkLocalStorageForData()
+        loadData()
+
+//        checkLocalStorageForData()
 
 //        peopleAdapter = PeopleAdapter(requireContext(), peopleItemsArray)
 //        recyclerview.layoutManager = GridLayoutManager(view.context, 3)
@@ -404,7 +406,7 @@ class Home : Fragment() {
             }
             productsAdapter.updateSellerProducts(productsItemsArray)
             productsRecyclerView.visibility = View.VISIBLE
-            mainLayout.visibility = View.VISIBLE
+            productsLayout.visibility = View.VISIBLE
             loader.visibility = View.GONE
         }
     }
@@ -438,11 +440,7 @@ class Home : Fragment() {
     }
 
     private fun loadData() {
-//        mainLayout = requireView().findViewById(R.id.mainLayout_home)
-//        shopSeller = requireView().findViewById(R.id.shop_layout_seller_home)
-//        shopBuyer = requireView().findViewById(R.id.shop_layout_buyer_home)
-//        loader = requireView().findViewById(R.id.progressbar_home)
-
+        userdata = localStorage.getData(requireContext(), "user_data")
         uid = userdata!!["uid"]!!
         dbViewModel.updateTransactorDetails(uid)
         dbViewModel.fetchContacts(uid)
@@ -477,21 +475,20 @@ class Home : Fragment() {
         }
     }
 
-    private fun checkLocalStorageForData() {
-        lifecycleScope.launch {
-            while (true) {
-                // Check if data is in local storage
-                if(requireContext() != null)
-                    userdata = localStorage.getData(requireContext(), "user_data")
-
-                if (userdata != null) {
-                    loadData()
-                    break
-                } else {
-                    delay(1000)
-                }
-            }
-        }
-    }
+//    private fun checkLocalStorageForData() {
+//        lifecycleScope.launch {
+//            while (true) {
+//                if(requireContext() != null)
+//                    userdata = localStorage.getData(requireContext(), "user_data")
+//
+//                if (userdata != null) {
+//                    loadData()
+//                    break
+//                } else {
+//                    delay(1000)
+//                }
+//            }
+//        }
+//    }
 
 }
